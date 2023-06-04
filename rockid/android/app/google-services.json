@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1070717245640",
+    "firebase_url": "https://rockid-30d56-default-rtdb.firebaseio.com",
+    "project_id": "rockid-30d56",
+    "storage_bucket": "rockid-30d56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070717245640:android:bc09187d766442e025edfd",
+        "android_client_info": {
+          "package_name": "com.example.rockid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1070717245640-npkcbg7ptff01fa9jvt7emdui9gm50il.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnBr91dXUQVMWr6xjYrK1rxj-4ICRDBMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070717245640-npkcbg7ptff01fa9jvt7emdui9gm50il.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1070717245640-5ek6j8392df6tc1hh21j1bbqj70pm48s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rockid"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
