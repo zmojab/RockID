@@ -1,17 +1,75 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
 import '../components/square_tile.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   //text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
-  void signUserIn() {}
+  void signUserIn() async{
 
+<<<<<<< HEAD
+=======
+    showDialog(context: context, 
+    builder: (context){
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+    );
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      //Wrong Email
+      if(e.code == 'user-not-found') {
+        wrongEmailMessage();
+      } 
+      //Wrong Password
+      else if (e.code == 'wrong-password') {
+       wrongPasswordMessage();
+      }
+    }
+  }
+
+  void wrongEmailMessage() {
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Incorrect Email'),
+        );
+    },
+    );
+  }
+
+  void wrongPasswordMessage() {
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Incorrect Password'),
+        );
+    });
+  }
+
+>>>>>>> db79a9fcd79e6558b22ca49ab2a5323305e38d69
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,11 +91,39 @@ class LoginPage extends StatelessWidget {
 
             const SizedBox(height: 50),
 
+<<<<<<< HEAD
             //username textfield
             MyTextField(
               controller: usernameController,
               hintText: 'Username',
               obscureText: false,
+=======
+          //email textfield
+          MyTextField(
+            controller: emailController,
+            hintText: 'Email',
+            obscureText: false,
+          ),
+
+          //password textfield
+          MyTextField(
+            controller: passwordController,
+            hintText: 'Password',
+            obscureText: true,
+          ),
+
+          const SizedBox(height: 10,),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Forgot Password?',
+                  style: TextStyle(color: Colors.grey[600]),),
+              ],
+>>>>>>> db79a9fcd79e6558b22ca49ab2a5323305e38d69
             ),
 
             //password textfield
