@@ -64,53 +64,6 @@ def vgg16(height,width,NumOfclasses):
   
   
   
-
-
-
-def main1():
-  path = "C:/Users/wadea/Rock Gemstone/Rocks"
-
-  img_height = 180
-  img_width = 180
-  batch_size = 32
-  
-  trainData = tf.keras.utils.image_dataset_from_directory(
-    path,
-    validation_split=0.2,
-    subset="training",
-    seed=123,
-    label_mode='categorical',
-    image_size=(img_height, img_width),
-    batch_size=batch_size,
-    shuffle=True
-    
-  )
-  
-  valData = tf.keras.utils.image_dataset_from_directory(
-    path,
-    validation_split=0.2,
-    subset="validation",
-    seed=123,
-    label_mode='categorical',
-    image_size=(img_height, img_width),
-    batch_size=batch_size,
-    shuffle=True
-  )
-  
-  
-
-  classes = trainData.class_names
-  
-  model=vgg16(img_height,img_width,144)
-  
-
-  history = model.fit(
-    trainData,
-    validation_data=valData,
-    epochs=20
-  )
-  
-  
 def main():
     img_width=80; img_height=80
     batch_size=32
