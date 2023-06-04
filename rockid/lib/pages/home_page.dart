@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -7,29 +7,27 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-=======
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
-
-  final user = FirebaseAuth.instance.currentUser!;
+final user = FirebaseAuth.instance.currentUser!;
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
->>>>>>> db79a9fcd79e6558b22ca49ab2a5323305e38d69
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD
         title: Text('RockID'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: signUserOut, 
+            icon: Icon(Icons.logout)
+            )
+          ]
       ),
       body: Center(
         child: Text(
@@ -53,19 +51,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-=======
-        actions: [
-          IconButton(
-            onPressed: signUserOut, 
-            icon: Icon(Icons.logout)
-            )
-          ],
-      ),
-      body: Center(
-        child: Text(
-          "Logged in as " + user.email!,
-          style: TextStyle(fontSize: 20))),
-    );
-  }
-}
->>>>>>> db79a9fcd79e6558b22ca49ab2a5323305e38d69

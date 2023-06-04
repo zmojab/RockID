@@ -19,8 +19,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void signUserIn() async{
 
-<<<<<<< HEAD
-=======
     showDialog(context: context, 
     builder: (context){
       return const Center(
@@ -69,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
->>>>>>> db79a9fcd79e6558b22ca49ab2a5323305e38d69
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,13 +88,6 @@ class _LoginPageState extends State<LoginPage> {
 
             const SizedBox(height: 50),
 
-<<<<<<< HEAD
-            //username textfield
-            MyTextField(
-              controller: usernameController,
-              hintText: 'Username',
-              obscureText: false,
-=======
           //email textfield
           MyTextField(
             controller: emailController,
@@ -112,26 +102,6 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
           ),
 
-          const SizedBox(height: 10,),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  'Forgot Password?',
-                  style: TextStyle(color: Colors.grey[600]),),
-              ],
->>>>>>> db79a9fcd79e6558b22ca49ab2a5323305e38d69
-            ),
-
-            //password textfield
-            MyTextField(
-              controller: passwordController,
-              hintText: 'Password',
-              obscureText: true,
-            ),
 
             const SizedBox(
               height: 10,
