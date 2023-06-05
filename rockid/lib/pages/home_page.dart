@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,26 +10,21 @@ class HomePage extends StatefulWidget {
 
 final user = FirebaseAuth.instance.currentUser!;
 
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
-  }
+void signUserOut() {
+  FirebaseAuth.instance.signOut();
+}
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final List<Widget> _pages = [HomePage(), ProfilePage()];
+  //void _selectPage(int index) {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('RockID'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: signUserOut, 
-            icon: Icon(Icons.logout)
-            )
-          ]
-      ),
+      appBar: AppBar(title: Text('Home Page'), centerTitle: true, actions: [
+        IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))
+      ]),
       body: Center(
         child: Text(
           'Home Page',
@@ -47,6 +43,13 @@ class _HomePageState extends State<HomePage> {
             label: 'Profile',
           ),
         ],
+        onTap: (index) {
+          // Update the state and rebuild the widget
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => _pages[index]),
+          );
+        },
       ),
     );
   }

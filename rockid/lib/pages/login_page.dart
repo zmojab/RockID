@@ -17,54 +17,52 @@ class _LoginPageState extends State<LoginPage> {
 
   final passwordController = TextEditingController();
 
-  void signUserIn() async{
-
-    showDialog(context: context, 
-    builder: (context){
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    },
+  void signUserIn() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text
-      );
+          email: emailController.text, password: passwordController.text);
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //Wrong Email
-      if(e.code == 'user-not-found') {
+      if (e.code == 'user-not-found') {
         wrongEmailMessage();
-      } 
+      }
       //Wrong Password
       else if (e.code == 'wrong-password') {
-       wrongPasswordMessage();
+        wrongPasswordMessage();
       }
     }
   }
 
   void wrongEmailMessage() {
     showDialog(
-      context: context, 
+      context: context,
       builder: (context) {
         return const AlertDialog(
           title: Text('Incorrect Email'),
         );
-    },
+      },
     );
   }
 
   void wrongPasswordMessage() {
     showDialog(
-      context: context, 
-      builder: (context) {
-        return const AlertDialog(
-          title: Text('Incorrect Password'),
-        );
-    });
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Incorrect Password'),
+          );
+        });
   }
 
   @override
@@ -88,20 +86,19 @@ class _LoginPageState extends State<LoginPage> {
 
             const SizedBox(height: 50),
 
-          //email textfield
-          MyTextField(
-            controller: emailController,
-            hintText: 'Email',
-            obscureText: false,
-          ),
+            //email textfield
+            MyTextField(
+              controller: emailController,
+              hintText: 'Email',
+              obscureText: false,
+            ),
 
-          //password textfield
-          MyTextField(
-            controller: passwordController,
-            hintText: 'Password',
-            obscureText: true,
-          ),
-
+            //password textfield
+            MyTextField(
+              controller: passwordController,
+              hintText: 'Password',
+              obscureText: true,
+            ),
 
             const SizedBox(
               height: 10,
