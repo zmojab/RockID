@@ -12,10 +12,6 @@ final user = FirebaseAuth.instance.currentUser!;
 
 String email = user.email!;
 
-void signUserOut() {
-  FirebaseAuth.instance.signOut();
-}
-
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0;
 
@@ -23,9 +19,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Profile Page'), centerTitle: true, actions: [
-        IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))
-      ]),
+      appBar:
+          AppBar(title: Text('Profile Page'), centerTitle: true, actions: []),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -57,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.lightBlue[200],
                     ),
                     title: Text(
-                      '3135556789',
+                      '313-555-6789',
                       style: TextStyle(fontSize: 20.0, color: Colors.white),
                     ),
                   ),
@@ -79,25 +74,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ]),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        onTap: (index) {
-          // Update the state and rebuild the widget
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => _pages[index]),
-          );
-        },
       ),
     );
   }
