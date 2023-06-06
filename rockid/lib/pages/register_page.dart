@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
 import '../components/square_tile.dart';
+import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -53,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
       //Inalid Email
       else if (e.code == 'invalid-email') {
         showErrorMessage('Email address is not valid');
-      }   
+      }
     }
   }
 
@@ -67,8 +68,6 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -165,14 +164,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 // google button
-                SquareTile(imagePath: 'lib/images/google_logo.png'),
+                SquareTile(
+                    onTap: () => AuthService().signInWithGoogle(),
+                    imagePath: 'lib/images/google_logo.png'),
 
                 SizedBox(width: 25),
 
                 // facebook button
-                SquareTile(imagePath: 'lib/images/facebook_logo.png')
+                SquareTile(
+                    onTap: () => () {},
+                    imagePath: 'lib/images/facebook_logo.png')
               ],
             ),
 
