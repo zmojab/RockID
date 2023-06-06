@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
+import 'package:rockid/services/auth_service.dart';
 import '../components/square_tile.dart';
+
+//TUTORIAL SKIP TO 6:00
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -46,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       //Inalid Email
       else if (e.code == 'invalid-email') {
         showErrorMessage('Email address is not valid');
-      }   
+      }
     }
   }
 
@@ -158,14 +161,17 @@ class _LoginPageState extends State<LoginPage> {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 // google button
-                SquareTile(imagePath: 'lib/images/google_logo.png'),
+                SquareTile(
+                    onTap: () => AuthService().signInWithGoogle(),
+                    imagePath: 'lib/images/google_logo.png'),
 
                 SizedBox(width: 25),
 
                 // facebook button
-                SquareTile(imagePath: 'lib/images/facebook_logo.png')
+                SquareTile(
+                    onTap: () {}, imagePath: 'lib/images/facebook_logo.png')
               ],
             ),
 
