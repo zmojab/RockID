@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+          email: emailController.toString().trim(), password: passwordController.toString().trim());
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
@@ -42,6 +42,10 @@ class _LoginPageState extends State<LoginPage> {
       else if (e.code == 'wrong-password') {
         wrongPasswordMessage();
       }
+      //Inalid Email
+      else if (e.code == 'invalid-email') {
+        invalidEmailMessage();
+      }   
     }
   }
 
@@ -62,6 +66,16 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) {
           return const AlertDialog(
             title: Text('Incorrect Password'),
+          );
+        });
+  }
+
+  void invalidEmailMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Email address is not valid'),
           );
         });
   }
