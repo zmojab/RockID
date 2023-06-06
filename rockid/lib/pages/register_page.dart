@@ -43,7 +43,17 @@ class _RegisterPageState extends State<RegisterPage> {
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       //Wrong Email
-      showErrorMessage(e.code);
+      if (e.code == 'email-already-in-use') {
+        showErrorMessage('This email has already been taken');
+      }
+      //Wrong Password
+      else if (e.code == 'weak-password') {
+        showErrorMessage('Password must be more than 6 characters');
+      }
+      //Inalid Email
+      else if (e.code == 'invalid-email') {
+        showErrorMessage('Email address is not valid');
+      }   
     }
   }
 
@@ -57,6 +67,8 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

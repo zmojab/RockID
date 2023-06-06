@@ -30,54 +30,35 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.toString().trim(), password: passwordController.toString().trim());
+          email: emailController.text, password: passwordController.text);
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       Navigator.pop(context);
       //Wrong Email
       if (e.code == 'user-not-found') {
-        wrongEmailMessage();
+        showErrorMessage('Incorrect Email');
       }
       //Wrong Password
       else if (e.code == 'wrong-password') {
-        wrongPasswordMessage();
+        showErrorMessage('Incorrect Password');
       }
       //Inalid Email
       else if (e.code == 'invalid-email') {
-        invalidEmailMessage();
+        showErrorMessage('Email address is not valid');
       }   
     }
   }
 
-  void wrongEmailMessage() {
+  void showErrorMessage(String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return const AlertDialog(
-          title: Text('Incorrect Email'),
+        return AlertDialog(
+          title: Text(message),
         );
       },
     );
-  }
-
-  void wrongPasswordMessage() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            title: Text('Incorrect Password'),
-          );
-        });
-  }
-
-  void invalidEmailMessage() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            title: Text('Email address is not valid'),
-          );
-        });
   }
 
   @override
