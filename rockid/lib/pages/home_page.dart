@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rockid/pages/profile_page.dart';
+import 'package:rockid/pages/camera_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ void signUserOut() {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [HomePage(), ProfilePage()];
+  final List<Widget> _pages = [HomePage(), ProfilePage(), CameraScreen(),];
   //void _selectPage(int index) {}
 
   @override
@@ -41,6 +42,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            label: 'Camera',
           ),
         ],
         onTap: (index) {

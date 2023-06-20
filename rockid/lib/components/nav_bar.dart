@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rockid/pages/home_page.dart';
 import 'package:rockid/pages/profile_page.dart';
+import 'package:rockid/pages/camera_page.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _NavBarState extends State<NavBar> {
   List<Widget> _pages = [
     HomePage(),
     ProfilePage(),
+    CameraScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -35,7 +37,10 @@ class _NavBarState extends State<NavBar> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-          // Add more BottomNavigationBarItems as needed
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            label: 'Camera',
+          ),// Add more BottomNavigationBarItems as needed
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
