@@ -5,8 +5,6 @@ import 'package:rockid/components/my_textfield.dart';
 import 'package:rockid/services/auth_service.dart';
 import '../components/square_tile.dart';
 
-//TUTORIAL SKIP TO 6:00
-
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
   const LoginPage({super.key, required this.onTap});

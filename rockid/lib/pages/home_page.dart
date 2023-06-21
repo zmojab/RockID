@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 
@@ -11,8 +12,24 @@ class HomePage extends StatefulWidget {
 
 final user = FirebaseAuth.instance.currentUser!;
 
-void signUserOut() {
-  FirebaseAuth.instance.signOut();
+//firebases sign out method is asynchronous so making signUseOut asynchronous
+Future<void> signUserOut() async{
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  try {
+    final _providerData = _auth.currentUser!.providerData;
+    if (_providerData.isNotEmpty) {
+      //if user signed in through google
+      if(_providerData[0].providerId.toLowerCase().contains('google')) {
+        GoogleSignIn googleSignIn = GoogleSignIn();
+        googleSignIn.signOut();
+      }
+    } 
+    await _auth.signOut();
+   
+  } catch(e) {
+    print(e);
+  }
+  
 }
 
 class _HomePageState extends State<HomePage> {
