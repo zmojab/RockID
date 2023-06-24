@@ -13,28 +13,30 @@ class HomePage extends StatefulWidget {
 final user = FirebaseAuth.instance.currentUser!;
 
 //firebases sign out method is asynchronous so making signUseOut asynchronous
-Future<void> signUserOut() async{
+Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
     final _providerData = _auth.currentUser!.providerData;
     if (_providerData.isNotEmpty) {
       //if user signed in through google
-      if(_providerData[0].providerId.toLowerCase().contains('google')) {
+      if (_providerData[0].providerId.toLowerCase().contains('google')) {
         GoogleSignIn googleSignIn = GoogleSignIn();
         googleSignIn.signOut();
       }
-    } 
+    }
     await _auth.signOut();
-   
-  } catch(e) {
+  } catch (e) {
     print(e);
   }
-  
 }
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [HomePage(), ProfilePage(), CameraScreen(),];
+  final List<Widget> _pages = [
+    HomePage(),
+    ProfilePage(),
+    RockID(),
+  ];
   //void _selectPage(int index) {}
 
   @override
@@ -61,8 +63,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
-            label: 'Camera',
+            icon: Icon(Icons.image_sharp),
+            label: 'Rock Identifier',
           ),
         ],
         onTap: (index) {
