@@ -1,147 +1,226 @@
+// Copyright (c) 2022 Kodeco LLC
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+// distribute, sublicense, create a derivative work, and/or sell copies of the
+// Software in any work that is designed, intended, or marketed for pedagogical
+// or instructional purposes related to programming, coding,
+// application development, or information technology.  Permission for such use,
+// copying, modification, merger, publication, distribution, sublicensing,
+// creation of derivative works, or sale is expressly withheld.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
+import 'package:rockid/classifier/rock_view.dart';
+import '../classifier/classifier.dart';
+
+const _labelsFileName = 'assets/labels.txt';
+const _modelFileName = '78%.tflite';
+//const _labelsFileName = 'assets/labels1.txt';
+//const _modelFileName = 'model_unquant.tflite';
 
 class RockID extends StatefulWidget {
   const RockID({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _RockIDState createState() => _RockIDState();
+  State<RockID> createState() => _RockIDState();
+}
+
+enum _ResultStatus {
+  notStarted,
+  notFound,
+  found,
 }
 
 class _RockIDState extends State<RockID> {
-  late String _modelPath;
-  late Interpreter _interpreter;
-  late File _pickedImage;
-  bool _isImageLoaded = false;
-  List<dynamic> _outputClasses = [];
+  bool _isAnalyzing = false;
+  final picker = ImagePicker();
+  File? _selectedImageFile;
+
+  // Result
+  _ResultStatus _resultStatus = _ResultStatus.notStarted;
+  String _plantLabel = ''; // Name of Error Message
+  double _accuracy = 0.0;
+
+  late Classifier _classifier;
 
   @override
   void initState() {
     super.initState();
-    _loadModel();
+    _loadClassifier();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  Future<void> _loadClassifier() async {
+    debugPrint(
+      'Start loading of Classifier with '
+      'labels at $_labelsFileName, '
+      'model at $_modelFileName',
+    );
 
-  Future<void> _loadModel() async {
-    _modelPath = 'lib/assets/78%.tflite';
-    try {
-      _interpreter = await Interpreter.fromAsset(_modelPath);
-    } catch (e) {
-      print('Failed to load model: $e');
-    }
-  }
-
-  void _captureImage() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image != null) {
-        setState(() {
-          _pickedImage = File(image.path);
-          _isImageLoaded = true;
-        });
-        _classifyImage(_pickedImage);
-      }
-    } catch (e) {
-      print('Failed to capture image: $e');
-    }
-  }
-
-  void _pickImageFromGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        setState(() {
-          _pickedImage = File(image.path);
-          _isImageLoaded = true;
-        });
-        _classifyImage(_pickedImage);
-      }
-    } catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  void _classifyImage(File imageFile) async {
-    try {
-      final imageBytes = await imageFile.readAsBytes();
-      final image = img.decodeImage(imageBytes);
-
-      // Resize the image to the target size
-      final resizedImage = img.copyResize(image!, width: 224, height: 224);
-
-      // Convert the image to RGB format if it's not already in RGB
-      // ignore: unrelated_type_equality_checks
-      final rgbImage = resizedImage.channels == 4
-          ? img.copyResize(resizedImage, width: 224, height: 224)
-          : resizedImage;
-
-      // Normalize the pixel values to the range [-1, 1]
-      final normalizedImage =
-          rgbImage.data.map((pixel) => (pixel - 127.5) / 127.5).toList();
-
-      final input = Float32List.fromList(normalizedImage);
-
-      final inputs = <String, dynamic>{};
-      inputs['input'] = input;
-
-      final outputs = <String, dynamic>{};
-      outputs['output'] = List.filled(1 * 17, 0.0);
-
-      _interpreter.run(inputs, outputs);
-
-      setState(() {
-        _outputClasses = outputs['output'];
-      });
-    } catch (e) {
-      print('Failed to classify image: $e');
-    }
+    final classifier = await Classifier.loadWith(
+      labelsFileName: _labelsFileName,
+      modelFileName: _modelFileName,
+    );
+    _classifier = classifier!;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rock Identification'),
-      ),
-      body: Column(
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(
-            child: _isImageLoaded ? Image.file(_pickedImage) : Container(),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: _buildTitle(),
           ),
-          ElevatedButton(
-            onPressed: _captureImage,
-            child: const Text('Capture Image'),
+          const SizedBox(height: 20),
+          _buildPhotolView(),
+          const SizedBox(height: 10),
+          _buildResultView(),
+          const Spacer(flex: 5),
+          _buildPickPhotoButton(
+            title: 'Take a photo',
+            source: ImageSource.camera,
           ),
-          ElevatedButton(
-            onPressed: _pickImageFromGallery,
-            child: const Text('Pick Image from Gallery'),
+          _buildPickPhotoButton(
+            title: 'Pick from gallery',
+            source: ImageSource.gallery,
           ),
-          const Text(
-            'Results:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _outputClasses.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('${_outputClasses[index]}'),
-                );
-              },
-            ),
-          ),
+          const Spacer(),
         ],
       ),
+    );
+  }
+
+  Widget _buildPhotolView() {
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        RockPhotoView(file: _selectedImageFile),
+        _buildAnalyzingText(),
+      ],
+    );
+  }
+
+  Widget _buildAnalyzingText() {
+    if (!_isAnalyzing) {
+      return const SizedBox.shrink();
+    }
+    return const Text('Analyzing...');
+  }
+
+  Widget _buildTitle() {
+    return const Text(
+      'Rock Idenitifier',
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget _buildPickPhotoButton({
+    required ImageSource source,
+    required String title,
+  }) {
+    return TextButton(
+      onPressed: () => _onPickPhoto(source),
+      child: Container(
+        width: 300,
+        height: 50,
+        child: Center(
+            child: Text(title,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w600,
+                ))),
+      ),
+    );
+  }
+
+  void _setAnalyzing(bool flag) {
+    setState(() {
+      _isAnalyzing = flag;
+    });
+  }
+
+  void _onPickPhoto(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile == null) {
+      return;
+    }
+
+    final imageFile = File(pickedFile.path);
+    setState(() {
+      _selectedImageFile = imageFile;
+    });
+
+    _analyzeImage(imageFile);
+  }
+
+  void _analyzeImage(File image) {
+    _setAnalyzing(true);
+
+    final imageInput = img.decodeImage(image.readAsBytesSync())!;
+
+    final resultCategory = _classifier.predict(imageInput);
+
+    final result = resultCategory.score >= 0.8
+        ? _ResultStatus.found
+        : _ResultStatus.notFound;
+    final plantLabel = resultCategory.label;
+    final accuracy = resultCategory.score;
+
+    _setAnalyzing(false);
+
+    setState(() {
+      _resultStatus = result;
+      _plantLabel = plantLabel;
+      _accuracy = accuracy;
+    });
+  }
+
+  Widget _buildResultView() {
+    var title = '';
+
+    if (_resultStatus == _ResultStatus.notFound) {
+      title = 'Fail to recognise';
+    } else if (_resultStatus == _ResultStatus.found) {
+      title = _plantLabel;
+    } else {
+      title = '';
+    }
+
+    //
+    var accuracyLabel = '';
+    if (_resultStatus == _ResultStatus.found) {
+      accuracyLabel = 'Accuracy: ${(_accuracy * 100).toStringAsFixed(2)}%';
+    }
+
+    return Column(
+      children: [Text(title), const SizedBox(height: 10), Text(accuracyLabel)],
     );
   }
 }
