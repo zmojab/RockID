@@ -1,11 +1,16 @@
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:image/image.dart' as img;
 
 class RockID extends StatefulWidget {
+  const RockID({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _RockIDState createState() => _RockIDState();
 }
 
@@ -53,8 +58,7 @@ class _RockIDState extends State<RockID> {
 
   void _pickImageFromGallery() async {
     try {
-      final image =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image != null) {
         setState(() {
           _pickedImage = File(image.path);
@@ -69,12 +73,29 @@ class _RockIDState extends State<RockID> {
 
   void _classifyImage(File imageFile) async {
     try {
-      final inputImage = imageFile.readAsBytesSync();
+      final imageBytes = await imageFile.readAsBytes();
+      final image = img.decodeImage(imageBytes);
+
+      // Resize the image to the target size
+      final resizedImage = img.copyResize(image!, width: 224, height: 224);
+
+      // Convert the image to RGB format if it's not already in RGB
+      // ignore: unrelated_type_equality_checks
+      final rgbImage = resizedImage.channels == 4
+          ? img.copyResize(resizedImage, width: 224, height: 224)
+          : resizedImage;
+
+      // Normalize the pixel values to the range [-1, 1]
+      final normalizedImage =
+          rgbImage.data.map((pixel) => (pixel - 127.5) / 127.5).toList();
+
+      final input = Float32List.fromList(normalizedImage);
+
       final inputs = <String, dynamic>{};
-      inputs['input'] = inputImage;
+      inputs['input'] = input;
 
       final outputs = <String, dynamic>{};
-      outputs['output'] = List.filled(1 * 1000, 0.0);
+      outputs['output'] = List.filled(1 * 17, 0.0);
 
       _interpreter.run(inputs, outputs);
 
