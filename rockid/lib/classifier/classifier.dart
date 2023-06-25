@@ -170,16 +170,16 @@ class Classifier {
 
     // #3
     final shapeLength = _model.inputShape[1];
-    final resizeOp = ResizeOp(shapeLength, shapeLength, ResizeMethod.BILINEAR);
+    final resizeOp = ResizeOp(224, 224, ResizeMethod.BILINEAR);
 
     // #4
-    final normalizeOp = NormalizeOp(127.5, 127.5);
+    //final normalizeOp = NormalizeOp(127.5, 127.5);
 
     // #5
     final imageProcessor = ImageProcessorBuilder()
         .add(cropOp)
         .add(resizeOp)
-        .add(normalizeOp)
+        //.add(normalizeOp)
         .build();
 
     imageProcessor.process(inputTensor);

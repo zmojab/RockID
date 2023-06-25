@@ -147,7 +147,7 @@ class _RockIDState extends State<RockID> {
     return TextButton(
       onPressed: () => _onPickPhoto(source),
       child: Container(
-        width: 300,
+        width: 200,
         height: 50,
         child: Center(
             child: Text(title,
