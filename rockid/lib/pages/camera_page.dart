@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
@@ -11,9 +10,6 @@ class RockID extends StatefulWidget {
 }
 
 class _RockIDState extends State<RockID> {
-  CameraController? _cameraController;
-  bool _isCameraInitialized = false;
-  late List<CameraDescription> _availableCameras;
   late String _modelPath;
   late Interpreter _interpreter;
   late File _pickedImage;
@@ -23,19 +19,16 @@ class _RockIDState extends State<RockID> {
   @override
   void initState() {
     super.initState();
-    _loadModel().then((value) {
-      _initCamera();
-    });
+    _loadModel();
   }
 
   @override
   void dispose() {
-    _cameraController?.dispose();
     super.dispose();
   }
 
   Future<void> _loadModel() async {
-    _modelPath = 'lib/assets/78%.tflite'; // Replace with your model path
+    _modelPath = 'lib/assets/78%.tflite';
     try {
       _interpreter = await Interpreter.fromAsset(_modelPath);
     } catch (e) {
@@ -43,36 +36,25 @@ class _RockIDState extends State<RockID> {
     }
   }
 
-  Future<void> _initCamera() async {
-    _availableCameras = await availableCameras();
-    if (_availableCameras.isNotEmpty) {
-      _cameraController =
-          CameraController(_availableCameras[0], ResolutionPreset.medium);
-      await _cameraController!.initialize();
-      setState(() {
-        _isCameraInitialized = true;
-      });
-    }
-  }
-
   void _captureImage() async {
-    if (_isCameraInitialized) {
-      try {
-        final image = await _cameraController!.takePicture();
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image != null) {
         setState(() {
           _pickedImage = File(image.path);
           _isImageLoaded = true;
         });
         _classifyImage(_pickedImage);
-      } catch (e) {
-        print('Failed to capture image: $e');
       }
+    } catch (e) {
+      print('Failed to capture image: $e');
     }
   }
 
   void _pickImageFromGallery() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image != null) {
         setState(() {
           _pickedImage = File(image.path);
