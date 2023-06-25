@@ -14,7 +14,7 @@ class _NavBarState extends State<NavBar> {
   List<Widget> _pages = [
     HomePage(),
     ProfilePage(),
-    CameraScreen(),
+    RockID(),
   ];
 
   void _onItemTapped(int index) {
@@ -40,7 +40,7 @@ class _NavBarState extends State<NavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.camera),
             label: 'Camera',
-          ),// Add more BottomNavigationBarItems as needed
+          ), // Add more BottomNavigationBarItems as needed
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
