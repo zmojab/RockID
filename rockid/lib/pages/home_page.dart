@@ -31,7 +31,7 @@ Future<void> signUserOut() async {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  //int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
     ProfilePage(),
