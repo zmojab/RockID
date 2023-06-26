@@ -34,11 +34,18 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rockid/classifier/rock_view.dart';
 import '../classifier/classifier.dart';
 import '../classifier/styles.dart';
+import 'package:rockid/pages/profile_page.dart';
+import 'package:rockid/pages/camera_page.dart';
+import 'package:rockid/pages/Home_page.dart';
 
 const _labelsFileName = 'assets/labels.txt';
 const _modelFileName = '78%.tflite';
 //const _labelsFileName = 'assets/labels1.txt';
 //const _modelFileName = 'model_unquant.tflite';
+final List<Widget> _pages = [
+  const HomePage(),
+  const ProfilePage(),
+];
 
 class RockID extends StatefulWidget {
   const RockID({super.key});
@@ -87,32 +94,53 @@ class _RockIDState extends State<RockID> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: kColorLightbeige,
-      width: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: _buildTitle(),
+    return Scaffold(
+      body: Container(
+        color: kColorLightbeige,
+        width: double.infinity,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: _buildTitle(),
+            ),
+            const SizedBox(height: 20),
+            _buildPhotolView(),
+            const SizedBox(height: 10),
+            _buildResultView(),
+            const Spacer(flex: 5),
+            _buildPickPhotoButton(
+              title: 'Take a photo',
+              source: ImageSource.camera,
+            ),
+            _buildPickPhotoButton(
+              title: 'Upload from gallery',
+              source: ImageSource.gallery,
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-          const SizedBox(height: 20),
-          _buildPhotolView(),
-          const SizedBox(height: 10),
-          _buildResultView(),
-          const Spacer(flex: 5),
-          _buildPickPhotoButton(
-            title: 'Take a photo',
-            source: ImageSource.camera,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
-          _buildPickPhotoButton(
-            title: 'Upload from gallery',
-            source: ImageSource.gallery,
-          ),
-          const Spacer(),
         ],
+        onTap: (index) {
+          // Update the state and rebuild the widget
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => _pages[index]),
+          );
+        },
       ),
     );
   }

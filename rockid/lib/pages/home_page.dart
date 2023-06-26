@@ -33,7 +33,6 @@ Future<void> signUserOut() async {
 class _HomePageState extends State<HomePage> {
   //int _selectedIndex = 0;
   final List<Widget> _pages = [
-    HomePage(),
     ProfilePage(),
     RockID(),
   ];
@@ -54,10 +53,6 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
