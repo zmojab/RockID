@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rockid/pages/Home_page.dart';
-import 'package:rockid/pages/camera_page.dart';
+//import 'package:rockid/pages/Home_page.dart';
+//import 'package:rockid/pages/camera_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,9 +14,9 @@ final user = FirebaseAuth.instance.currentUser!;
 String email = user.email!;
 
 class _ProfilePageState extends State<ProfilePage> {
-  int _selectedIndex = 0;
+  //int _selectedIndex = 0;
 
-  final List<Widget> _pages = [HomePage(), RockID()];
+  //final List<Widget> _pages = [HomePage(), RockID()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

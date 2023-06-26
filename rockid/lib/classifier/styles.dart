@@ -26,31 +26,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import 'dart:io';
 import 'package:flutter/material.dart';
-import '../classifier/styles.dart';
 
-class RockPhotoView extends StatelessWidget {
-  final File? file;
-  const RockPhotoView({super.key, this.file});
+const kMainFont = 'Roboto';
+const kButtonFont = 'Roboto';
+const kDisplayFont = 'SquadaOne';
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 250,
-      height: 250,
-      color: Colors.blueGrey,
-      child: (file == null)
-          ? _buildEmptyView()
-          : Image.file(file!, fit: BoxFit.cover),
-    );
-  }
+const kColorGreen = Color(0xFF395144);
+const kColorLightGreen = Color(0XFF4E6C50);
+const kColorBrown = Color(0XFFAA8B56);
+const kColorLightYellow = Color(0xFFF0EBCE);
 
-  Widget _buildEmptyView() {
-    return const Center(
-        child: Text(
-      'Please pick a photo',
-      style: kAnalyzingTextStyle,
-    ));
-  }
-}
+const kColorRed = Color(0xFFD96666);
+const kColorLightRed = Color(0xFFF2CECE);
+const kColorLightGray = Color(0xFFDDDDDD);
+const kColorLightbeige = Color.fromARGB(240, 246, 244, 241);
+
+const kColorbrown = Color.fromARGB(230, 109, 64, 46);
+
+const kColorHunterGreen = Color(0xFF386641);
+const kColorMayGreen = Color(0xFF6a994e);
+const kColorAndroidGreen = Color(0xFFa7c957);
+const kColorEggshell = Color(0xFFf2e8cf);
+const kColorBitterSweetShimmer = Color(0xFFbc4749);
+
+const kBgColor = kColorGreen;
+
+const kTitleTextStyle = TextStyle(
+  fontFamily: kDisplayFont,
+  fontSize: 50.0,
+  color: Colors.black,
+  decoration: TextDecoration.none,
+);
+
+const kAnalyzingTextStyle = TextStyle(
+    fontFamily: kMainFont,
+    fontSize: 25.0,
+    color: Colors.white,
+    decoration: TextDecoration.none);
+
+const kResultTextStyle = TextStyle(
+    fontFamily: kDisplayFont,
+    fontSize: 25.0,
+    color: Colors.black,
+    decoration: TextDecoration.none);
+
+const kResultRatingTextStyle = TextStyle(
+    fontFamily: kMainFont,
+    fontSize: 18.0,
+    color: Colors.black,
+    decoration: TextDecoration.none);
