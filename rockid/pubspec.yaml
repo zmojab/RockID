@@ -40,7 +40,7 @@ dependencies:
   image: ^3.0.2
   image_picker: ^0.8.9
   tflite_flutter: ^0.9.0
-  tflite_flutter_helper: 
+  tflite_flutter_helper: ^0.2.1
   
   google_fonts:
   camera: ^0.10.5+2
