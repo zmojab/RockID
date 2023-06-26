@@ -13,36 +13,50 @@ class HomePage extends StatefulWidget {
 final user = FirebaseAuth.instance.currentUser!;
 
 //firebases sign out method is asynchronous so making signUseOut asynchronous
-Future<void> signUserOut() async{
+Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
     final _providerData = _auth.currentUser!.providerData;
     if (_providerData.isNotEmpty) {
       //if user signed in through google
-      if(_providerData[0].providerId.toLowerCase().contains('google')) {
+      if (_providerData[0].providerId.toLowerCase().contains('google')) {
         GoogleSignIn googleSignIn = GoogleSignIn();
         googleSignIn.signOut();
       }
-    } 
+    }
     await _auth.signOut();
-   
-  } catch(e) {
+  } catch (e) {
     print(e);
   }
-  
 }
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [HomePage(), ProfilePage(), CameraScreen(),];
+  final List<Widget> _pages = [
+    HomePage(),
+    CameraScreen(),
+    ProfilePage(),
+  ];
   //void _selectPage(int index) {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home Page'), centerTitle: true, actions: [
-        IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))
-      ]),
+      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      appBar: AppBar(
+        title: Text(
+          'Home Page',
+          style: TextStyle(fontSize: 30),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: signUserOut,
+            icon: Icon(Icons.logout),
+          ),
+        ],
+        backgroundColor: Colors.brown,
+      ),
       body: Center(
         child: Text(
           'Home Page',
@@ -53,16 +67,16 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Colors.brown),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.camera, color: Colors.grey),
+            label: 'Camera',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
-            label: 'Camera',
+            icon: Icon(Icons.person, color: Colors.grey),
+            label: 'Profile',
           ),
         ],
         onTap: (index) {

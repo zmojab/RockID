@@ -67,6 +67,8 @@ flutter:
      - lib/images/google_logo.png
      - lib/images/facebook_logo.png
      - lib/images/Blank_profile (1).png
+     - lib/images/RockID.png
+     - lib/images/rockpic.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

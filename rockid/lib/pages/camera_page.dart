@@ -8,14 +8,14 @@ class CameraScreen extends StatefulWidget {
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
-
 }
+
 class _CameraScreenState extends State<CameraScreen> {
   late List<CameraDescription> cameras;
   CameraController? cameraController;
 
   int _selectedIndex = 0;
-  final List<Widget> _pages = [HomePage(), ProfilePage()];
+  final List<Widget> _pages = [HomePage(), CameraScreen(), ProfilePage()];
 
   @override
   void initState() {
@@ -26,20 +26,16 @@ class _CameraScreenState extends State<CameraScreen> {
   void startCamera() async {
     cameras = await availableCameras();
 
-    cameraController = CameraController(
-      cameras[0], 
-      ResolutionPreset.low,
-      enableAudio: false
-      );
+    cameraController =
+        CameraController(cameras[0], ResolutionPreset.low, enableAudio: false);
 
     await cameraController?.initialize().then((value) {
-      if(!mounted) {
+      if (!mounted) {
         return;
       }
       setState(() {});
     }).catchError((e) {
       print('Error initializing camera: $e');
-  
     });
   }
 
@@ -48,47 +44,53 @@ class _CameraScreenState extends State<CameraScreen> {
     cameraController?.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    if(cameraController != null && cameraController!.value.isInitialized) {
+    if (cameraController != null && cameraController!.value.isInitialized) {
       print("camera initialized!");
       return Scaffold(
+        backgroundColor: Color.fromARGB(255, 255, 237, 223),
         body: Stack(
           children: [
             CameraPreview(cameraController!),
             GestureDetector(
               onTap: () {
                 cameraController!.takePicture().then((XFile? file) {
-                  if(mounted) {
-                    if(file != null) {
+                  if (mounted) {
+                    if (file != null) {
                       print("Picture saved to ${file.path}");
                     }
                   }
                 });
               },
-              child: button(Icons.camera_alt_outlined, Alignment.bottomCenter), 
+              child: button(Icons.camera_alt_outlined, Alignment.bottomCenter),
             )
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        onTap: (index) {
-          // Update the state and rebuild the widget
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => _pages[index]),
-          );
-        },
-      ),
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.grey),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera, color: Colors.brown),
+              label: 'Camera',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, color: Colors.grey),
+              label: 'Profile',
+            ),
+          ],
+          onTap: (index) {
+            // Update the state and rebuild the widget
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => _pages[index]),
+            );
+          },
+        ),
       );
     } else {
       return const SizedBox();
@@ -101,8 +103,8 @@ Widget button(IconData icon, Alignment alignment) {
     alignment: alignment,
     child: Container(
       margin: const EdgeInsets.only(
-          left: 20,
-          bottom: 20,
+        left: 20,
+        bottom: 20,
       ),
       height: 50,
       width: 50,
