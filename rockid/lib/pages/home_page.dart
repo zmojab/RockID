@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
-    CameraScreen(),
+    RockID(),
     ProfilePage(),
   ];
   //void _selectPage(int index) {}
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera, color: Colors.grey),
-            label: 'Camera',
+            label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.grey),

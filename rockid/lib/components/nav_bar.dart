@@ -15,6 +15,7 @@ class _NavBarState extends State<NavBar> {
     HomePage(),
     CameraScreen(),
     ProfilePage(),
+
   ];
 
   void _onItemTapped(int index) {

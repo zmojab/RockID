@@ -15,9 +15,11 @@ final user = FirebaseAuth.instance.currentUser!;
 String email = user.email!;
 
 class _ProfilePageState extends State<ProfilePage> {
-  int _selectedIndex = 0;
+  //int _selectedIndex = 0;
 
-  final List<Widget> _pages = [HomePage(), CameraScreen(), ProfilePage()];
+
+  final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera, color: Colors.grey),
-            label: 'Camera',
+            label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: Colors.brown),
