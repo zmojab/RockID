@@ -77,6 +77,8 @@ flutter:
      - lib/images/google_logo.png
      - lib/images/facebook_logo.png
      - lib/images/Blank_profile (1).png
+     - lib/images/RockID.png
+     - lib/images/rockpic.png
      #- lib/assets/78%.tflite
      #- lib/assets/labels.txt
      #- lib\assets\model_unquant.tflite

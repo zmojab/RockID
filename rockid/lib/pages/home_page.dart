@@ -31,19 +31,32 @@ Future<void> signUserOut() async {
 }
 
 class _HomePageState extends State<HomePage> {
-  //int _selectedIndex = 0;
+  int _selectedIndex = 0;
   final List<Widget> _pages = [
-    ProfilePage(),
+    HomePage(),
     RockID(),
+    ProfilePage(),
   ];
   //void _selectPage(int index) {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home Page'), centerTitle: true, actions: [
-        IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))
-      ]),
+      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      appBar: AppBar(
+        title: Text(
+          'Home Page',
+          style: TextStyle(fontSize: 30),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: signUserOut,
+            icon: Icon(Icons.logout),
+          ),
+        ],
+        backgroundColor: Colors.brown,
+      ),
       body: Center(
         child: Text(
           'Home Page',
@@ -54,12 +67,16 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.home, color: Colors.brown),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.image_sharp),
+            icon: Icon(Icons.camera, color: Colors.grey),
             label: 'Rock Identifier',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.grey),
+            label: 'Profile',
           ),
         ],
         onTap: (index) {
