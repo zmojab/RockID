@@ -33,6 +33,7 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:rockid/classifier/rock_view.dart';
 import '../classifier/classifier.dart';
+import '../classifier/styles.dart';
 
 const _labelsFileName = 'assets/labels.txt';
 const _modelFileName = '78%.tflite';
@@ -59,7 +60,7 @@ class _RockIDState extends State<RockID> {
 
   // Result
   _ResultStatus _resultStatus = _ResultStatus.notStarted;
-  String _plantLabel = ''; // Name of Error Message
+  String _RockLabel = ''; // Name of Error Message
   double _accuracy = 0.0;
 
   late Classifier _classifier;
@@ -87,7 +88,7 @@ class _RockIDState extends State<RockID> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: kColorLightbeige,
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -107,7 +108,7 @@ class _RockIDState extends State<RockID> {
             source: ImageSource.camera,
           ),
           _buildPickPhotoButton(
-            title: 'Pick from gallery',
+            title: 'Upload from gallery',
             source: ImageSource.gallery,
           ),
           const Spacer(),
@@ -130,12 +131,13 @@ class _RockIDState extends State<RockID> {
     if (!_isAnalyzing) {
       return const SizedBox.shrink();
     }
-    return const Text('Analyzing...');
+    return const Text('Analyzing...', style: kAnalyzingTextStyle);
   }
 
   Widget _buildTitle() {
     return const Text(
       'Rock Idenitifier',
+      style: kTitleTextStyle,
       textAlign: TextAlign.center,
     );
   }
@@ -147,13 +149,16 @@ class _RockIDState extends State<RockID> {
     return TextButton(
       onPressed: () => _onPickPhoto(source),
       child: Container(
-        width: 200,
+        width: 300,
         height: 50,
+        color: kColorbrown,
         child: Center(
             child: Text(title,
                 style: const TextStyle(
+                  fontFamily: kButtonFont,
                   fontSize: 20.0,
                   fontWeight: FontWeight.w600,
+                  color: kColorLightbeige,
                 ))),
       ),
     );
@@ -197,7 +202,7 @@ class _RockIDState extends State<RockID> {
 
     setState(() {
       _resultStatus = result;
-      _plantLabel = plantLabel;
+      _RockLabel = plantLabel;
       _accuracy = accuracy;
     });
   }
@@ -208,7 +213,7 @@ class _RockIDState extends State<RockID> {
     if (_resultStatus == _ResultStatus.notFound) {
       title = 'Fail to recognise';
     } else if (_resultStatus == _ResultStatus.found) {
-      title = _plantLabel;
+      title = "This rock is possibly a $_RockLabel";
     } else {
       title = '';
     }
@@ -220,7 +225,11 @@ class _RockIDState extends State<RockID> {
     }
 
     return Column(
-      children: [Text(title), const SizedBox(height: 10), Text(accuracyLabel)],
+      children: [
+        Text(title, style: kResultTextStyle),
+        const SizedBox(height: 10),
+        Text(accuracyLabel, style: kResultRatingTextStyle),
+      ],
     );
   }
 }
