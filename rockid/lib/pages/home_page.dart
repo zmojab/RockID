@@ -12,24 +12,6 @@ class HomePage extends StatefulWidget {
 
 final user = FirebaseAuth.instance.currentUser!;
 
-//firebases sign out method is asynchronous so making signUseOut asynchronous
-Future<void> signUserOut() async {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  try {
-    final _providerData = _auth.currentUser!.providerData;
-    if (_providerData.isNotEmpty) {
-      //if user signed in through google
-      if (_providerData[0].providerId.toLowerCase().contains('google')) {
-        GoogleSignIn googleSignIn = GoogleSignIn();
-        googleSignIn.signOut();
-      }
-    }
-    await _auth.signOut();
-  } catch (e) {
-    print(e);
-  }
-}
-
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
@@ -44,17 +26,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       appBar: AppBar(
+        // automaticallyImplyLeading: false,
         title: Text(
           'Home Page',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: signUserOut,
-            icon: Icon(Icons.logout),
-          ),
-        ],
+        actions: [],
         backgroundColor: Colors.brown,
       ),
       body: Center(
@@ -65,6 +43,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.brown),

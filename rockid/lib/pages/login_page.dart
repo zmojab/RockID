@@ -88,8 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 25),
                     const SizedBox(height: 25),
                     CircleAvatar(
-                      radius: 100.0,
-                      backgroundImage: NetworkImage('lib/images/RockID.png'),
+                      radius: 40.0,
+                      backgroundImage: AssetImage('lib/images/RockID.png'),
                       backgroundColor: Colors.transparent,
                     ),
                     const Text(
