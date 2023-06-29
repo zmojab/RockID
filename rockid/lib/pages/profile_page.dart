@@ -18,6 +18,7 @@ String _occ = "";
 int _rocks = 0;
 final user = FirebaseAuth.instance.currentUser!;
 String email = user.email!;
+String uid = user.uid;
 
 var collection = FirebaseFirestore.instance.collection("users");
 
@@ -50,12 +51,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _set_user_info() async {
     var username = await collection.where("email", isEqualTo: email).get();
+    username.docs[0].id;
     if (username.docs.isNotEmpty) {
       setState(() {
         _username = username.docs[0].data()['username'];
+
         _occ = username.docs[0].data()['occupation'];
         _rocks = username.docs[0].data()['number of rocks found'];
-        print(_rocks);
       });
     }
   }

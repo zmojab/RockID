@@ -9,8 +9,10 @@ class EditProfilePage extends StatefulWidget {
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
+final user = FirebaseAuth.instance.currentUser!;
+String email = user.email!;
+
 class _EditProfilePageState extends State<EditProfilePage> {
-  final user = FirebaseAuth.instance.currentUser!;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late TextEditingController usernameController;
@@ -28,7 +30,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> fetchUserProfile() async {
     try {
-      final snapshot = await _firestore.collection('users').doc(user.uid).get();
+      var docID = await _firestore
+          .collection("users")
+          .where("email", isEqualTo: email)
+          .get();
+      final snapshot =
+          await _firestore.collection('users').doc(docID.docs[0].id).get();
 
       if (snapshot.exists) {
         final data = snapshot.data() as Map<String, dynamic>;
@@ -45,7 +52,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> updateProfile() async {
     try {
-      await _firestore.collection('users').doc(user.uid).update({
+      var docID = await _firestore
+          .collection("users")
+          .where("email", isEqualTo: email)
+          .get();
+
+      await _firestore.collection("users").doc(docID.docs[0].id).update({
         'username': usernameController.text.trim(),
         'occupation': occupationController.text.trim(),
       });
@@ -83,28 +95,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            SizedBox(height: 16.0),
-            TextField(
-              controller: occupationController,
-              decoration: InputDecoration(labelText: 'Occupation'),
-            ),
-            SizedBox(height: 24.0),
-            ElevatedButton(
-              onPressed: updateProfile,
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(200, 60),
-                backgroundColor:
-                    Colors.brown, // Set the button background color
+        child: Expanded(
+          child: Column(
+            children: [
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(labelText: 'Username'),
               ),
-              child: const Text('SAVE', style: TextStyle(fontSize: 20)),
-            )
-          ],
+              SizedBox(height: 16.0),
+              TextField(
+                controller: occupationController,
+                decoration: InputDecoration(labelText: 'Occupation'),
+              ),
+              SizedBox(height: 24.0),
+              ElevatedButton(
+                onPressed: updateProfile,
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 60),
+                  backgroundColor:
+                      Colors.brown, // Set the button background color
+                ),
+                child: const Text('SAVE', style: TextStyle(fontSize: 20)),
+              ),
+            ],
+          ),
         ),
       ),
     );
