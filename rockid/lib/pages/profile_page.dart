@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _set_user_info() async {
-    var username = await collection.where("email", isEqualTo: email).get();
+    var username = await collection.where("UID", isEqualTo: user.uid).get();
     username.docs[0].id;
     if (username.docs.isNotEmpty) {
       setState(() {

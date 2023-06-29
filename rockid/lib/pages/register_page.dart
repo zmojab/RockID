@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void addUserEntry(String email) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-
+    //final user = FirebaseAuth.instance.currentUser!;
     // Get a reference to the collection
     CollectionReference usersCollection = firestore.collection('users');
 
@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     // Set the data for the new user entry
     newUserRef.set({
-      'email': email,
+      'UID': "test",
       'username': '',
       'occupation': '',
       'number of rocks found': 0,
@@ -111,10 +111,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   backgroundColor: Colors.transparent,
                 ),
                 const Text(
-                  'registeration Form',
+                  'Registeration',
                   style: TextStyle(
                     color: Colors.brown,
-                    fontSize: 50,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -210,9 +210,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Already have an account?',
-                      style: TextStyle(color: Colors.lightBlue),
+                      style: TextStyle(color: Colors.brown),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
@@ -220,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: const Text(
                         'Login now',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.brown,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

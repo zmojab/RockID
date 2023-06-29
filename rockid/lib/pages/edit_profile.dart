@@ -54,7 +54,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     try {
       var docID = await _firestore
           .collection("users")
-          .where("email", isEqualTo: email)
+          .where("UID", isEqualTo: user.uid)
           .get();
 
       await _firestore.collection("users").doc(docID.docs[0].id).update({
