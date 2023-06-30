@@ -77,7 +77,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       // Get the download URL of the uploaded image
       var imageUrl = await storageReference.getDownloadURL();
-
+      storageReference.getData();
       setState(() {
         _uploadedImageUrl = imageUrl;
         updateUrl();
@@ -86,22 +86,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> updateOccupation() async {
-    try {
-      var docID = await _firestore
-          .collection("users")
-          .where("UID", isEqualTo: user.uid)
-          .get();
+    if (occupationController.text.trim().length > 2) {
+      try {
+        var docID = await _firestore
+            .collection("users")
+            .where("UID", isEqualTo: user.uid)
+            .get();
 
-      await _firestore.collection("users").doc(docID.docs[0].id).update({
-        'occupation': occupationController.text.trim(),
-      });
+        await _firestore.collection("users").doc(docID.docs[0].id).update({
+          'occupation': occupationController.text.trim(),
+        });
 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('occupation updated successfully')),
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update occupation')),
+        );
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('occupation updated successfully')),
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update occupation')),
+        const SnackBar(
+            content: Text(
+                'Failed to update occupation need to be more than 2 characters')),
       );
     }
   }
