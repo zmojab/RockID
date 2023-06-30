@@ -10,6 +10,23 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
+Future<void> signUserOut() async {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  try {
+    final _providerData = _auth.currentUser!.providerData;
+    if (_providerData.isNotEmpty) {
+      //if user signed in through google
+      if (_providerData[0].providerId.toLowerCase().contains('google')) {
+        GoogleSignIn googleSignIn = GoogleSignIn();
+        googleSignIn.signOut();
+      }
+    }
+    await _auth.signOut();
+  } catch (e) {
+    print(e);
+  }
+}
+
 final user = FirebaseAuth.instance.currentUser!;
 
 class _HomePageState extends State<HomePage> {
@@ -32,12 +49,19 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        actions: [],
+        actions: [
+          IconButton(
+            onPressed: signUserOut,
+            icon: Icon(
+              Icons.logout,
+            ),
+          ),
+        ],
         backgroundColor: Colors.brown,
       ),
       body: Center(
         child: Text(
-          'Home Page',
+          'Welcome Back',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 25),
         ),

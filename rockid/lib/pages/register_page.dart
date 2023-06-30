@@ -25,16 +25,18 @@ class _RegisterPageState extends State<RegisterPage> {
     //final user = FirebaseAuth.instance.currentUser!;
     // Get a reference to the collection
     CollectionReference usersCollection = firestore.collection('users');
-
+    final user = FirebaseAuth.instance.currentUser!;
     // Create a new document with a unique ID
     DocumentReference newUserRef = usersCollection.doc();
 
     // Set the data for the new user entry
     newUserRef.set({
-      'UID': "test",
+      'UID': user.uid,
       'username': '',
       'occupation': '',
       'number of rocks found': 0,
+      'user_profile_url':
+          'https://firebasestorage.googleapis.com/v0/b/rockid-30d56.appspot.com/o/Profile_Images%2FBlank_profile%20(1).png?alt=media&token=36582d23-62ae-460b-b9f4-74e5c9227a3b',
     }).then((value) {
       print('User entry created successfully');
     }).catchError((error) {

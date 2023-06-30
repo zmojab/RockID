@@ -1,17 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rockid/pages/Home_page.dart';
+import 'package:rockid/pages/login_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+
+//default image
+String _url = "";
 
 String _username = "";
 String _occ = "";
@@ -40,9 +46,8 @@ Future<void> signUserOut() async {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  //int _selectedIndex = 0;
-
   final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
+
   @override
   void initState() {
     super.initState();
@@ -51,13 +56,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _set_user_info() async {
     var username = await collection.where("UID", isEqualTo: user.uid).get();
-    username.docs[0].id;
+
     if (username.docs.isNotEmpty) {
       setState(() {
         _username = username.docs[0].data()['username'];
-
         _occ = username.docs[0].data()['occupation'];
         _rocks = username.docs[0].data()['number of rocks found'];
+        _url = username.docs[0].data()['user_profile_url'];
       });
     }
   }
@@ -85,13 +90,13 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: SafeArea(
         child: Center(
-          child: Column(
+          child: SingleChildScrollView(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 80,
-                  backgroundImage:
-                      AssetImage('lib/images/Blank_profile (1).png'),
+                  backgroundImage: NetworkImage(_url),
                 ),
                 Text(
                   email,
@@ -112,7 +117,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Card(
                     color: Color.fromARGB(255, 255, 237, 223),
                     margin: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 25.0),
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
                     child: ListTile(
                       leading: const Icon(
                         Icons.person,
@@ -126,11 +133,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(_username,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          )),
+                      subtitle: Text(
+                        _username,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -142,7 +151,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Card(
                     color: Color.fromARGB(255, 255, 237, 223),
                     margin: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 25.0),
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
                     child: ListTile(
                       leading: const Icon(
                         Icons.work,
@@ -156,11 +167,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(_occ,
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          )),
+                      subtitle: Text(
+                        _occ,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -172,45 +185,51 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Card(
                     color: Color.fromARGB(255, 255, 237, 223),
                     margin: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 25.0),
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
                     child: ListTile(
                       leading: const Icon(
                         Icons.search,
                         color: Colors.brown,
                       ),
                       title: const Text(
-                        'Rocks Found:',
+                        'ROCKS FOUND:',
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: Text(_rocks.toString(),
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          )),
+                      subtitle: Text(
+                        _rocks.toString(),
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => EditProfilePage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(200, 60),
+                    fixedSize: const Size(150, 50),
                     backgroundColor:
                         Colors.brown, // Set the button background color
                   ),
                   child: const Text('EDIT PROFILE',
-                      style: TextStyle(fontSize: 20)),
-                )
-              ]),
+                      style: TextStyle(fontSize: 15)),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
