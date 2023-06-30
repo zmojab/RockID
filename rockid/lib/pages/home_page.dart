@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -10,9 +11,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-final user = FirebaseAuth.instance.currentUser!;
-
-//firebases sign out method is asynchronous so making signUseOut asynchronous
 Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
@@ -30,7 +28,46 @@ Future<void> signUserOut() async {
   }
 }
 
+final user = FirebaseAuth.instance.currentUser!;
+
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    addUserEntry();
+    super.initState();
+  }
+
+  Future<void> addUserEntry() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference usersCollection = firestore.collection('users');
+    final user = FirebaseAuth.instance.currentUser!;
+
+    final QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .where("UID",
+            isEqualTo: user.uid) // Check if UID matches the current user
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      // If no document with matching UID exists, create a new entry
+      DocumentReference newUserRef = usersCollection.doc();
+      newUserRef.set({
+        'UID': user.uid,
+        'username': '',
+        'occupation': '',
+        'number of rocks found': 0,
+        'user_profile_url':
+            'https://firebasestorage.googleapis.com/v0/b/rockid-30d56.appspot.com/o/Profile_Images%2FBlank_profile%20(1).png?alt=media&token=36582d23-62ae-460b-b9f4-74e5c9227a3b',
+      }).then((value) {
+        print('User entry created successfully');
+      }).catchError((error) {
+        print('Error creating user entry: $error');
+      });
+    } else {
+      print('User entry already exists');
+    }
+  }
+
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
@@ -44,6 +81,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       appBar: AppBar(
+        // automaticallyImplyLeading: false,
         title: Text(
           'Home Page',
           style: TextStyle(fontSize: 30),
@@ -52,19 +90,22 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: signUserOut,
-            icon: Icon(Icons.logout),
+            icon: Icon(
+              Icons.logout,
+            ),
           ),
         ],
         backgroundColor: Colors.brown,
       ),
       body: Center(
         child: Text(
-          'Home Page',
+          'Welcome Back',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 25),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.brown),

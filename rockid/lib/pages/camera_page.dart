@@ -40,10 +40,10 @@ import 'package:rockid/pages/Home_page.dart';
 
 const _labelsFileName = 'assets/labels.txt';
 const _modelFileName = '78%.tflite';
-//const _labelsFileName = 'assets/labels1.txt';
-//const _modelFileName = 'model_unquant.tflite';
+
 final List<Widget> _pages = [
   const HomePage(),
+  const RockID(),
   const ProfilePage(),
 ];
 
@@ -95,16 +95,24 @@ class _RockIDState extends State<RockID> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Rock Identifier',
+          style: TextStyle(fontSize: 30),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.brown,
+      ),
       body: Container(
-        color: kColorLightbeige,
+        color: Color.fromARGB(255, 255, 237, 223),
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             const Spacer(),
-            Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: _buildTitle(),
+            const Padding(
+              padding: EdgeInsets.only(top: 30),
             ),
             const SizedBox(height: 20),
             _buildPhotolView(),
@@ -124,13 +132,19 @@ class _RockIDState extends State<RockID> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.grey,
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Colors.grey),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.camera, color: Colors.brown),
+            label: 'Rock Identifier',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.grey),
             label: 'Profile',
           ),
         ],
