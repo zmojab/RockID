@@ -198,63 +198,65 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            if (_image != null)
-              Image.file(
-                _image!,
-                height: 200,
+        child: Expanded(
+          child: ListView(
+            children: [
+              if (_image != null)
+                Image.file(
+                  _image!,
+                  height: 200,
+                ),
+              ElevatedButton(
+                onPressed: _uploadImage,
+                child: Text('Upload Profile Picture'),
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 50),
+                  backgroundColor: Colors.brown,
+                ),
               ),
-            ElevatedButton(
-              onPressed: _uploadImage,
-              child: Text('Upload Profile Picture'),
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(200, 50),
-                backgroundColor: Colors.brown,
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: usernameController,
+                      decoration: InputDecoration(labelText: 'Username'),
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+                  ElevatedButton(
+                    onPressed: updateUsername,
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(80, 40),
+                      backgroundColor: Colors.brown,
+                    ),
+                    child: Text('Update'),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(labelText: 'Username'),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: occupationController,
+                      decoration: InputDecoration(labelText: 'Occupation'),
+                    ),
                   ),
-                ),
-                SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updateUsername,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(80, 40),
-                    backgroundColor: Colors.brown,
+                  SizedBox(width: 8.0),
+                  ElevatedButton(
+                    onPressed: updateOccupation,
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(80, 40),
+                      backgroundColor: Colors.brown,
+                    ),
+                    child: Text('Update'),
                   ),
-                  child: Text('Update'),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: occupationController,
-                    decoration: InputDecoration(labelText: 'Occupation'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updateOccupation,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(80, 40),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Update'),
-                ),
-              ],
-            ),
-            SizedBox(height: 24.0),
-          ],
+                ],
+              ),
+              SizedBox(height: 24.0),
+            ],
+          ),
         ),
       ),
     );
