@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
+import 'package:rockid/pages/rocks_found_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -98,10 +99,16 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.brown,
       ),
       body: Center(
-        child: Text(
-          'Welcome Back',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 25),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RocksFoundListPage(uid: user.uid),
+              ),
+            );
+          },
+          child: Text('View Rocks Found'),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
