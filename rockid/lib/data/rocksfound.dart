@@ -8,14 +8,32 @@ class RocksFoundCRUD {
   final CollectionReference rocksFoundCollection =
       FirebaseFirestore.instance.collection('rocks_found');
 
-  Future<void> addRockFound(String uid, String rockClassification,
-      String rockImageUrl, bool viewable) async {
+  Future<void> addRockFoundWithLocation(String uid, String rockClassification,
+      String rockImageUrl, double lattitude, double longitude, DateTime dateTime) async {
     try {
       await rocksFoundCollection.doc().set({
         'UID': uid,
         'ROCK_CLASSIFICATION': rockClassification,
         'ROCK_IMAGE_URL': rockImageUrl,
-        'VIEWABLE': viewable,
+        'LATTITUDE': lattitude,
+        'LONGITUDE': longitude,
+        'VIEWABLE': true,
+        'DATETIME': dateTime,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> addRockFoundWithOutLocation(String uid, String rockClassification,
+      String rockImageUrl, DateTime dateTime) async {
+    try {
+      await rocksFoundCollection.doc().set({
+        'UID': uid,
+        'ROCK_CLASSIFICATION': rockClassification,
+        'ROCK_IMAGE_URL': rockImageUrl,
+        'VIEWABLE': false,
+        'DATETIME': dateTime,
       });
     } catch (e) {
       print(e);
