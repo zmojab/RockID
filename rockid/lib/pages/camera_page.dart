@@ -153,6 +153,7 @@ class _RockIDState extends State<RockID> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+
             icon: Icon(Icons.camera, color: Colors.brown),
             label: 'Rock Identifier',
           ),

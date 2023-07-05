@@ -28,6 +28,7 @@ String uid = user.uid;
 
 var collection = FirebaseFirestore.instance.collection("users");
 
+
 Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
