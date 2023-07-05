@@ -72,12 +72,12 @@ class _LoginPageState extends State<LoginPage> {
         child: Stack(
           children: [
             Positioned(
-              top: 0,
+              top: 50,
               left: 0,
               child: Image.asset(
                 ('lib/images/rockpic.png'),
-                width: 100,
-                height: 100,
+                width: 400,
+                height: 1200,
               ),
             ),
             Center(
@@ -85,11 +85,13 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 25),
-                    const SizedBox(height: 25),
-                    CircleAvatar(
-                      radius: 40.0,
-                      backgroundImage: AssetImage('lib/images/RockID.png'),
+
+                    const SizedBox(height: 0),
+                    const SizedBox(height: 0),
+                    const CircleAvatar(
+                      radius: 60.0,
+                      backgroundImage: AssetImage('lib/images/blinking.gif'),
+
                       backgroundColor: Colors.transparent,
                     ),
                     const Text(
@@ -144,14 +146,14 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.grey[400],
+                              color: Colors.brown,
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 10.0),
                             child: Text(
-                              'Or login with',
+                              'Or',
                               style: TextStyle(
                                 color: Colors.brown,
                                 fontSize: 20,
@@ -161,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.grey[400],
+                              color: Colors.brown,
                             ),
                           ),
                         ],
@@ -172,16 +174,13 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // google button
+
                         SquareTile(
                           onTap: () => AuthService().signInWithGoogle(),
                           imagePath: 'lib/images/google_logo.png',
                         ),
-                        SizedBox(width: 25),
-                        // facebook button
-                        SquareTile(
-                          onTap: () {},
-                          imagePath: 'lib/images/facebook_logo.png',
-                        )
+
+                        SizedBox(width: 55),
                       ],
                     ),
                     const SizedBox(height: 50),

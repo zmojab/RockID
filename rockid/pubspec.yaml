@@ -48,8 +48,10 @@ dependencies:
   firebase_auth: ^4.6.2
   firebase_core: ^2.13.1
   google_sign_in: ^6.1.3
+  google_maps_flutter: ^2.3.1
   cloud_firestore: ^4.8.2
   firebase_storage: ^11.2.4
+
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +83,7 @@ flutter:
      - lib/images/Blank_profile (1).png
      - lib/images/RockID.png
      - lib/images/rockpic.png
+     - lib/images/blinking.gif
      #- lib/assets/78%.tflite
      #- lib/assets/labels.txt
      #- lib\assets\model_unquant.tflite
