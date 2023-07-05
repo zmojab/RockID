@@ -17,7 +17,6 @@ String email = user.email!;
 class _ProfilePageState extends State<ProfilePage> {
   //int _selectedIndex = 0;
 
-
   final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
 
   @override

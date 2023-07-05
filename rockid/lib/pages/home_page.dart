@@ -3,22 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
+import 'package:rockid/pages/maps.dart';
+import '../components/square_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 final user = FirebaseAuth.instance.currentUser!;
 
-//firebases sign out method is asynchronous so making signUseOut asynchronous
+// Firebase sign out method is asynchronous, so making signUserOut asynchronous
 Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
     final _providerData = _auth.currentUser!.providerData;
     if (_providerData.isNotEmpty) {
-      //if user signed in through google
+      // If user signed in through Google
       if (_providerData[0].providerId.toLowerCase().contains('google')) {
         GoogleSignIn googleSignIn = GoogleSignIn();
         googleSignIn.signOut();
@@ -37,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     RockID(),
     ProfilePage(),
   ];
-  //void _selectPage(int index) {}
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +59,31 @@ class _HomePageState extends State<HomePage> {
         ],
         backgroundColor: Colors.brown,
       ),
-      body: Center(
-        child: Text(
-          'Home Page',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 25),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MapsPage()),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                EdgeInsets.all(16.0), // Adjust the padding as needed
+              ),
+            ),
+            child: Text(
+              'Maps',
+              style: TextStyle(
+                fontSize: 20.0, // Adjust the font size as needed
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

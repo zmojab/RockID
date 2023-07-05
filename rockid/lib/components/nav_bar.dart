@@ -13,9 +13,8 @@ class _NavBarState extends State<NavBar> {
 
   List<Widget> _pages = [
     HomePage(),
-    CameraScreen(),
+    RockID(),
     ProfilePage(),
-
   ];
 
   void _onItemTapped(int index) {
