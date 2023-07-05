@@ -149,4 +149,77 @@ class RocksFoundCRUD {
       print(e);
     }
   }
+
+  Future<bool> isUIDPresent(String uid) async {
+    try {
+      QuerySnapshot snapshot =
+          await rocksFoundCollection.where('UID', isEqualTo: uid).get();
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<DateTime?> getLatestTimestampForUID(String uid) async {
+    try {
+      QuerySnapshot snapshot = await rocksFoundCollection
+          .where('UID', isEqualTo: uid)
+          .orderBy('DATETIME', descending: true)
+          .limit(1)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        Map<String, dynamic> data =
+            snapshot.docs.first.data() as Map<String, dynamic>;
+        DateTime timestamp = data['DATETIME'].toDate();
+        return timestamp;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<Map<String, int>> getItemCountByClassificationForUID(String uid) async {
+    try {
+      QuerySnapshot snapshot = await rocksFoundCollection
+          .where('UID', isEqualTo: uid)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        Map<String, int> itemCounts = {};
+        for (var doc in snapshot.docs) {
+          Map<String, dynamic> data =
+              doc.data() as Map<String, dynamic>;
+          String classification = data['ROCK_CLASSIFICATION'];
+          itemCounts[classification] = (itemCounts[classification] ?? 0) + 1;
+        }
+        return itemCounts;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return {};
+  }
+  
+  Future<int> getUniqueClassificationCountForUID(String uid) async {
+    try {
+      QuerySnapshot snapshot = await rocksFoundCollection
+          .where('UID', isEqualTo: uid)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        Set<String> uniqueClassifications = Set<String>();
+        for (var doc in snapshot.docs) {
+          Map<String, dynamic> data =
+              doc.data() as Map<String, dynamic>;
+          String classification = data['ROCK_CLASSIFICATION'];
+          uniqueClassifications.add(classification);
+        }
+        return uniqueClassifications.length;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return 0;
+  }
+
 }
