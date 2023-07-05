@@ -161,6 +161,7 @@ class Classifier {
 
   TensorImage _preProcessInput(Image image) {
     // #1
+    //image = Image.rgb(224, 224);
     final inputTensor = TensorImage(_model.inputType);
     inputTensor.loadImage(image);
 

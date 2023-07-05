@@ -13,7 +13,10 @@ class _NavBarState extends State<NavBar> {
 
   List<Widget> _pages = [
     HomePage(),
+
     RockID(),
+    //CameraScreen(),
+    
     ProfilePage(),
   ];
 
