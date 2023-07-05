@@ -8,8 +8,13 @@ class RocksFoundCRUD {
   final CollectionReference rocksFoundCollection =
       FirebaseFirestore.instance.collection('rocks_found');
 
-  Future<void> addRockFoundWithLocation(String uid, String rockClassification,
-      String rockImageUrl, double lattitude, double longitude, DateTime dateTime) async {
+  Future<void> addRockFoundWithLocation(
+      String uid,
+      String rockClassification,
+      String rockImageUrl,
+      double lattitude,
+      double longitude,
+      DateTime dateTime) async {
     try {
       await rocksFoundCollection.doc().set({
         'UID': uid,
@@ -17,6 +22,7 @@ class RocksFoundCRUD {
         'ROCK_IMAGE_URL': rockImageUrl,
         'LATTITUDE': lattitude,
         'LONGITUDE': longitude,
+        'CAN_BE_VIEWED': true,
         'VIEWABLE': true,
         'DATETIME': dateTime,
       });
@@ -25,13 +31,14 @@ class RocksFoundCRUD {
     }
   }
 
-  Future<void> addRockFoundWithOutLocation(String uid, String rockClassification,
-      String rockImageUrl, DateTime dateTime) async {
+  Future<void> addRockFoundWithOutLocation(String uid,
+      String rockClassification, String rockImageUrl, DateTime dateTime) async {
     try {
       await rocksFoundCollection.doc().set({
         'UID': uid,
         'ROCK_CLASSIFICATION': rockClassification,
         'ROCK_IMAGE_URL': rockImageUrl,
+        'CAN_BE_VIEWED': false,
         'VIEWABLE': false,
         'DATETIME': dateTime,
       });
@@ -45,41 +52,62 @@ class RocksFoundCRUD {
     try {
       QuerySnapshot snapshot = await rocksFoundCollection.get();
       rocksFound = snapshot.docs
-      .map((doc) => doc.data() as Map<String, dynamic>)
-      .toList();
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
     } catch (e) {
       print(e);
     }
     return rocksFound;
   }
+
 
   Future<List<Map<String, dynamic>>> getRocksFoundForUID(String uid) async {
-    List<Map<String, dynamic>> rocksFound = [];
-    try {
-      QuerySnapshot snapshot = await rocksFoundCollection
-          .where('UID', isEqualTo: uid)
-          .get();
-      rocksFound = snapshot.docs
-      .map((doc) => doc.data() as Map<String, dynamic>)
-      .toList();
-    } catch (e) {
-      print(e);
-    }
-    return rocksFound;
+  List<Map<String, dynamic>> rocksFound = [];
+  try {
+    QuerySnapshot snapshot =
+        await rocksFoundCollection.where('UID', isEqualTo: uid).get();
+    rocksFound = snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return {
+        ...data,
+        'ID': doc.id,
+      };
+    }).toList();
+  } catch (e) {
+    print(e);
   }
+  return rocksFound;
+}
+   
 
-  Future<void> updateRockFound(
-    String documentId,
-    String uid,
-    String rockClassification,
-    String rockImageUrl,
-    bool viewable) async {
+  Future<void> updateRockFound(String documentId, String uid,
+      String rockClassification, String rockImageUrl, bool viewable) async {
     try {
       await rocksFoundCollection.doc(documentId).update({
         'UID': uid,
         'ROCK_CLASSIFICATION': rockClassification,
         'ROCK_IMAGE_URL': rockImageUrl,
         'VIEWABLE': viewable,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> hideRockFound(String documentId) async {
+    try {
+      await rocksFoundCollection.doc(documentId).update({
+        'VIEWABLE': false,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> showRockFound(String documentId) async {
+    try {
+      await rocksFoundCollection.doc(documentId).update({
+        'VIEWABLE': true,
       });
     } catch (e) {
       print(e);
@@ -121,5 +149,4 @@ class RocksFoundCRUD {
       print(e);
     }
   }
-
 }
