@@ -28,6 +28,7 @@
 
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -37,9 +38,14 @@ import '../classifier/styles.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/Home_page.dart';
+import 'package:geolocator/geolocator.dart';
+import '../data/rocksfound.dart';
 
 const _labelsFileName = 'assets/labels.txt';
 const _modelFileName = '78%.tflite';
+
+final RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
+final user = FirebaseAuth.instance.currentUser!;
 
 final List<Widget> _pages = [
   const HomePage(),
@@ -61,7 +67,9 @@ enum _ResultStatus {
 }
 
 class _RockIDState extends State<RockID> {
+  bool hasBeenSaved = false;
   bool _isAnalyzing = false;
+  bool isRockClassified = false;
   final picker = ImagePicker();
   File? _selectedImageFile;
 
@@ -118,6 +126,11 @@ class _RockIDState extends State<RockID> {
             _buildPhotolView(),
             const SizedBox(height: 10),
             _buildResultView(),
+            const SizedBox(height: 10),
+            Visibility(
+              visible: _resultStatus == _ResultStatus.found,
+              child: _buildSaveButton(),
+            ),
             const Spacer(flex: 5),
             _buildPickPhotoButton(
               title: 'Take a photo',
@@ -230,6 +243,8 @@ class _RockIDState extends State<RockID> {
 
   void _analyzeImage(File image) {
     _setAnalyzing(true);
+    hasBeenSaved = false;
+    isRockClassified = false;
 
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
 
@@ -238,6 +253,7 @@ class _RockIDState extends State<RockID> {
     final result = resultCategory.score >= 0.8
         ? _ResultStatus.found
         : _ResultStatus.notFound;
+        isRockClassified = true;
     final plantLabel = resultCategory.label;
     final accuracy = resultCategory.score;
 
@@ -273,6 +289,126 @@ class _RockIDState extends State<RockID> {
         const SizedBox(height: 10),
         Text(accuracyLabel, style: kResultRatingTextStyle),
       ],
+    );
+  }
+
+  Widget _buildSaveButton() {
+    if (!isRockClassified) {
+    return SizedBox.shrink();
+  }
+
+  return ElevatedButton(
+    onPressed: _saveClassification,
+    child: Text('Save Classification'),
+    style: ElevatedButton.styleFrom(
+      primary: kColorbrown,
+    ),
+  );
+  }
+
+  void _saveClassification() {
+    if(hasBeenSaved) {
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Classification Saved'),
+          content: Text(
+              'You have already saved this classification.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    } else {
+      hasBeenSaved = true;
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Save Classification'),
+          content: Text(
+              'Do you want to save your location along with the classification?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                _saveClassificationWithoutLocation();
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                _saveClassificationWithLocation();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    }
+  }
+
+  void _saveClassificationWithoutLocation() async {
+    final imageUrl =
+        await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
+    rocksFoundCRUD.addRockFoundWithOutLocation(user.uid, _RockLabel, imageUrl, DateTime.now());
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Classification Saved'),
+          content: Text(
+              'The classification and your location have been saved successfully.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _saveClassificationWithLocation() async {
+    final position = await Geolocator.getCurrentPosition();
+    final latitude = position.latitude;
+    final longitude = position.longitude;
+
+    final imageUrl =
+        await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
+
+    rocksFoundCRUD.addRockFoundWithLocation(
+        user.uid, _RockLabel, imageUrl, latitude, longitude, DateTime.now());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Classification Saved'),
+          content: Text(
+              'The classification and your location have been saved successfully.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

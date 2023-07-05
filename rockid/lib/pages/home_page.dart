@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
+import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
 import '../components/square_tile.dart';
 
@@ -104,7 +105,6 @@ class _HomePageState extends State<HomePage> {
         ],
         backgroundColor: Colors.brown,
       ),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -130,7 +130,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.grey,
