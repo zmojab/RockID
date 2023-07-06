@@ -70,140 +70,153 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 237, 223),
-        body: SafeArea(
-            child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 25),
-                const SizedBox(height: 25),
-                CircleAvatar(
-                  radius: 40.0,
-                  backgroundImage: AssetImage('lib/images/RockID.png'),
-                  backgroundColor: Colors.transparent,
-                ),
-                const Text(
-                  'Registeration',
-                  style: TextStyle(
-                    color: Colors.brown,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+      backgroundColor: Color.fromARGB(
+          255, 255, 237, 223), // Set the background color to light brown
+      body: SafeArea(
+        child: Stack(children: [
+          Positioned(
+            top: 550,
+            left: 0,
+            child: Image.asset(
+              ('lib/images/rockpic.png'),
+              width: 400,
+              height: 150,
+            ),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 0),
+                  const SizedBox(height: 0),
+                  const CircleAvatar(
+                    radius: 70.0,
+                    backgroundImage: AssetImage('lib/images/blinking.gif'),
+                    backgroundColor: Colors.transparent,
                   ),
-                ),
+                  const Text(
+                    'Registeration',
+                    style: TextStyle(
+                      color: Colors.brown,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
 
-                const SizedBox(height: 50),
+                  //email textfield
+                  MyTextField(
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
 
-                //email textfield
-                MyTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                const SizedBox(
-                  height: 10,
-                ),
+                  //password textfield
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                  ),
 
-                //password textfield
-                MyTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                const SizedBox(
-                  height: 10,
-                ),
+                  // confirm password
+                  MyTextField(
+                    controller: confirmPasswordController,
+                    hintText: 'Confirm Password',
+                    obscureText: true,
+                  ),
 
-                // confirm password
-                MyTextField(
-                  controller: confirmPasswordController,
-                  hintText: 'Confirm Password',
-                  obscureText: true,
-                ),
+                  const SizedBox(height: 20),
 
-                const SizedBox(height: 25),
+                  MyButton(
+                    text: "Sign Up",
+                    onTap: signUserUp,
+                  ),
 
-                MyButton(
-                  text: "Sign Up",
-                  onTap: signUserUp,
-                ),
+                  const SizedBox(height: 10),
 
-                const SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.brown,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            'Or',
+                            style: TextStyle(
+                              color: Colors.brown,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.brown,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
+                  const SizedBox(height: 55),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
+                      // google button
+                      SquareTile(
+                          onTap: () => AuthService().signInWithGoogle(),
+                          imagePath: 'lib/images/google_logo.png'),
+                    ],
+                  ),
+
+                  const SizedBox(height: 50),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Already have an account?',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 20,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or sign up with',
-                          style: TextStyle(color: Colors.brown),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: const Text(
+                          'Login now',
+                          style: TextStyle(
+                            color: Colors.brown,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-
-                const SizedBox(height: 50),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(
-                        onTap: () => AuthService().signInWithGoogle(),
-                        imagePath: 'lib/images/google_logo.png'),
-
-                    SizedBox(width: 25),
-
-                    // facebook button
-                    SquareTile(
-                        onTap: () => () {},
-                        imagePath: 'lib/images/facebook_logo.png')
-                  ],
-                ),
-
-                const SizedBox(height: 50),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Already have an account?',
-                      style: TextStyle(color: Colors.brown),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: const Text(
-                        'Login now',
-                        style: TextStyle(
-                          color: Colors.brown,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        )));
+          )
+        ]),
+      ),
+    );
   }
 }
