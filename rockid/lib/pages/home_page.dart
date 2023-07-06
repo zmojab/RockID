@@ -37,8 +37,6 @@ Future<void> signUserOut() async {
   }
 }
 
-final user = FirebaseAuth.instance.currentUser!;
-
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
@@ -123,6 +121,27 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Text(
               'Maps',
+              style: TextStyle(
+                fontSize: 20.0, // Adjust the font size as needed
+                color: Colors.white,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RocksFoundListPage(uid:user.uid)),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                EdgeInsets.all(16.0), // Adjust the padding as needed
+              ),
+            ),
+            child: Text(
+              'Rocks Found',
               style: TextStyle(
                 fontSize: 20.0, // Adjust the font size as needed
                 color: Colors.white,
