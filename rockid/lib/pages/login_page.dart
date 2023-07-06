@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Image.asset(
                 ('lib/images/rockpic.png'),
                 width: 400,
-                height: 1200,
+                height: 1150,
               ),
             ),
             Center(
@@ -85,13 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     const SizedBox(height: 0),
                     const SizedBox(height: 0),
                     const CircleAvatar(
-                      radius: 60.0,
+                      radius: 70.0,
                       backgroundImage: AssetImage('lib/images/blinking.gif'),
-
                       backgroundColor: Colors.transparent,
                     ),
                     const Text(
@@ -102,13 +100,14 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 10),
                     // email textfield
                     MyTextField(
                       controller: emailController,
                       hintText: 'Email',
                       obscureText: false,
                     ),
+                    const SizedBox(height: 10),
                     // password textfield
                     MyTextField(
                       controller: passwordController,
@@ -118,27 +117,13 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Colors.brown,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+
                     const SizedBox(height: 25),
                     MyButton(
                       text: "Sign In",
                       onTap: signUserIn,
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: Row(
@@ -169,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 60),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -179,11 +164,9 @@ class _LoginPageState extends State<LoginPage> {
                           onTap: () => AuthService().signInWithGoogle(),
                           imagePath: 'lib/images/google_logo.png',
                         ),
-
-                        SizedBox(width: 55),
                       ],
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 45),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

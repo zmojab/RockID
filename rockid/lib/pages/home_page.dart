@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-
 final user = FirebaseAuth.instance.currentUser!;
 
 // Firebase sign out method is asynchronous, so making signUserOut asynchronous
@@ -36,8 +35,6 @@ Future<void> signUserOut() async {
     print(e);
   }
 }
-
-final user = FirebaseAuth.instance.currentUser!;
 
 class _HomePageState extends State<HomePage> {
   @override

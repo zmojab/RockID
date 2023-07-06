@@ -28,7 +28,6 @@ String uid = user.uid;
 
 var collection = FirebaseFirestore.instance.collection("users");
 
-
 Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
@@ -97,6 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 CircleAvatar(
                   radius: 80,
+                  backgroundColor: Colors.transparent,
                   backgroundImage: NetworkImage(_url),
                 ),
                 Text(
