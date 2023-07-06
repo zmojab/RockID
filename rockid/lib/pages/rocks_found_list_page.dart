@@ -63,7 +63,7 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
                       fit: BoxFit.cover,
                     ),
                     title: Text(rockFound['ROCK_CLASSIFICATION']),
-                    subtitle: Text("Found: ${DateFormat('dd/MM/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}"),
+                    subtitle: Text("Found: ${DateFormat('MM/dd/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}"),
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'view') {
