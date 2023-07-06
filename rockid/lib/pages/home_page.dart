@@ -102,52 +102,63 @@ class _HomePageState extends State<HomePage> {
         ],
         backgroundColor: Colors.brown,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MapsPage()),
-              );
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                EdgeInsets.all(16.0), // Adjust the padding as needed
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 245),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapsPage()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0), // Adjust the padding as needed
+                ),
+              ),
+              child: Text(
+                'Maps',
+                style: TextStyle(
+                  fontSize: 20.0, // Adjust the font size as needed
+                  color: Colors.white,
+                ),
               ),
             ),
-            child: Text(
-              'Maps',
-              style: TextStyle(
-                fontSize: 20.0, // Adjust the font size as needed
-                color: Colors.white,
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RocksFoundListPage(uid: user.uid)),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0), // Adjust the padding as needed
+                ),
+              ),
+              child: Text(
+                'Rocks Found',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RocksFoundListPage(uid:user.uid)),
-              );
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                EdgeInsets.all(16.0), // Adjust the padding as needed
-              ),
+            const SizedBox(height: 100),
+            Image.asset(
+              'lib/images/rockpic.png',
+              width: 500,
+              height: 150,
             ),
-            child: Text(
-              'Rocks Found',
-              style: TextStyle(
-                fontSize: 20.0, // Adjust the font size as needed
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.grey,

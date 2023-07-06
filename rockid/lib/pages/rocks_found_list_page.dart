@@ -32,13 +32,14 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(
+      appBar: AppBar(
+        title: const Text(
           'Rocks Found List',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
         backgroundColor: Colors.brown,
-        ),
+      ),
       body: Container(
         color: Color.fromARGB(255, 255, 237, 223),
         child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -63,21 +64,28 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
                       fit: BoxFit.cover,
                     ),
                     title: Text(rockFound['ROCK_CLASSIFICATION']),
-                    subtitle: Text("Found: ${DateFormat('dd/MM/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}"),
+                    subtitle: Text(
+                        "Found: ${DateFormat('MM/dd/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}"),
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'view') {
                           // Placeholder to go to rock information page
                         } else if (value == 'delete') {
-                          rocksFoundCRUD.deleteRockFound(rockFound['ID']).then((_) {
+                          rocksFoundCRUD
+                              .deleteRockFound(rockFound['ID'])
+                              .then((_) {
                             refreshRocksFound();
                           });
                         } else if (value == 'hide') {
-                          rocksFoundCRUD.hideRockFound(rockFound['ID']).then((_) {
+                          rocksFoundCRUD
+                              .hideRockFound(rockFound['ID'])
+                              .then((_) {
                             refreshRocksFound();
                           });
                         } else if (value == 'show') {
-                          rocksFoundCRUD.showRockFound(rockFound['ID']).then((_) {
+                          rocksFoundCRUD
+                              .showRockFound(rockFound['ID'])
+                              .then((_) {
                             refreshRocksFound();
                           });
                         }
@@ -94,20 +102,20 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
                           ),
                         ];
                         if (canBeViewed) {
-                          if(rockFound['VIEWABLE']) {
+                          if (rockFound['VIEWABLE']) {
                             menuItems.add(
-                            PopupMenuItem<String>(
-                              value: 'hide',
-                              child: Text('Hide in Map'),
-                            ),
-                          );
+                              PopupMenuItem<String>(
+                                value: 'hide',
+                                child: Text('Hide in Map'),
+                              ),
+                            );
                           } else {
                             menuItems.add(
-                            PopupMenuItem<String>(
-                              value: 'show',
-                              child: Text('Show in Map'),
-                            ),
-                          );
+                              PopupMenuItem<String>(
+                                value: 'show',
+                                child: Text('Show in Map'),
+                              ),
+                            );
                           }
                         }
 
