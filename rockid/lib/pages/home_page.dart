@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rockid/main.dart';
+import 'package:rockid/pages/auth_page.dart';
+import 'package:rockid/pages/login_or_register_page.dart';
+import 'package:rockid/pages/login_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
@@ -19,23 +23,6 @@ class HomePage extends StatefulWidget {
 final user = FirebaseAuth.instance.currentUser!;
 
 // Firebase sign out method is asynchronous, so making signUserOut asynchronous
-
-Future<void> signUserOut() async {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  try {
-    final _providerData = _auth.currentUser!.providerData;
-    if (_providerData.isNotEmpty) {
-      // If user signed in through Google
-      if (_providerData[0].providerId.toLowerCase().contains('google')) {
-        GoogleSignIn googleSignIn = GoogleSignIn();
-        googleSignIn.signOut();
-      }
-    }
-    await _auth.signOut();
-  } catch (e) {
-    print(e);
-  }
-}
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -93,64 +80,63 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: signUserOut,
-            icon: Icon(
-              Icons.logout,
-            ),
-          ),
-        ],
+        actions: [],
         backgroundColor: Colors.brown,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 245),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MapsPage()),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), // Adjust the padding as needed
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 245),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MapsPage()),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.brown),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                    EdgeInsets.all(16.0), // Adjust the padding as needed
+                  ),
+                ),
+                child: Text(
+                  'Maps',
+                  style: TextStyle(
+                    fontSize: 20.0, // Adjust the font size as needed
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              child: Text(
-                'Maps',
-                style: TextStyle(
-                  fontSize: 20.0, // Adjust the font size as needed
-                  color: Colors.white,
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RocksFoundListPage(uid: user.uid)),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.brown),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                    EdgeInsets.all(16.0), // Adjust the padding as needed
+                  ),
+                ),
+                child: Text(
+                  'Rocks Found',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RocksFoundListPage(uid: user.uid)),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), // Adjust the padding as needed
-                ),
-              ),
-              child: Text(
-                'Rocks Found',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
+
             ),
             const SizedBox(height: 40),
             ElevatedButton(

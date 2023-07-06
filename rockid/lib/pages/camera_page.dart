@@ -183,10 +183,10 @@ class _RockIDState extends State<RockID> {
   }
 
   Widget _buildAnalyzingText() {
-    if (!_isAnalyzing) {
+    if (_isAnalyzing == false) {
       return const SizedBox.shrink();
     }
-    return const Text('Analyzing...', style: kAnalyzingTextStyle);
+    return const CircularProgressIndicator();
   }
 
   Widget _buildTitle() {
@@ -256,12 +256,14 @@ class _RockIDState extends State<RockID> {
     final plantLabel = resultCategory.label;
     final accuracy = resultCategory.score;
 
-    _setAnalyzing(false);
+    Future.delayed(Duration(seconds: 2), () {
+      _setAnalyzing(false);
 
-    setState(() {
-      _resultStatus = result;
-      _RockLabel = plantLabel;
-      _accuracy = accuracy;
+      setState(() {
+        _resultStatus = result;
+        _RockLabel = plantLabel;
+        _accuracy = accuracy;
+      });
     });
   }
 

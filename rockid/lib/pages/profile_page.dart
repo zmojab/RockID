@@ -9,6 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
+import 'auth_page.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -28,18 +30,57 @@ String uid = user.uid;
 
 var collection = FirebaseFirestore.instance.collection("users");
 
-Future<void> signUserOut() async {
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget cancelButton = TextButton(
+    child: Text("Yes"),
+    onPressed: () {
+      signUserOut(context);
+    },
+  );
+  Widget continueButton = TextButton(
+    child: Text("No"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Logging Out"),
+    content: Text("Would you like to log out?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+signUserOut(BuildContext context) async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
     final _providerData = _auth.currentUser!.providerData;
     if (_providerData.isNotEmpty) {
-      //if user signed in through google
+      // If user signed in through Google
       if (_providerData[0].providerId.toLowerCase().contains('google')) {
         GoogleSignIn googleSignIn = GoogleSignIn();
-        googleSignIn.signOut();
+        await googleSignIn.signOut();
       }
     }
     await _auth.signOut();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => AuthPage()),
+      (route) => false, // Clear all previous routes from the stack
+    );
   } catch (e) {
     print(e);
   }
@@ -84,9 +125,11 @@ class _ProfilePageState extends State<ProfilePage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        actions: const [
+        actions: [
           IconButton(
-            onPressed: signUserOut,
+            onPressed: () {
+              showAlertDialog(context);
+            },
             icon: Icon(
               Icons.logout,
             ),
@@ -220,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => EditProfilePage()),
