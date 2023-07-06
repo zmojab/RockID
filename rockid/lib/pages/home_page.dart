@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-
 final user = FirebaseAuth.instance.currentUser!;
 
 // Firebase sign out method is asynchronous, so making signUserOut asynchronous
@@ -36,8 +35,6 @@ Future<void> signUserOut() async {
     print(e);
   }
 }
-
-final user = FirebaseAuth.instance.currentUser!;
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -89,7 +86,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       appBar: AppBar(
-        // automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         title: Text(
           'Home Page',
           style: TextStyle(fontSize: 30),
@@ -149,7 +146,7 @@ class _HomePageState extends State<HomePage> {
         ],
         onTap: (index) {
           // Update the state and rebuild the widget
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => _pages[index]),
           );

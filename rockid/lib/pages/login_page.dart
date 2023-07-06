@@ -39,27 +39,24 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pop(context);
       // Wrong Email
       if (e.code == 'user-not-found') {
-        showErrorMessage('Incorrect Email');
+        showErrorMessage('Incorrect Email or password');
       }
       // Wrong Password
       else if (e.code == 'wrong-password') {
-        showErrorMessage('Incorrect Password');
+        showErrorMessage('Incorrect Email or Password');
       }
       // Invalid Email
       else if (e.code == 'invalid-email') {
-        showErrorMessage('Email address is not valid');
+        showErrorMessage('Incorrect Email or Password');
       }
     }
   }
 
   void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(message),
-        );
-      },
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
     );
   }
 
@@ -85,13 +82,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     const SizedBox(height: 0),
                     const SizedBox(height: 0),
                     const CircleAvatar(
                       radius: 60.0,
                       backgroundImage: AssetImage('lib/images/blinking.gif'),
-
                       backgroundColor: Colors.transparent,
                     ),
                     const Text(
