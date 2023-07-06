@@ -88,12 +88,18 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 100),
+            SizedBox(height: 0),
+            Image.asset(
+              'lib/images/two_rocks.png',
+              width: 600,
+              height: 150,
+            ),
             Text(
               'Welcome Back',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 40,
                 fontWeight: FontWeight.bold,
+                color: Colors.brown,
               ),
             ),
             SizedBox(height: 40),
@@ -164,11 +170,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 80),
+            SizedBox(height: 60),
             Image.asset(
               'lib/images/rockpic.png',
-              width: 500,
-              height: 90,
+              width: 600,
+              height: 150,
             ),
           ],
         ),

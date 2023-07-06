@@ -89,6 +89,7 @@ flutter:
      - lib/images/blinking.gif
      - lib/images/Home_left_rock.png
      - lib/images/Home_right_rock.png
+     - lib/images/two_rocks.png
      #- lib/assets/78%.tflite
      #- lib/assets/labels.txt
      #- lib\assets\model_unquant.tflite
