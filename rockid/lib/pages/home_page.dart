@@ -126,6 +126,27 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RocksFoundListPage(uid:user.uid)),
+              );
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+              padding: MaterialStateProperty.all<EdgeInsets>(
+                EdgeInsets.all(16.0), // Adjust the padding as needed
+              ),
+            ),
+            child: Text(
+              'Rocks Found',
+              style: TextStyle(
+                fontSize: 20.0, // Adjust the font size as needed
+                color: Colors.white,
+              ),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
