@@ -6,6 +6,7 @@ import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
+import 'package:rockid/pages/rock_information_page.dart';
 import '../components/square_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -145,6 +146,29 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Text(
                 'Rocks Found',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RockInformationPage()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0), // Adjust the padding as needed
+                ),
+              ),
+              child: Text(
+                'Rock Information',
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.white,
