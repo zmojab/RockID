@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rockid/main.dart';
+import 'package:rockid/pages/auth_page.dart';
 import 'package:rockid/pages/login_or_register_page.dart';
 import 'package:rockid/pages/login_page.dart';
 import 'package:rockid/pages/profile_page.dart';
@@ -21,28 +22,6 @@ class HomePage extends StatefulWidget {
 final user = FirebaseAuth.instance.currentUser!;
 
 // Firebase sign out method is asynchronous, so making signUserOut asynchronous
-
-signUserOut(BuildContext context) async {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  try {
-    final _providerData = _auth.currentUser!.providerData;
-    if (_providerData.isNotEmpty) {
-      // If user signed in through Google
-      if (_providerData[0].providerId.toLowerCase().contains('google')) {
-        GoogleSignIn googleSignIn = GoogleSignIn();
-        await googleSignIn.signOut();
-      }
-    }
-    await _auth.signOut();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage(onTap: () {})),
-      (route) => true, // Clear all previous routes from the stack
-    );
-  } catch (e) {
-    print(e);
-  }
-}
 
 class _HomePageState extends State<HomePage> {
   @override
@@ -100,16 +79,7 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              signUserOut(context);
-            },
-            icon: Icon(
-              Icons.logout,
-            ),
-          ),
-        ],
+        actions: [],
         backgroundColor: Colors.brown,
       ),
       body: SingleChildScrollView(
