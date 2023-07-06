@@ -86,7 +86,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> updateOccupation() async {
-    if (occupationController.text.trim().length > 2) {
+    if (occupationController.text.trim().length > 2 &&
+        occupationController.text.trim().length < 30) {
       try {
         var docID = await _firestore
             .collection("users")
@@ -147,7 +148,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (input.length > 2 &&
         snapshot.docs.isEmpty &&
-        !SpecialChar.hasMatch(input)) {
+        !SpecialChar.hasMatch(input) &&
+        input.length < 30) {
       try {
         var docID = await _firestore
             .collection("users")
@@ -227,7 +229,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ElevatedButton(
                     onPressed: updateUsername,
                     style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(80, 40),
+                      fixedSize: const Size(90, 40),
                       backgroundColor: Colors.brown,
                     ),
                     child: Text('Update'),
@@ -247,7 +249,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ElevatedButton(
                     onPressed: updateOccupation,
                     style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(80, 40),
+                      fixedSize: const Size(90, 40),
                       backgroundColor: Colors.brown,
                     ),
                     child: Text('Update'),

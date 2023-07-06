@@ -39,7 +39,7 @@ class RockPhotoView extends StatelessWidget {
     return Container(
       width: 250,
       height: 250,
-      color: Colors.blueGrey,
+      color: Color.fromARGB(198, 121, 85, 72),
       child: (file == null)
           ? _buildEmptyView()
           : Image.file(file!, fit: BoxFit.cover),

@@ -28,7 +28,6 @@ String uid = user.uid;
 
 var collection = FirebaseFirestore.instance.collection("users");
 
-
 Future<void> signUserOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   try {
@@ -57,12 +56,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _set_user_info() async {
     var username = await collection.where("UID", isEqualTo: user.uid).get();
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    QuerySnapshot snapshot = await firestore
+        .collection('rocks_found')
+        .where('UID', isEqualTo: user.uid)
+        .get();
 
     if (username.docs.isNotEmpty) {
       setState(() {
         _username = username.docs[0].data()['username'];
         _occ = username.docs[0].data()['occupation'];
-        _rocks = username.docs[0].data()['number of rocks found'];
+        _rocks = snapshot.size;
         _url = username.docs[0].data()['user_profile_url'];
       });
     }
@@ -73,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       appBar: AppBar(
-        leading: null,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Profile Page',
           style: TextStyle(fontSize: 30),

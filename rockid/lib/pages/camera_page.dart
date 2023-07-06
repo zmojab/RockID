@@ -153,7 +153,6 @@ class _RockIDState extends State<RockID> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-
             icon: Icon(Icons.camera, color: Colors.brown),
             label: 'Rock Identifier',
           ),
@@ -253,7 +252,7 @@ class _RockIDState extends State<RockID> {
     final result = resultCategory.score >= 0.8
         ? _ResultStatus.found
         : _ResultStatus.notFound;
-        isRockClassified = true;
+    isRockClassified = true;
     final plantLabel = resultCategory.label;
     final accuracy = resultCategory.score;
 
@@ -294,73 +293,73 @@ class _RockIDState extends State<RockID> {
 
   Widget _buildSaveButton() {
     if (!isRockClassified) {
-    return SizedBox.shrink();
-  }
+      return SizedBox.shrink();
+    }
 
-  return ElevatedButton(
-    onPressed: _saveClassification,
-    child: Text('Save Classification'),
-    style: ElevatedButton.styleFrom(
-      primary: kColorbrown,
-    ),
-  );
+    return ElevatedButton(
+      onPressed: _saveClassification,
+      child: Text('Save Classification'),
+      style: ElevatedButton.styleFrom(
+        primary: kColorbrown,
+      ),
+    );
   }
 
   void _saveClassification() {
-    if(hasBeenSaved) {
+    if (hasBeenSaved) {
       showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Classification Saved'),
-          content: Text(
-              'You have already saved this classification.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Classification Saved'),
+            content: Text('You have already saved this classification.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     } else {
       hasBeenSaved = true;
       showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Save Classification'),
-          content: Text(
-              'Do you want to save your location along with the classification?'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('No'),
-              onPressed: () {
-                _saveClassificationWithoutLocation();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Yes'),
-              onPressed: () {
-                _saveClassificationWithLocation();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Save Classification'),
+            content: Text(
+                'Do you want to save your location along with the classification?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  _saveClassificationWithoutLocation();
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Yes'),
+                onPressed: () {
+                  _saveClassificationWithLocation();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
   void _saveClassificationWithoutLocation() async {
     final imageUrl =
         await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
-    rocksFoundCRUD.addRockFoundWithOutLocation(user.uid, _RockLabel, imageUrl, DateTime.now());
+    rocksFoundCRUD.addRockFoundWithOutLocation(
+        user.uid, _RockLabel, imageUrl, DateTime.now());
     showDialog(
       context: context,
       builder: (BuildContext context) {
