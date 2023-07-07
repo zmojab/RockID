@@ -69,10 +69,11 @@ class _HomePageState extends State<HomePage> {
     ProfilePage(),
   ];
 
+  //UI adjustment -SU
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      backgroundColor: Color.fromARGB(255, 255, 237, 223), //Background color - SU
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -90,7 +91,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             SizedBox(height: 0),
             Image.asset(
-              'lib/images/two_rocks.png',
+              'lib/images/two_rocks.png', // top image with padding - SU
               width: 600,
               height: 150,
             ),
@@ -113,13 +114,14 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), // Adjust the padding as needed
+                  EdgeInsets.all(16.0), 
                 ),
               ),
+              // Map button initate - SU
               child: Text(
                 'Maps',
                 style: TextStyle(
-                  fontSize: 20.0, // Adjust the font size as needed
+                  fontSize: 20.0, 
                   color: Colors.white,
                 ),
               ),
@@ -136,7 +138,7 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), // Adjust the padding as needed
+                  EdgeInsets.all(16.0),
                 ),
               ),
               child: Text(
@@ -159,7 +161,7 @@ class _HomePageState extends State<HomePage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), // Adjust the padding as needed
+                  EdgeInsets.all(16.0), 
                 ),
               ),
               child: Text(
@@ -196,7 +198,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         onTap: (index) {
-          // Update the state and rebuild the widget
+          
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => _pages[index]),
