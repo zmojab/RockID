@@ -127,6 +127,7 @@ class _RockIDState extends State<RockID> {
             const SizedBox(height: 10),
             _buildResultView(),
             const SizedBox(height: 10),
+            // only visible when the result is found - JW
             Visibility(
               visible: _resultStatus == _ResultStatus.found,
               child: _buildSaveButton(),
@@ -242,7 +243,9 @@ class _RockIDState extends State<RockID> {
 
   void _analyzeImage(File image) {
     _setAnalyzing(true);
+    // flag to ensure rock is not saved again
     hasBeenSaved = false;
+    // flag to ensure rock classified
     isRockClassified = false;
 
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
@@ -294,6 +297,7 @@ class _RockIDState extends State<RockID> {
   }
 
   Widget _buildSaveButton() {
+    // only visible when the result is found - JW
     if (!isRockClassified) {
       return SizedBox.shrink();
     }
@@ -308,12 +312,15 @@ class _RockIDState extends State<RockID> {
   }
 
   void _saveClassification() {
+    //only saves if not saved previously - JW
+    //popup if saved previously - JW
     if (hasBeenSaved) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Classification Saved'),
+          
             content: Text('You have already saved this classification.'),
             actions: <Widget>[
               TextButton(
@@ -331,6 +338,7 @@ class _RockIDState extends State<RockID> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
+          //start of dialog boxes for saving with or without location - JW
           return AlertDialog(
             title: Text('Save Classification'),
             content: Text(
@@ -357,11 +365,14 @@ class _RockIDState extends State<RockID> {
     }
   }
 
+  //Adds rock to database without location - JW
   void _saveClassificationWithoutLocation() async {
+    //upload image to storage - JW
     final imageUrl =
         await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
     rocksFoundCRUD.addRockFoundWithOutLocation(
         user.uid, _RockLabel, imageUrl, DateTime.now());
+    //Confirmation - JW
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -382,17 +393,21 @@ class _RockIDState extends State<RockID> {
     );
   }
 
+  //Adds rock to database with location - JW
   void _saveClassificationWithLocation() async {
+    //Get lat and long form Geolocator - JW
     final position = await Geolocator.getCurrentPosition();
     final latitude = position.latitude;
     final longitude = position.longitude;
 
+    //upload image to storage - JW
     final imageUrl =
         await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
 
     rocksFoundCRUD.addRockFoundWithLocation(
         user.uid, _RockLabel, imageUrl, latitude, longitude, DateTime.now());
 
+    //Confirmation
     showDialog(
       context: context,
       builder: (BuildContext context) {
