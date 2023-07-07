@@ -7,16 +7,15 @@ import '../components/square_tile.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const LoginPage({Key? key, required this.onTap}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //text editing controllers
+  // text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
   void signUserIn() async {
@@ -31,173 +30,171 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+        email: emailController.text,
+        password: passwordController.text,
+      );
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       print(e.code);
       Navigator.pop(context);
-      //Wrong Email
+      // Wrong Email
       if (e.code == 'user-not-found') {
-        showErrorMessage('Incorrect Email');
+        showErrorMessage('Incorrect Email or password');
       }
-      //Wrong Password
+      // Wrong Password
       else if (e.code == 'wrong-password') {
-        showErrorMessage('Incorrect Password');
+        showErrorMessage('Incorrect Email or Password');
       }
-      //Inalid Email
+      // Invalid Email
       else if (e.code == 'invalid-email') {
-        showErrorMessage('Email address is not valid');
+        showErrorMessage('Incorrect Email or Password');
       }
     }
   }
 
   void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(message),
-        );
-      },
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-            child: Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: Color.fromARGB(
+          255, 255, 237, 223), // Set the background color to light brown
+      body: SafeArea(
+        child: Stack(
           children: [
-            const SizedBox(height: 25),
-
-            const Icon(
-              Icons.camera,
-              size: 30,
-              color: Colors.lightBlue,
-            ),
-
-            const SizedBox(height: 25),
-
-            const Text(
-              'RockID',
-              style: TextStyle(color: Colors.lightBlue, fontSize: 20),
-            ),
-
-            const SizedBox(height: 50),
-
-            //email textfield
-            MyTextField(
-              controller: emailController,
-              hintText: 'Email',
-              obscureText: false,
-            ),
-
-            //password textfield
-            MyTextField(
-              controller: passwordController,
-              hintText: 'Password',
-              obscureText: true,
-            ),
-
-            const SizedBox(
-              height: 10,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.lightBlue),
-                  ),
-                ],
+            Positioned(
+              top: 50,
+              left: 0,
+              child: Image.asset(
+                ('lib/images/rockpic.png'),
+                width: 400,
+                height: 1150,
               ),
             ),
-
-            const SizedBox(height: 25),
-
-            MyButton(
-              text: "Sign In",
-              onTap: signUserIn,
-            ),
-
-            const SizedBox(height: 50),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      thickness: 0.5,
-                      color: Colors.grey[400],
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 0),
+                    const SizedBox(height: 0),
+                    const CircleAvatar(
+                      radius: 70.0,
+                      backgroundImage: AssetImage('lib/images/blinking.gif'),
+                      backgroundColor: Colors.transparent,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text(
-                      'Or login with',
-                      style: TextStyle(color: Colors.lightBlue),
+                    const Text(
+                      'Rock ID',
+                      style: TextStyle(
+                        color: Colors.brown,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      thickness: 0.5,
-                      color: Colors.grey[400],
+                    const SizedBox(height: 10),
+                    // email textfield
+                    MyTextField(
+                      controller: emailController,
+                      hintText: 'Email',
+                      obscureText: false,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    // password textfield
+                    MyTextField(
+                      controller: passwordController,
+                      hintText: 'Password',
+                      obscureText: true,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+
+                    const SizedBox(height: 25),
+                    MyButton(
+                      text: "Sign In",
+                      onTap: signUserIn,
+                    ),
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.5,
+                              color: Colors.brown,
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Text(
+                              'Or',
+                              style: TextStyle(
+                                color: Colors.brown,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.5,
+                              color: Colors.brown,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 60),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // google button
+
+                        SquareTile(
+                          onTap: () => AuthService().signInWithGoogle(),
+                          imagePath: 'lib/images/google_logo.png',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 45),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Not a member?',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        GestureDetector(
+                          onTap: widget.onTap,
+                          child: const Text(
+                            'Register now',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.brown,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            const SizedBox(height: 50),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // google button
-                SquareTile(
-                    onTap: () => AuthService().signInWithGoogle(),
-                    imagePath: 'lib/images/google_logo.png'),
-
-                SizedBox(width: 25),
-
-                // facebook button
-                SquareTile(
-                    onTap: () {}, imagePath: 'lib/images/facebook_logo.png')
-              ],
-            ),
-
-            const SizedBox(height: 50),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Not a member?',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                const SizedBox(width: 4),
-                GestureDetector(
-                  onTap: widget.onTap,
-                  child: const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ],
         ),
       ),
-    )));
+    );
   }
 }
