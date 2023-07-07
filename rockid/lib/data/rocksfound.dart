@@ -5,10 +5,14 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+// RocksFoundCrud class for CRUD operations on rocks_found collection JW
+
 class RocksFoundCRUD {
+  // Collection reference JW
   final CollectionReference rocksFoundCollection =
       FirebaseFirestore.instance.collection('rocks_found');
 
+  // Adds rock found with location JW
   Future<void> addRockFoundWithLocation(
       String uid,
       String rockClassification,
@@ -32,6 +36,7 @@ class RocksFoundCRUD {
     }
   }
 
+  // Adds rock found without location JW
   Future<void> addRockFoundWithOutLocation(String uid,
       String rockClassification, String rockImageUrl, DateTime dateTime) async {
     try {
@@ -48,6 +53,7 @@ class RocksFoundCRUD {
     }
   }
 
+  //returns list of all rocs found JW
   Future<List<Map<String, dynamic>>> getRocksFound() async {
     List<Map<String, dynamic>> rocksFound = [];
     try {
@@ -61,7 +67,7 @@ class RocksFoundCRUD {
     return rocksFound;
   }
 
-
+  //returns list of all rocks found for a given UID JW
   Future<List<Map<String, dynamic>>> getRocksFoundForUID(String uid) async {
   List<Map<String, dynamic>> rocksFound = [];
   try {
@@ -80,7 +86,7 @@ class RocksFoundCRUD {
   return rocksFound;
 }
    
-
+  //Updates a given rock found, not currently used or needed should be removed JW
   Future<void> updateRockFound(String documentId, String uid,
       String rockClassification, String rockImageUrl, bool viewable) async {
     try {
@@ -95,6 +101,7 @@ class RocksFoundCRUD {
     }
   }
 
+  //Hides rock found for user toggle JW
   Future<void> hideRockFound(String documentId) async {
     try {
       await rocksFoundCollection.doc(documentId).update({
@@ -104,7 +111,8 @@ class RocksFoundCRUD {
       print(e);
     }
   }
-
+  
+  //Shows rock found for user toggle JW
   Future<void> showRockFound(String documentId) async {
     try {
       await rocksFoundCollection.doc(documentId).update({
@@ -115,6 +123,7 @@ class RocksFoundCRUD {
     }
   }
 
+  //Deletes a given rock found JW
   Future<void> deleteRockFound(String documentId) async {
     try {
       await rocksFoundCollection.doc(documentId).delete();
@@ -123,6 +132,7 @@ class RocksFoundCRUD {
     }
   }
 
+  //Upload image to Firebase Storage and returns url to be saved with rock found document JW
   Future<String> uploadImageToStorage(File imageFile) async {
     String imageId = Uuid().v4();
     Reference storageReference =
@@ -139,6 +149,7 @@ class RocksFoundCRUD {
     }
   }
 
+  //Update given rock found with new image url, not currently used or needed JW
   Future<void> updateRockImageUrl(String rockId, String imageUrl) async {
     try {
       await FirebaseFirestore.instance
