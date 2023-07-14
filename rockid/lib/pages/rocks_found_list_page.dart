@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../data/rocksfound.dart';
+
+
 
 // For displaying list of rocks found by user JW
 class RocksFoundListPage extends StatefulWidget {
@@ -29,11 +29,29 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
     refreshRocksFound();
   }
 
+  //Used to refresh page after operation JW
   void refreshRocksFound() {
     setState(() {
       rocksFoundFuture = rocksFoundCRUD.getRocksFoundForUID(widget.uid);
     });
   }
+  
+
+  //Rock classification names are stored in firebase in all lower case
+  //This function capitalizes the first letter of each word in the rock classification name for presentation in the list tile JW
+  String capitalizeRockClassification(String rockClassificaitonName) {
+  if (rockClassificaitonName.isEmpty) return rockClassificaitonName;
+
+  final List<String> rockClassificationNames = rockClassificaitonName.split(" ");
+  final capitalizedWords = rockClassificationNames.map((rockClassificationPartName) {
+    if (rockClassificationPartName.isEmpty) return rockClassificationPartName;
+    return rockClassificationPartName[0].toUpperCase() + rockClassificationPartName.substring(1);
+  });
+
+  return capitalizedWords.join(" ");
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,82 +85,100 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
                   Map<String, dynamic> rockFound = rocksFound[index];
                   //returns can be viewed, false if field doesnt exist JW
                   bool canBeViewed = rockFound['CAN_BE_VIEWED'] ?? false;
-                  return ListTile(
-                    //ListTile for each rock found JW
-                    leading: Image.network(
-                      rockFound['ROCK_IMAGE_URL'],
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                    title: Text(rockFound['ROCK_CLASSIFICATION']),
-                    subtitle: Text(
-                      //Timestamp for when rock found JW
-                        "Found: ${DateFormat('MM/dd/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}"),
+                  // Dismissible for each rock found for slide to delete- JW
+                  return Dismissible(
+                    //unique key for each rock found JW
+                      key: UniqueKey(), 
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Color.fromARGB(247, 242, 137, 38),
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onDismissed: (direction) {
+                        // Deletes from collection JW
+                        rocksFoundCRUD
+                            .deleteRockFound(rockFound['ID'])
+                            .then((_) {
+                          refreshRocksFound();
+                        });
+                        // Snackbar confirmation rock deleted JW
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Rock deleted'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        //ListTile for each rock found JW
+                        leading: Image.network(
+                          rockFound['ROCK_IMAGE_URL'],
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text(capitalizeRockClassification(rockFound['ROCK_CLASSIFICATION'])),
+                        subtitle: Text(
+                            //Timestamp for when rock found JW
+                            "Found: ${DateFormat('MM/dd/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}" + 
+                            (rockFound['CAN_BE_VIEWED'] ? "\nLatitude: ${rockFound['LATTITUDE']}\nLongitude: ${rockFound['LONGITUDE']}" : "")),
                         //popupmenu for each rock found JW
-                    trailing: PopupMenuButton<String>(
-                      //to show popup needs to be implemented still JW
-                      onSelected: (value) {
-                        if (value == 'view') {
-                          // Placeholder to go to rock information page
-                        } else if (value == 'delete') {
-                          //deletes rock found from database JW
-                          rocksFoundCRUD
-                              .deleteRockFound(rockFound['ID'])
-                              .then((_) {
-                            refreshRocksFound();
-                          });
-                        } else if (value == 'hide') {
-                          //toggles viewable field to false JW
-                          rocksFoundCRUD
-                              .hideRockFound(rockFound['ID'])
-                              .then((_) {
-                            refreshRocksFound();
-                          });
-                        } else if (value == 'show') {
-                          //toggles viewable field to true JW
-                          rocksFoundCRUD
-                              .showRockFound(rockFound['ID'])
-                              .then((_) {
-                            refreshRocksFound();
-                          });
-                        }
-                      },
-                      //options for popupmenu JW
-                      itemBuilder: (BuildContext context) {
-                        List<PopupMenuEntry<String>> menuItems = [
-                          PopupMenuItem<String>(
-                            value: 'view',
-                            child: Text('View'),
-                          ),
-                          PopupMenuItem<String>(
-                            value: 'delete',
-                            child: Text('Delete'),
-                          ),
-                        ];
-                        //only showed if rock can be viewed JW
-                        if (canBeViewed) {
-                          if (rockFound['VIEWABLE']) {
-                            menuItems.add(
+                        trailing: PopupMenuButton<String>(
+                          //to show popup needs to be implemented still JW
+                          onSelected: (value) {
+                            if (value == 'view') {
+                              // Placeholder to go to rock information page
+                            } else if (value == 'hide') {
+                              //toggles viewable field to false JW
+                              rocksFoundCRUD
+                                  .hideRockFound(rockFound['ID'])
+                                  .then((_) {
+                                refreshRocksFound();
+                              });
+                            } else if (value == 'show') {
+                              //toggles viewable field to true JW
+                              rocksFoundCRUD
+                                  .showRockFound(rockFound['ID'])
+                                  .then((_) {
+                                refreshRocksFound();
+                              });
+                            }
+                          },
+                          //options for popupmenu JW
+                          itemBuilder: (BuildContext context) {
+                            List<PopupMenuEntry<String>> menuItems = [
                               PopupMenuItem<String>(
-                                value: 'hide',
-                                child: Text('Hide in Map'),
+                                value: 'view',
+                                child: Text('View'),
                               ),
-                            );
-                          } else {
-                            menuItems.add(
-                              PopupMenuItem<String>(
-                                value: 'show',
-                                child: Text('Show in Map'),
-                              ),
-                            );
-                          }
-                        }
-
-                        return menuItems;
-                      },
-                    ),
-                  );
+                            ];
+                            //only showed if rock can be viewed JW
+                            if (canBeViewed) {
+                              if (rockFound['VIEWABLE']) {
+                                menuItems.add(
+                                  PopupMenuItem<String>(
+                                    value: 'hide',
+                                    child: Text('Hide in Map'),
+                                  ),
+                                );
+                              } else {
+                                menuItems.add(
+                                  PopupMenuItem<String>(
+                                    value: 'show',
+                                    child: Text('Show in Map'),
+                                  ),
+                                );
+                              }
+                            }
+                            return menuItems;
+                          },
+                        ),
+                      ));
                 },
               );
             }

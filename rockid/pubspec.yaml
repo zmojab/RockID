@@ -43,7 +43,7 @@ dependencies:
   tflite_flutter_helper: ^0.2.1
   
   google_fonts:
-  camera: ^0.10.5+2
+  #camera: ^0.10.5+2
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.6.2
   firebase_core: ^2.13.1
