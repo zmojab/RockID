@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../data/users.dart';
+
+bool isProfilePublic = true;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -19,16 +22,19 @@ String email = user.email!;
 class _EditProfilePageState extends State<EditProfilePage> {
   File? _image;
   String? _uploadedImageUrl;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   late TextEditingController usernameController;
   late TextEditingController occupationController;
+  late TextEditingController locationController;
+  late TextEditingController bioController;
 
   @override
   void initState() {
     super.initState();
     usernameController = TextEditingController();
     occupationController = TextEditingController();
+    locationController = TextEditingController();
+    bioController = TextEditingController();
 
     // Fetch user profile data and populate the text fields
     fetchUserProfile();
@@ -36,20 +42,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> fetchUserProfile() async {
     try {
-      var docID = await _firestore
-          .collection("users")
-          .where("UID", isEqualTo: user.uid)
-          .get();
-      final snapshot =
-          await _firestore.collection('users').doc(docID.docs[0].id).get();
+      var docID = await UserCRUD().getUserDocID(user.uid);
+      if (docID != null) {
+        final snapshot = await UserCRUD().getUserProfile(docID);
+        if (snapshot.exists) {
+          final data = snapshot.data() as Map<String, dynamic>;
 
-      if (snapshot.exists) {
-        final data = snapshot.data() as Map<String, dynamic>;
-
-        setState(() {
-          usernameController.text = data['username'] as String? ?? '';
-          occupationController.text = data['occupation'] as String? ?? '';
-        });
+          setState(() {
+            usernameController.text = data['username'] as String? ?? '';
+            occupationController.text = data['occupation'] as String? ?? '';
+            locationController.text = data['location'] as String? ?? '';
+            bioController.text = data['bio'] as String? ?? '';
+            isProfilePublic = data['public'] as bool? ?? true;
+          });
+        }
       }
     } catch (error) {
       print('Error fetching user profile: $error');
@@ -89,18 +95,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (occupationController.text.trim().length > 2 &&
         occupationController.text.trim().length < 30) {
       try {
-        var docID = await _firestore
-            .collection("users")
-            .where("UID", isEqualTo: user.uid)
-            .get();
-
-        await _firestore.collection("users").doc(docID.docs[0].id).update({
-          'occupation': occupationController.text.trim(),
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('occupation updated successfully')),
-        );
+        var docID = await UserCRUD().getUserDocID(user.uid);
+        if (docID != null) {
+          await UserCRUD()
+              .updateUserOccupation(docID, occupationController.text.trim());
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Occupation updated successfully')),
+          );
+        }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to update occupation')),
@@ -109,26 +111,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-                'Failed to update occupation need to be more than 2 characters')),
+          content: Text(
+              'Failed to update occupation. Must be between 2 and 30 characters.'),
+        ),
       );
     }
   }
 
   Future<void> updateUrl() async {
     try {
-      var docID = await _firestore
-          .collection("users")
-          .where("UID", isEqualTo: user.uid)
-          .get();
-
-      await _firestore.collection("users").doc(docID.docs[0].id).update({
-        'user_profile_url': _uploadedImageUrl,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile picture updated successfully')),
-      );
+      var docID = await UserCRUD().getUserDocID(user.uid);
+      if (docID != null) {
+        await UserCRUD().updateUserProfileUrl(docID, _uploadedImageUrl);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile picture updated successfully')),
+        );
+      }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Failed to update profile picture')),
@@ -138,11 +136,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> updateUsername() async {
     String input = usernameController.text.trim();
-    final QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .where("username", isEqualTo: input)
-        .limit(1)
-        .get();
+    final QuerySnapshot snapshot = await UserCRUD().getUserByUsername(input);
     // ignore: non_constant_identifier_names
     final SpecialChar = RegExp(r'[!@#$%^&*(),.?":{}|<> ]');
 
@@ -151,18 +145,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
         !SpecialChar.hasMatch(input) &&
         input.length < 30) {
       try {
-        var docID = await _firestore
-            .collection("users")
-            .where("UID", isEqualTo: user.uid)
-            .get();
-
-        await _firestore.collection("users").doc(docID.docs[0].id).update({
-          'username': input,
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('username updated successfully')),
-        );
+        var docID = await UserCRUD().getUserDocID(user.uid);
+        if (docID != null) {
+          await UserCRUD().updateUserUsername(docID, input);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Username updated successfully')),
+          );
+        }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to username profile')),
@@ -177,10 +166,82 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> updateLocation() async {
+    String location = locationController.text.trim();
+    final RegExp alphanumericWithSpaces = RegExp(r'^[a-zA-Z0-9\s]+$');
+
+    if (location.length > 2 && alphanumericWithSpaces.hasMatch(location)) {
+      try {
+        var docID = await UserCRUD().getUserDocID(user.uid);
+        if (docID != null) {
+          await UserCRUD().updateUserLocation(docID, location);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location updated successfully')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update location')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Failed to update location. Location must be at least 2 characters long and alphanumeric with spaces.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateBio() async {
+    String bio = bioController.text.trim();
+
+    if (bio.length <= 250) {
+      try {
+        var docID = await UserCRUD().getUserDocID(user.uid);
+        if (docID != null) {
+          await UserCRUD().updateUserBio(docID, bio);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Bio updated successfully')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update location')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Failed to update bio. Bio must be 250 characters or less.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateProfileStatus(bool isPublic) async {
+    try {
+      var docID = await UserCRUD().getUserDocID(user.uid);
+      if (docID != null) {
+        await UserCRUD().updateUserProfileStatus(docID, isPublic);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile privacy updated successfully')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update profile privacy')),
+      );
+    }
+  }
+
   @override
   void dispose() {
     usernameController.dispose();
     occupationController.dispose();
+    locationController.dispose();
     super.dispose();
   }
 
@@ -200,34 +261,101 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Expanded(
-          child: ListView(
-            children: [
-              if (_image != null)
-                Image.file(
-                  _image!,
-                  height: 200,
-                ),
-              ElevatedButton(
-                onPressed: _uploadImage,
-                child: Text('Upload Profile Picture'),
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(200, 50),
-                  backgroundColor: Colors.brown,
-                ),
+        child: ListView(
+          children: [
+            if (_image != null)
+              Image.file(
+                _image!,
+                height: 200,
               ),
-              SizedBox(height: 16.0),
-              Row(
+            ElevatedButton(
+              onPressed: _uploadImage,
+              child: Text('Upload Profile Picture'),
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(200, 50),
+                backgroundColor: Colors.brown,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: usernameController,
+                    decoration: InputDecoration(labelText: 'Username'),
+                  ),
+                ),
+                SizedBox(width: 8.0),
+                ElevatedButton(
+                  onPressed: updateUsername,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(90, 40),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Update'),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: occupationController,
+                    decoration: InputDecoration(labelText: 'Occupation'),
+                  ),
+                ),
+                SizedBox(width: 8.0),
+                ElevatedButton(
+                  onPressed: updateOccupation,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(90, 40),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Update'),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: locationController,
+                    decoration: InputDecoration(labelText: 'Location'),
+                  ),
+                ),
+                SizedBox(width: 8.0),
+                ElevatedButton(
+                  onPressed: updateLocation,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(90, 40),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Update'),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: 200.0, 
+              ),
+              child: Row(
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: usernameController,
-                      decoration: InputDecoration(labelText: 'Username'),
+                      controller: bioController,
+                      maxLines:
+                          null, 
+                      keyboardType:
+                          TextInputType.multiline, 
+                      decoration: InputDecoration(labelText: 'Bio'),
                     ),
                   ),
                   SizedBox(width: 8.0),
                   ElevatedButton(
-                    onPressed: updateUsername,
+                    onPressed: updateBio,
                     style: ElevatedButton.styleFrom(
                       fixedSize: const Size(90, 40),
                       backgroundColor: Colors.brown,
@@ -236,29 +364,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 16.0),
-              Row(
+            ),
+            SizedBox(height: 24.0),
+            Container(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: TextField(
-                      controller: occupationController,
-                      decoration: InputDecoration(labelText: 'Occupation'),
-                    ),
+                  Text('Private'),
+                  Switch.adaptive(
+                    value: isProfilePublic,
+                    onChanged: (value) {
+                      setState(() {
+                        isProfilePublic = value;
+                      });
+                      updateProfileStatus(value);
+                    },
+                    activeColor: Color.fromARGB(247, 242, 137, 38),
                   ),
-                  SizedBox(width: 8.0),
-                  ElevatedButton(
-                    onPressed: updateOccupation,
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(90, 40),
-                      backgroundColor: Colors.brown,
-                    ),
-                    child: Text('Update'),
-                  ),
+                  Text('Public'),
                 ],
               ),
-              SizedBox(height: 24.0),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
