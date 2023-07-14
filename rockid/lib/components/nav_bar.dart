@@ -37,7 +37,7 @@ class _NavBarState extends State<NavBar> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
+            icon: Icon(Icons.gps_fixed_sharp),
             label: 'Camera',
           ), // Add more BottomNavigationBarItems as needed
           BottomNavigationBarItem(

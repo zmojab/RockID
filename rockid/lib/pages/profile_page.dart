@@ -290,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera, color: Colors.grey),
+            icon: Icon(Icons.gps_fixed_sharp, color: Colors.grey),
             label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
