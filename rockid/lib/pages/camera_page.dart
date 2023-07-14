@@ -230,30 +230,18 @@ class _RockIDState extends State<RockID> {
   }) {
     return TextButton(
       onPressed: () => _onPickPhoto(source),
-      child: Row(
-        children: [
-          Icon(
-            Icons.photo,
-            color: kColorLightbeige,
-          ),
-          SizedBox(width: 8.0), // Add spacing between the icon and text
-          Container(
-            width: 300,
-            height: 50,
-            color: kColorbrown,
-            child: Center(
-              child: Text(
-                title,
+      child: Container(
+        width: 300,
+        height: 50,
+        color: kColorbrown,
+        child: Center(
+            child: Text(title,
                 style: const TextStyle(
                   fontFamily: kButtonFont,
                   fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                   color: kColorLightbeige,
-                ),
-              ),
-            ),
-          ),
-        ],
+                ))),
       ),
     );
   }
