@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rockid/main.dart';
-import 'package:rockid/pages/auth_page.dart';
-import 'package:rockid/pages/login_or_register_page.dart';
-import 'package:rockid/pages/login_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
 import 'package:rockid/pages/rock_information_page.dart';
-import '../components/square_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -84,7 +78,7 @@ class _HomePageState extends State<HomePage> {
         actions: [],
         backgroundColor: Colors.brown,
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -108,29 +102,6 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapsPage()),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), 
-                ),
-              ),
-              // Map button initate - SU
-              child: Text(
-                'Maps',
-                style: TextStyle(
-                  fontSize: 20.0, 
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
                   MaterialPageRoute(
                       builder: (context) => RocksFoundListPage(uid: user.uid)),
                 );
@@ -142,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: Text(
-                'Rocks Found',
+                'My Collection',
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.white,
@@ -172,6 +143,29 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapsPage()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0), 
+                ),
+              ),
+              // Map button initate - SU
+              child: Text(
+                'Rocks Around the World',
+                style: TextStyle(
+                  fontSize: 20.0, 
+                  color: Colors.white,
+                ),
+              ),
+            ),
             SizedBox(height: 60),
             Image.asset(
               'lib/images/rockpic.png',
@@ -189,7 +183,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera, color: Colors.grey),
+            icon: Icon(Icons.gps_fixed_sharp, color: Colors.grey),
             label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
