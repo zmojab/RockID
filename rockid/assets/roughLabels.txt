@@ -1,0 +1,19 @@
+0 agate
+1 alexandrite
+2 amethyst
+3 aquamarine
+4 citrine
+5 diamond
+6 emerald
+7 garnet
+8 jade
+9 lapis Lazuli
+10 moonstone
+11 morganite
+12 opal
+13 peridot
+14 ruby
+15 sapphire
+16 tanzanite
+17 topaz
+18 turquoise

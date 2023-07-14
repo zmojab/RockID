@@ -41,8 +41,10 @@ import 'package:rockid/pages/Home_page.dart';
 import 'package:geolocator/geolocator.dart';
 import '../data/rocksfound.dart';
 
-const _labelsFileName = 'assets/labels.txt';
-const _modelFileName = '78%.tflite';
+const _labelsFileName = 'assets/polishedLabels.txt';
+const _modelFileName = 'polished80%.tflite';
+const _labelsFileName1 = 'assets/roughLabels.txt';
+const _modelFileName1 = 'rough82%.tflite';
 
 final RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
 final user = FirebaseAuth.instance.currentUser!;
@@ -69,16 +71,21 @@ enum _ResultStatus {
 class _RockIDState extends State<RockID> {
   bool hasBeenSaved = false;
   bool _isAnalyzing = false;
+  bool _isLocation = false;
+  bool _isRaw = false;
   bool isRockClassified = false;
   final picker = ImagePicker();
   File? _selectedImageFile;
+  String _rockType = "";
 
   // Result
   _ResultStatus _resultStatus = _ResultStatus.notStarted;
   String _RockLabel = ''; // Name of Error Message
   double _accuracy = 0.0;
 
+  //creates Classifier objects
   late Classifier _classifier;
+  late Classifier _classifier1;
 
   @override
   void initState() {
@@ -92,12 +99,18 @@ class _RockIDState extends State<RockID> {
       'labels at $_labelsFileName, '
       'model at $_modelFileName',
     );
-
+    //loads polished gems
     final classifier = await Classifier.loadWith(
       labelsFileName: _labelsFileName,
       modelFileName: _modelFileName,
     );
     _classifier = classifier!;
+    //loads rough gems
+    final classifier1 = await Classifier.loadWith(
+      labelsFileName: _labelsFileName1,
+      modelFileName: _modelFileName1,
+    );
+    _classifier1 = classifier1!;
   }
 
   @override
@@ -120,19 +133,32 @@ class _RockIDState extends State<RockID> {
           children: [
             const Spacer(),
             const Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 10),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             _buildPhotolView(),
             const SizedBox(height: 10),
-            _buildResultView(),
-            const SizedBox(height: 10),
-            // only visible when the result is found - JW
-            Visibility(
-              visible: _resultStatus == _ResultStatus.found,
-              child: _buildSaveButton(),
+            const Spacer(),
+            const Text(
+              "Current Location",
+              style: TextStyle(
+                  color: Colors.brown,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
             ),
-            const Spacer(flex: 5),
+            _buildLocationSwitch(),
+            const Spacer(flex: 2),
+            const Text(
+              "Rock Type",
+              style: TextStyle(
+                  color: Colors.brown,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+            _buildRockRadio(),
+            const Spacer(),
+            // only visible when the result is found - JW
+
             _buildPickPhotoButton(
               title: 'Take a photo',
               source: ImageSource.camera,
@@ -220,6 +246,46 @@ class _RockIDState extends State<RockID> {
     );
   }
 
+  Widget _buildRockRadio() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: RadioListTile(
+            title: const Text(
+              "Rough",
+              style: TextStyle(color: Colors.brown, fontSize: 15),
+            ),
+            value: true,
+            activeColor: Colors.brown,
+            groupValue: _isRaw,
+            onChanged: (value) {
+              setState(() {
+                _isRaw = value!;
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: RadioListTile(
+            title: const Text(
+              "Polished",
+              style: TextStyle(color: Colors.brown, fontSize: 15),
+            ),
+            activeColor: Colors.brown,
+            value: false,
+            groupValue: _isRaw,
+            onChanged: (value) {
+              setState(() {
+                _isRaw = value!;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   void _setAnalyzing(bool flag) {
     setState(() {
       _isAnalyzing = flag;
@@ -242,150 +308,139 @@ class _RockIDState extends State<RockID> {
   }
 
   void _analyzeImage(File image) {
+    String rockType = "";
     _setAnalyzing(true);
     // flag to ensure rock is not saved again
-    hasBeenSaved = false;
+    //hasBeenSaved = false;
     // flag to ensure rock classified
     isRockClassified = false;
-
+    final resultCategory;
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
-
-    final resultCategory = _classifier.predict(imageInput);
+    if (_isRaw) {
+      resultCategory = _classifier1.predict(imageInput);
+      rockType = "rough";
+    } else {
+      resultCategory = _classifier.predict(imageInput);
+      rockType = "polished";
+    }
 
     final result = resultCategory.score >= 0.8
         ? _ResultStatus.found
         : _ResultStatus.notFound;
     isRockClassified = true;
-    final plantLabel = resultCategory.label;
+    final rockLabel = resultCategory.label;
     final accuracy = resultCategory.score;
 
     Future.delayed(Duration(seconds: 2), () {
       _setAnalyzing(false);
-
-      setState(() {
-        _resultStatus = result;
-        _RockLabel = plantLabel;
-        _accuracy = accuracy;
-      });
     });
-  }
 
-  Widget _buildResultView() {
-    var title = '';
-
-    if (_resultStatus == _ResultStatus.notFound) {
-      title = 'Fail to recognise';
-    } else if (_resultStatus == _ResultStatus.found) {
-      title = "This rock is possibly a $_RockLabel";
-    } else {
-      title = '';
-    }
-
-    //
-    var accuracyLabel = '';
+    setState(() {
+      _resultStatus = result;
+      _RockLabel = rockLabel;
+      _accuracy = accuracy;
+      _rockType = rockType;
+    });
     if (_resultStatus == _ResultStatus.found) {
-      accuracyLabel = 'Accuracy: ${(_accuracy * 100).toStringAsFixed(2)}%';
-    }
-
-    return Column(
-      children: [
-        Text(title, style: kResultTextStyle),
-        const SizedBox(height: 10),
-        Text(accuracyLabel, style: kResultRatingTextStyle),
-      ],
-    );
-  }
-
-  Widget _buildSaveButton() {
-    // only visible when the result is found - JW
-    if (!isRockClassified) {
-      return SizedBox.shrink();
-    }
-
-    return ElevatedButton(
-      onPressed: _saveClassification,
-      child: Text('Save Classification'),
-      style: ElevatedButton.styleFrom(
-        primary: kColorbrown,
-      ),
-    );
-  }
-
-  void _saveClassification() {
-    //only saves if not saved previously - JW
-    //popup if saved previously - JW
-    if (hasBeenSaved) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Classification Saved'),
-          
-            content: Text('You have already saved this classification.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      _SaveRock();
     } else {
-      hasBeenSaved = true;
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          //start of dialog boxes for saving with or without location - JW
-          return AlertDialog(
-            title: Text('Save Classification'),
-            content: Text(
-                'Do you want to save your location along with the classification?'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('No'),
-                onPressed: () {
-                  _saveClassificationWithoutLocation();
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Yes'),
-                onPressed: () {
-                  _saveClassificationWithLocation();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      _CantRecognize();
     }
   }
 
   //Adds rock to database without location - JW
-  void _saveClassificationWithoutLocation() async {
+  void _saveClassificationWithOrWithoutLocation() async {
     //upload image to storage - JW
+    //Get lat and long form Geolocator - JW
+    final position = await Geolocator.getCurrentPosition();
+    final latitude = position.latitude;
+    final longitude = position.longitude;
     final imageUrl =
         await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
-    rocksFoundCRUD.addRockFoundWithOutLocation(
-        user.uid, _RockLabel, imageUrl, DateTime.now());
-    //Confirmation - JW
-    showDialog(
+
+    if (_isLocation) {
+      try {
+        rocksFoundCRUD.addRockFoundWithLocation(user.uid, _RockLabel, imageUrl,
+            latitude, longitude, DateTime.now());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text(
+                  'Successfully saved the rock classification and location')),
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Failed to save rock classification and location')),
+        );
+      }
+    } else {
+      try {
+        rocksFoundCRUD.addRockFoundWithOutLocation(
+            user.uid, _RockLabel, imageUrl, DateTime.now());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Successfully saved the rock classification')),
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save rock classification')),
+        );
+      }
+    }
+  }
+
+  void _SaveRock() async {
+    //Get lat and long form Geolocator - JW
+    final position = await Geolocator.getCurrentPosition();
+    final latitude = position.latitude;
+    final longitude = position.longitude;
+    var title = '';
+
+    if (_resultStatus == _ResultStatus.notFound) {
+      title = 'Fail to recognise this rock';
+    } else if (_resultStatus == _ResultStatus.found) {
+      title = "This rock is possibly a $_rockType $_RockLabel";
+    } else {
+      title = '';
+    }
+    var accuracyLabel = '';
+    if (_resultStatus == _ResultStatus.found) {
+      accuracyLabel = '${(_accuracy * 100).toStringAsFixed(2)}%';
+    }
+    //upload image to storage - JW
+
+    //Confirmation
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Classification Saved'),
-          content: Text(
-              'The classification and your location have been saved successfully.'),
+          backgroundColor: Color.fromARGB(255, 255, 237, 223),
+          title: Text('Rock Classification'),
+          content: Text(title + " with an accuracy of " + accuracyLabel),
           actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            ButtonBar(
+              alignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.brown),
+                  ),
+                  onPressed: () {
+                    _saveClassificationWithOrWithoutLocation();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Not Save',
+                    style: TextStyle(color: Colors.brown),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ],
         );
@@ -393,38 +448,58 @@ class _RockIDState extends State<RockID> {
     );
   }
 
-  //Adds rock to database with location - JW
-  void _saveClassificationWithLocation() async {
+  void _CantRecognize() async {
     //Get lat and long form Geolocator - JW
-    final position = await Geolocator.getCurrentPosition();
-    final latitude = position.latitude;
-    final longitude = position.longitude;
-
-    //upload image to storage - JW
-    final imageUrl =
-        await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
-
-    rocksFoundCRUD.addRockFoundWithLocation(
-        user.uid, _RockLabel, imageUrl, latitude, longitude, DateTime.now());
-
-    //Confirmation
-    showDialog(
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Classification Saved'),
-          content: Text(
-              'The classification and your location have been saved successfully.'),
+          backgroundColor: Color.fromARGB(255, 255, 237, 223),
+          title: Text('Rock Classification'),
+          content: Text("Failed to recognize the rock"),
           actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            ButtonBar(
+              alignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text(
+                    'Close',
+                    style: TextStyle(color: Colors.brown),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildLocationSwitch() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Off', style: TextStyle(color: Colors.brown)),
+            Switch(
+              value: _isLocation,
+              activeColor: Colors.brown,
+              onChanged: (value) {
+                print("VALUE : $value");
+                setState(() {
+                  _isLocation = value;
+                });
+              },
+            ),
+            Text('On', style: TextStyle(color: Colors.brown)),
+          ],
+        ),
+      ],
     );
   }
 }

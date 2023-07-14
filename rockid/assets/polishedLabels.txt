@@ -1,0 +1,74 @@
+0 Alexandrite
+1 Almandine
+2 Amazonite
+3 Amber
+4 Amethyst
+5 Ametrine
+6 Andalusite
+7 Andradite
+8 Aquamarine
+9 Aventurine Green
+10 Aventurine Yellow
+11 Benitoite
+12 Beryl Golden
+13 Bixbite
+14 Bloodstone
+15 Cats Eye
+16 Chalcedony Blue
+17 Chrome Diopside
+18 Chrysoberyl
+19 Chrysocolla
+20 Chrysoprase
+21 Citrine
+22 Coral
+23 Danburite
+24 Diamond
+25 Diaspore
+26 Dumortierite
+27 Emerald
+28 Fluorite
+29 Garnet Red
+30 Goshenite
+31 Grossular
+32 Hessonite
+33 Hiddenite
+34 Iolite
+35 Jade
+36 Kunzite
+37 Kyanite
+38 Labradorite
+39 Lapis Lazuli
+40 Larimar
+41 Malachite
+42 Moonstone
+43 Morganite
+44 Onyx Black
+45 Opal
+46 Pearl
+47 Peridot
+48 Pyrite
+49 Pyrope
+50 Quartz Smoky
+51 Rhodochrosite
+52 Rhodolite
+53 Rhodonite
+54 Ruby
+55 Sapphire Blue
+56 Sapphire Pink
+57 Sapphire Purple
+58 Sapphire Yellow
+59 Serpentine
+60 Sodalite
+61 Spessartite
+62 Sphene
+63 Spinel
+64 Sunstone
+65 Tanzanite
+66 Tigers Eye
+67 Topaz
+68 Tourmaline
+69 Tsavorite
+70 Turquoise
+71 Variscite
+72 Zircon
+73 Zoisite
