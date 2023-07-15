@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -161,4 +160,25 @@ class RocksFoundCRUD {
       print(e);
     }
   }
+
+  // Returns list of all rocks found for a given UID that are viewable JW
+Future<List<Map<String, dynamic>>> getViewableRocksFoundForUID(String uid) async {
+  List<Map<String, dynamic>> rocksFound = [];
+  try {
+    QuerySnapshot snapshot = await rocksFoundCollection
+        .where('UID', isEqualTo: uid)
+        .where('VIEWABLE', isEqualTo: true) // Add this condition
+        .get();
+    rocksFound = snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return {
+        ...data,
+        'ID': doc.id,
+      };
+    }).toList();
+  } catch (e) {
+    print(e);
+  }
+  return rocksFound;
+}
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/pages/other_users_collection.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
