@@ -140,7 +140,7 @@ class _RockIDState extends State<RockID> {
             const SizedBox(height: 10),
             const Spacer(),
             const Text(
-              "Current Location",
+              "Save Location",
               style: TextStyle(
                   color: Colors.brown,
                   fontSize: 20,
@@ -433,7 +433,7 @@ class _RockIDState extends State<RockID> {
                 ),
                 TextButton(
                   child: Text(
-                    'Not Save',
+                    'Cancel',
                     style: TextStyle(color: Colors.brown),
                   ),
                   onPressed: () {
