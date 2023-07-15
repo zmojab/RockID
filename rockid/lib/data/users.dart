@@ -65,6 +65,7 @@ class UserCRUD {
     }
   }
 
+//updates user's location JW
   Future<void> updateUserLocation(String? docID, String location) async {
     if (docID != null) {
       await _firestore.collection("users").doc(docID).update({
@@ -75,6 +76,7 @@ class UserCRUD {
     }
   }
 
+//updates user's bio JW
   Future<void> updateUserBio(String? docID, String bio) async {
     if (docID != null) {
       await _firestore.collection("users").doc(docID).update({
@@ -85,6 +87,7 @@ class UserCRUD {
     }
   }
 
+//updates user's public status JW
 Future<void> updateUserProfileStatus(String? docID, bool isPublic) async {
     if (docID != null) {
       await _firestore.collection("users").doc(docID).update({
@@ -93,6 +96,23 @@ Future<void> updateUserProfileStatus(String? docID, bool isPublic) async {
     } else {
       throw Exception('User doc ID is null');
     }
+  }
+
+//gets username for display purposes JW
+  Future<String?> getUsernameFromUid(String uid) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection("users")
+          .where("UID", isEqualTo: uid)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        var data = querySnapshot.docs[0].data() as Map<String, dynamic>;
+        return data?['username'] as String?;
+      }
+    } catch (error) {
+      print('Error getting username from UID: $error');
+    }
+    return null;
   }
 
 }
