@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rockid/pages/Home_page.dart';
-import 'package:rockid/pages/login_page.dart';
-import 'package:rockid/pages/profile_page.dart';
+import 'package:rockid/components/disclaimer_popup.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -126,16 +125,51 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {
-              showAlertDialog(context);
+          Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+              );
             },
-            icon: Icon(
-              Icons.logout,
-            ),
           ),
         ],
         backgroundColor: Colors.brown,
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.brown,
+              ),
+              child: Text(
+                'Menu',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                showAlertDialog(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('Disclaimer'),
+              onTap: () {
+                DisclaimerPopup.show(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: SafeArea(
         child: Center(
