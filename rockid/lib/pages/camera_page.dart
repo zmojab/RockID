@@ -485,7 +485,6 @@ class _RockIDState extends State<RockID> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Off', style: TextStyle(color: Colors.brown)),
             Switch(
               value: _isLocation,
               activeColor: Colors.brown,
