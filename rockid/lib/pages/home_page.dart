@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rockid/pages/other_users_collection.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
@@ -43,7 +42,12 @@ class _HomePageState extends State<HomePage> {
       newUserRef.set({
         'UID': user.uid,
         'username': '',
+        'email': user.email,
         'occupation': '',
+        'isProfilePrivate': false,
+        'isFullNamePrivate': false,
+        'isEmailPrivate': false,
+        'isPhoneNumberPrivate': false,
         'number of rocks found': 0,
         'user_profile_url':
             'https://firebasestorage.googleapis.com/v0/b/rockid-30d56.appspot.com/o/Profile_Images%2FBlank_profile%20(1).png?alt=media&token=36582d23-62ae-460b-b9f4-74e5c9227a3b',

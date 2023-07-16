@@ -4,10 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'dart:io';
 import '../data/users.dart';
 
-bool isProfilePublic = true;
+bool isProfilePrivate = false;
+bool isFullNamePrivate = false;
+bool isEmailPrivate = false;
+bool isPhoneNumberPrivate = false;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -24,14 +28,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _uploadedImageUrl;
 
   late TextEditingController usernameController;
+  late TextEditingController fullNameController;
+  late TextEditingController phoneNumberController;
   late TextEditingController occupationController;
   late TextEditingController locationController;
   late TextEditingController bioController;
+
+  var phoneNumberFormatter = MaskTextInputFormatter(
+    mask: '(###) ###-####',
+    filter: {'#': RegExp(r'[0-9]')},
+  );
 
   @override
   void initState() {
     super.initState();
     usernameController = TextEditingController();
+    fullNameController = TextEditingController();
+    phoneNumberController = TextEditingController();
     occupationController = TextEditingController();
     locationController = TextEditingController();
     bioController = TextEditingController();
@@ -50,10 +63,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
           setState(() {
             usernameController.text = data['username'] as String? ?? '';
+            fullNameController.text = data['fullName'] as String? ?? '';
+            phoneNumberController.text =
+                formatPhoneNumber(data['phoneNumber'] as String? ?? '');
             occupationController.text = data['occupation'] as String? ?? '';
             locationController.text = data['location'] as String? ?? '';
             bioController.text = data['bio'] as String? ?? '';
-            isProfilePublic = data['public'] as bool? ?? true;
+            isProfilePrivate = data['profilePrivate'] as bool? ?? true;
+            isFullNamePrivate = data['fullNamePrivate'] as bool? ?? true;
+            isEmailPrivate = data['emailPrivate'] as bool? ?? true;
+            isPhoneNumberPrivate = data['phoneNumberPrivate'] as bool? ?? true;
           });
         }
       }
@@ -113,6 +132,61 @@ class _EditProfilePageState extends State<EditProfilePage> {
         const SnackBar(
           content: Text(
               'Failed to update occupation. Must be between 2 and 30 characters.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateFullName() async {
+    if (fullNameController.text.trim().length < 100) {
+      try {
+        var docID = await UserCRUD().getUserDocID(user.uid);
+        if (docID != null) {
+          await UserCRUD()
+              .updateUserFullName(docID, fullNameController.text.trim());
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Full name updated successfully')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update full name')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Failed to update full name. Full name must be 100 characters or less.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> updatePhoneNumber() async {
+    String phoneNumber = phoneNumberController.text.trim();
+    print(phoneNumber.length);
+
+    if (phoneNumber.length == 14) {
+      phoneNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
+      try {
+        var docID = await UserCRUD().getUserDocID(user.uid);
+        if (docID != null) {
+          await UserCRUD().updateUserPhoneNumber(docID, phoneNumber);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Phone number updated successfully')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update phone number')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+              'Failed to update phone number. Please enter a valid 10-digit phone number.'),
         ),
       );
     }
@@ -221,25 +295,90 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateProfileStatus(bool isPublic) async {
+  Future<void> updateProfileStatus(bool isProfilePrivate) async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
       if (docID != null) {
-        await UserCRUD().updateUserProfileStatus(docID, isPublic);
+        await UserCRUD().updateUserProfileStatus(docID, isProfilePrivate);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile privacy updated successfully')),
+          const SnackBar(
+              content: Text('Profile privacy status updated successfully')),
         );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile privacy')),
+        const SnackBar(
+            content: Text('Failed to update profile privacy status')),
       );
     }
+  }
+
+  Future<void> updateFullNameStatus(bool isFullNamePrivate) async {
+    try {
+      var docID = await UserCRUD().getUserDocID(user.uid);
+      if (docID != null) {
+        await UserCRUD().updateUserFullNameStatus(docID, isFullNamePrivate);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Full name privacy status updated successfully')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Failed to update full name privacy status')),
+      );
+    }
+  }
+
+  Future<void> updateEmailStatus(bool isEmailPrivate) async {
+    try {
+      var docID = await UserCRUD().getUserDocID(user.uid);
+      if (docID != null) {
+        await UserCRUD().updateUserEmailStatus(docID, isEmailPrivate);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Email privacy status updated successfully')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update email privacy status')),
+      );
+    }
+  }
+
+  Future<void> updatePhoneNumberStatus(bool isPhoneNumberPrivate) async {
+    try {
+      var docID = await UserCRUD().getUserDocID(user.uid);
+      if (docID != null) {
+        await UserCRUD()
+            .updateUserPhoneNumberStatus(docID, isPhoneNumberPrivate);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text('Phone number privacy status updated successfully')),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Failed to update phone number privacy status')),
+      );
+    }
+  }
+
+  String formatPhoneNumber(String phoneNumber) {
+    final maskedText = phoneNumberFormatter.maskText(phoneNumber);
+    return maskedText;
   }
 
   @override
   void dispose() {
     usernameController.dispose();
+    bioController.dispose();
+    fullNameController.dispose();
+    phoneNumberController.dispose();
     occupationController.dispose();
     locationController.dispose();
     super.dispose();
@@ -259,9 +398,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
         backgroundColor: Colors.brown,
       ),
       backgroundColor: Color.fromARGB(255, 255, 237, 223),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (_image != null)
               Image.file(
@@ -297,6 +437,45 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ],
             ),
             SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: fullNameController,
+                    decoration: InputDecoration(labelText: 'Full Name'),
+                  ),
+                ),
+                SizedBox(width: 8.0),
+                ElevatedButton(
+                  onPressed: updateFullName,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(90, 40),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Update'),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: phoneNumberController,
+                    inputFormatters: [phoneNumberFormatter],
+                    decoration: InputDecoration(labelText: 'Phone Number'),
+                  ),
+                ),
+                SizedBox(width: 8.0),
+                ElevatedButton(
+                  onPressed: updatePhoneNumber,
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(90, 40),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Update'),
+                ),
+              ],
+            ),
             Row(
               children: [
                 Expanded(
@@ -339,17 +518,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
             SizedBox(height: 16.0),
             Container(
               constraints: BoxConstraints(
-                maxHeight: 200.0, 
+                maxHeight: 200.0,
               ),
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: bioController,
-                      maxLines:
-                          null, 
-                      keyboardType:
-                          TextInputType.multiline, 
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(labelText: 'Bio'),
                     ),
                   ),
@@ -366,25 +543,145 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             SizedBox(height: 24.0),
-            Container(
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Private'),
-                  Switch.adaptive(
-                    value: isProfilePublic,
-                    onChanged: (value) {
-                      setState(() {
-                        isProfilePublic = value;
-                      });
-                      updateProfileStatus(value);
-                    },
-                    activeColor: Color.fromARGB(247, 242, 137, 38),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Privacy Options',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  Text('Public'),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Profile',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Switch.adaptive(
+                              value: isProfilePrivate,
+                              onChanged: (value) {
+                                setState(() {
+                                  isProfilePrivate = value;
+                                });
+                                updateProfileStatus(value);
+                              },
+                              activeColor: Color.fromARGB(247, 242, 137, 38),
+                            ),
+                            Text('Private'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Full Name',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Switch.adaptive(
+                              value: isFullNamePrivate,
+                              onChanged: (value) {
+                                setState(() {
+                                  isFullNamePrivate = value;
+                                });
+                                updateFullNameStatus(value);
+                              },
+                              activeColor: Color.fromARGB(247, 242, 137, 38),
+                            ),
+                            Text('Private'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Email',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Switch.adaptive(
+                              value: isEmailPrivate,
+                              onChanged: (value) {
+                                setState(() {
+                                  isEmailPrivate = value;
+                                });
+                                updateEmailStatus(value);
+                              },
+                              activeColor: Color.fromARGB(247, 242, 137, 38),
+                            ),
+                            Text('Private'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Phone Number',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Row(
+                          children: [
+                            Switch.adaptive(
+                              value: isPhoneNumberPrivate,
+                              onChanged: (value) {
+                                setState(() {
+                                  isPhoneNumberPrivate = value;
+                                });
+                                updatePhoneNumberStatus(value);
+                              },
+                              activeColor: Color.fromARGB(247, 242, 137, 38),
+                            ),
+                            Text('Private'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
