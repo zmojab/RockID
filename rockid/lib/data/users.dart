@@ -87,11 +87,43 @@ class UserCRUD {
     }
   }
 
-//updates user's public status JW
-Future<void> updateUserProfileStatus(String? docID, bool isPublic) async {
+//updates user's profile privacy status JW
+Future<void> updateUserProfileStatus(String? docID, bool isProfilePrivate) async {
     if (docID != null) {
       await _firestore.collection("users").doc(docID).update({
-        'public': isPublic,
+        'profilePrivate': isProfilePrivate,
+      });
+    } else {
+      throw Exception('User doc ID is null');
+    }
+  }
+
+  Future<void> updateUserFullNameStatus(String? docID, bool isFullNamePrivate) async {
+    if (docID != null) {
+      await _firestore.collection("users").doc(docID).update({
+        'fullNamePrivate': isFullNamePrivate,
+      });
+    } else {
+      throw Exception('User doc ID is null');
+    }
+  }
+
+//updates user's email privacy status JW
+  Future<void> updateUserEmailStatus(String? docID, bool isEmailPrivate) async {
+    if (docID != null) {
+      await _firestore.collection("users").doc(docID).update({
+        'emailPrivate': isEmailPrivate,
+      });
+    } else {
+      throw Exception('User doc ID is null');
+    }
+  }
+
+  //updates user's phone number privacy status JW
+  Future<void> updateUserPhoneNumberStatus(String? docID, bool isPhoneNumberPrivate) async {
+    if (docID != null) {
+      await _firestore.collection("users").doc(docID).update({
+        'phoneNumberPrivate': isPhoneNumberPrivate,
       });
     } else {
       throw Exception('User doc ID is null');
@@ -113,6 +145,28 @@ Future<void> updateUserProfileStatus(String? docID, bool isPublic) async {
       print('Error getting username from UID: $error');
     }
     return null;
+  }
+
+  //updates user's full name JW
+  Future<void> updateUserFullName(String? docID, String fullName) async {
+    if (docID != null) {
+      await _firestore.collection("users").doc(docID).update({
+        'fullName': fullName,
+      });
+    } else {
+      throw Exception('User doc ID is null');
+    }
+  }
+
+  //updates user's phone number JW
+  Future<void> updateUserPhoneNumber(String? docID, String phoneNumber) async {
+    if (docID != null) {
+      await _firestore.collection("users").doc(docID).update({
+        'phoneNumber': phoneNumber,
+      });
+    } else {
+      throw Exception('User doc ID is null');
+    }
   }
 
 }
