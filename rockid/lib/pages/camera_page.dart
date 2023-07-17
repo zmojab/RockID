@@ -77,6 +77,7 @@ class _RockIDState extends State<RockID> {
   final picker = ImagePicker();
   File? _selectedImageFile;
   String _rockType = "";
+  String _chance = "";
 
   // Result
   _ResultStatus _resultStatus = _ResultStatus.notStarted;
@@ -330,6 +331,19 @@ class _RockIDState extends State<RockID> {
     isRockClassified = true;
     final rockLabel = resultCategory.label;
     final accuracy = resultCategory.score;
+    if (accuracy >= 95) {
+      setState(() {
+        _chance = "high";
+      });
+    } else if (accuracy >= 85) {
+      setState(() {
+        _chance = "medium";
+      });
+    } else {
+      setState(() {
+        _chance = "low";
+      });
+    }
 
     Future.delayed(Duration(seconds: 2), () {
       _setAnalyzing(false);
@@ -391,15 +405,16 @@ class _RockIDState extends State<RockID> {
 
   void _SaveRock() async {
     //Get lat and long form Geolocator - JW
-    final position = await Geolocator.getCurrentPosition();
-    final latitude = position.latitude;
-    final longitude = position.longitude;
+    //final position = await Geolocator.getCurrentPosition();
+    //final latitude = position.latitude;
+    //final longitude = position.longitude;
     var title = '';
 
     if (_resultStatus == _ResultStatus.notFound) {
       title = 'Fail to recognise this rock';
     } else if (_resultStatus == _ResultStatus.found) {
-      title = "This rock is possibly a $_rockType $_RockLabel";
+      title =
+          "There is a $_chance proability this rock is a $_rockType $_RockLabel";
     } else {
       title = '';
     }
@@ -416,14 +431,15 @@ class _RockIDState extends State<RockID> {
         return AlertDialog(
           backgroundColor: Color.fromARGB(255, 255, 237, 223),
           title: Text('Rock Classification'),
-          content: Text(title + " with an accuracy of " + accuracyLabel),
+          content: Text(
+              "$title with an accuracy of $accuracyLabel. Would you like to save this classification?"),
           actions: <Widget>[
             ButtonBar(
               alignment: MainAxisAlignment.center,
               children: [
                 TextButton(
                   child: Text(
-                    'Save',
+                    'Yes',
                     style: TextStyle(color: Colors.brown),
                   ),
                   onPressed: () {
@@ -433,7 +449,7 @@ class _RockIDState extends State<RockID> {
                 ),
                 TextButton(
                   child: Text(
-                    'Cancel',
+                    'No',
                     style: TextStyle(color: Colors.brown),
                   ),
                   onPressed: () {

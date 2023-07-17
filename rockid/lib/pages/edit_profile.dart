@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rockid/pages/home_page.dart';
 import 'dart:io';
 import '../data/users.dart';
 
@@ -12,6 +13,7 @@ bool isProfilePrivate = false;
 bool isFullNamePrivate = false;
 bool isEmailPrivate = false;
 bool isPhoneNumberPrivate = false;
+String _message = "";
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -118,9 +120,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         if (docID != null) {
           await UserCRUD()
               .updateUserOccupation(docID, occupationController.text.trim());
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Occupation updated successfully')),
-          );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -144,9 +143,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         if (docID != null) {
           await UserCRUD()
               .updateUserFullName(docID, fullNameController.text.trim());
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Full name updated successfully')),
-          );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -173,9 +169,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         var docID = await UserCRUD().getUserDocID(user.uid);
         if (docID != null) {
           await UserCRUD().updateUserPhoneNumber(docID, phoneNumber);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Phone number updated successfully')),
-          );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -198,7 +191,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       if (docID != null) {
         await UserCRUD().updateUserProfileUrl(docID, _uploadedImageUrl);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile picture updated successfully')),
+          const SnackBar(content: Text('Updated profile picture')),
         );
       }
     } catch (error) {
@@ -211,6 +204,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> updateUsername() async {
     String input = usernameController.text.trim();
     final QuerySnapshot snapshot = await UserCRUD().getUserByUsername(input);
+    var collection = FirebaseFirestore.instance.collection("users");
+    var username = await collection.where("UID", isEqualTo: user.uid).get();
+
     // ignore: non_constant_identifier_names
     final SpecialChar = RegExp(r'[!@#$%^&*(),.?":{}|<> ]');
 
@@ -222,15 +218,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
         var docID = await UserCRUD().getUserDocID(user.uid);
         if (docID != null) {
           await UserCRUD().updateUserUsername(docID, input);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Username updated successfully')),
-          );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to username profile')),
         );
       }
+    } else if (input == username.docs[0].data()['username']) {
+      print("Same username");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -249,9 +244,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         var docID = await UserCRUD().getUserDocID(user.uid);
         if (docID != null) {
           await UserCRUD().updateUserLocation(docID, location);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location updated successfully')),
-          );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -276,9 +268,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         var docID = await UserCRUD().getUserDocID(user.uid);
         if (docID != null) {
           await UserCRUD().updateUserBio(docID, bio);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Bio updated successfully')),
-          );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -295,15 +284,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateProfileStatus(bool isProfilePrivate) async {
+  Future<void> updateProfileStatus() async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
       if (docID != null) {
         await UserCRUD().updateUserProfileStatus(docID, isProfilePrivate);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Profile privacy status updated successfully')),
-        );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -313,15 +298,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateFullNameStatus(bool isFullNamePrivate) async {
+  Future<void> updateFullNameStatus() async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
       if (docID != null) {
         await UserCRUD().updateUserFullNameStatus(docID, isFullNamePrivate);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Full name privacy status updated successfully')),
-        );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -331,15 +312,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateEmailStatus(bool isEmailPrivate) async {
+  Future<void> updateEmailStatus() async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
       if (docID != null) {
         await UserCRUD().updateUserEmailStatus(docID, isEmailPrivate);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Email privacy status updated successfully')),
-        );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -348,17 +325,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updatePhoneNumberStatus(bool isPhoneNumberPrivate) async {
+  Future<void> updatePhoneNumberStatus() async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
       if (docID != null) {
         await UserCRUD()
             .updateUserPhoneNumberStatus(docID, isPhoneNumberPrivate);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text('Phone number privacy status updated successfully')),
-        );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -388,7 +360,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: null,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Edit Profile',
           style: TextStyle(fontSize: 30),
@@ -404,9 +376,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (_image != null)
-              Image.file(
-                _image!,
-                height: 200,
+              Column(
+                children: [
+                  Image.file(
+                    _image!,
+                    height: 200,
+                  ),
+                  SizedBox(height: 16.0),
+                ],
               ),
             ElevatedButton(
               onPressed: _uploadImage,
@@ -417,6 +394,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
             SizedBox(height: 16.0),
+            SizedBox(height: 16.0),
             Row(
               children: [
                 Expanded(
@@ -426,14 +404,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updateUsername,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(90, 40),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Update'),
-                ),
               ],
             ),
             SizedBox(height: 16.0),
@@ -446,14 +416,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updateFullName,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(90, 40),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Update'),
-                ),
               ],
             ),
             Row(
@@ -466,14 +428,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updatePhoneNumber,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(90, 40),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Update'),
-                ),
               ],
             ),
             Row(
@@ -485,14 +439,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updateOccupation,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(90, 40),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Update'),
-                ),
               ],
             ),
             SizedBox(height: 16.0),
@@ -505,14 +451,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: updateLocation,
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(90, 40),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Update'),
-                ),
               ],
             ),
             SizedBox(height: 16.0),
@@ -531,14 +469,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                   SizedBox(width: 8.0),
-                  ElevatedButton(
-                    onPressed: updateBio,
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(90, 40),
-                      backgroundColor: Colors.brown,
-                    ),
-                    child: Text('Update'),
-                  ),
                 ],
               ),
             ),
@@ -577,7 +507,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 setState(() {
                                   isProfilePrivate = value;
                                 });
-                                updateProfileStatus(value);
                               },
                               activeColor: Color.fromARGB(247, 242, 137, 38),
                             ),
@@ -608,7 +537,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 setState(() {
                                   isFullNamePrivate = value;
                                 });
-                                updateFullNameStatus(value);
                               },
                               activeColor: Color.fromARGB(247, 242, 137, 38),
                             ),
@@ -639,7 +567,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 setState(() {
                                   isEmailPrivate = value;
                                 });
-                                updateEmailStatus(value);
                               },
                               activeColor: Color.fromARGB(247, 242, 137, 38),
                             ),
@@ -670,7 +597,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 setState(() {
                                   isPhoneNumberPrivate = value;
                                 });
-                                updatePhoneNumberStatus(value);
                               },
                               activeColor: Color.fromARGB(247, 242, 137, 38),
                             ),
@@ -680,6 +606,44 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ],
                     ),
                   ),
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    updateUsername();
+                    updateFullName();
+                    updatePhoneNumber();
+                    updateOccupation();
+                    updateLocation();
+                    updateBio();
+                    updateProfileStatus();
+                    updateFullNameStatus();
+                    updateEmailStatus();
+                    updatePhoneNumberStatus();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Fields are updated')),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(150, 50),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Update'),
+                ),
+                SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(150, 50),
+                    backgroundColor: Colors.brown,
+                  ),
+                  child: Text('Home Page'),
                 ),
               ],
             ),
