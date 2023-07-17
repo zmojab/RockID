@@ -22,6 +22,11 @@ String _url = "";
 
 String _username = "";
 String _occ = "";
+String _bio = "";
+String _fullname = "";
+String _phoneNumber = "";
+String _location = "";
+
 int _rocks = 0;
 final user = FirebaseAuth.instance.currentUser!;
 String email = user.email!;
@@ -31,14 +36,21 @@ var collection = FirebaseFirestore.instance.collection("users");
 
 showAlertDialog(BuildContext context) {
   // set up the buttons
+
   Widget cancelButton = TextButton(
-    child: Text("Yes"),
+    child: Text(
+      "Yes",
+      style: TextStyle(color: Colors.brown),
+    ),
     onPressed: () {
       signUserOut(context);
     },
   );
   Widget continueButton = TextButton(
-    child: Text("No"),
+    child: Text(
+      "No",
+      style: TextStyle(color: Colors.brown),
+    ),
     onPressed: () {
       Navigator.of(context).pop();
     },
@@ -46,8 +58,11 @@ showAlertDialog(BuildContext context) {
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
+    backgroundColor: Color.fromARGB(255, 255, 237, 223),
     title: Text("Logging Out"),
-    content: Text("Would you like to log out?"),
+    content: Text(
+      "Would you like to log out?",
+    ),
     actions: [
       cancelButton,
       continueButton,
@@ -103,13 +118,21 @@ class _ProfilePageState extends State<ProfilePage> {
         .where('UID', isEqualTo: user.uid)
         .get();
 
-    if (username.docs.isNotEmpty) {
-      setState(() {
-        _username = username.docs[0].data()['username'];
-        _occ = username.docs[0].data()['occupation'];
-        _rocks = snapshot.size;
-        _url = username.docs[0].data()['user_profile_url'];
-      });
+    try {
+      if (username.docs.isNotEmpty) {
+        setState(() {
+          _username = username.docs[0].data()['username'];
+          _occ = username.docs[0].data()['occupation'];
+          _rocks = snapshot.size;
+          _url = username.docs[0].data()['user_profile_url'];
+          _fullname = username.docs[0].data()['fullName'];
+          _bio = username.docs[0].data()['bio'];
+          _phoneNumber = username.docs[0].data()['phoneNumber'];
+          _location = username.docs[0].data()['location'];
+        });
+      }
+    } catch (e) {
+      print("could not get user info information");
     }
   }
 
@@ -139,6 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.brown,
       ),
       endDrawer: Drawer(
+        backgroundColor: Color.fromARGB(255, 255, 237, 223),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -183,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundImage: NetworkImage(_url),
                 ),
                 Text(
-                  email,
+                  _fullname,
                   style: TextStyle(fontSize: 22),
                 ),
                 const SizedBox(
@@ -253,6 +277,142 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       subtitle: Text(
                         _occ,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: Color.fromARGB(255, 255, 237, 223),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.email,
+                        color: Colors.brown,
+                      ),
+                      title: const Text(
+                        'EMAIL:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        email,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: Color.fromARGB(255, 255, 237, 223),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.phone,
+                        color: Colors.brown,
+                      ),
+                      title: const Text(
+                        'PHONE NUMBER:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        _phoneNumber,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: Color.fromARGB(255, 255, 237, 223),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.location_city,
+                        color: Colors.brown,
+                      ),
+                      title: const Text(
+                        'LOCATION:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        _location,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: Color.fromARGB(255, 255, 237, 223),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.brown,
+                      ),
+                      title: const Text(
+                        'BIO:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        _bio,
                         style: const TextStyle(
                           fontSize: 20.0,
                           color: Colors.black,
