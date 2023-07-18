@@ -1,33 +1,4 @@
-// Copyright (c) 2022 Kodeco LLC
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
-// distribute, sublicense, create a derivative work, and/or sell copies of the
-// Software in any work that is designed, intended, or marketed for pedagogical
-// or instructional purposes related to programming, coding,
-// application development, or information technology.  Permission for such use,
-// copying, modification, merger, publication, distribution, sublicensing,
-// creation of derivative works, or sale is expressly withheld.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
@@ -39,6 +10,7 @@ import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/Home_page.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import '../data/rocksfound.dart';
 
 const _labelsFileName = 'assets/polishedLabels.txt';
@@ -73,11 +45,11 @@ class _RockIDState extends State<RockID> {
   bool _isAnalyzing = false;
   bool _isLocation = false;
   bool _isRaw = false;
-  bool isRockClassified = false;
   final picker = ImagePicker();
   File? _selectedImageFile;
   String _rockType = "";
   String _chance = "";
+  String _city = '';
 
   // Result
   _ResultStatus _resultStatus = _ResultStatus.notStarted;
@@ -314,7 +286,6 @@ class _RockIDState extends State<RockID> {
     // flag to ensure rock is not saved again
     //hasBeenSaved = false;
     // flag to ensure rock classified
-    isRockClassified = false;
     final resultCategory;
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
     if (_isRaw) {
@@ -328,7 +299,6 @@ class _RockIDState extends State<RockID> {
     final result = resultCategory.score >= 0.8
         ? _ResultStatus.found
         : _ResultStatus.notFound;
-    isRockClassified = true;
     final rockLabel = resultCategory.label;
     final accuracy = resultCategory.score;
     if (accuracy >= 95) {
@@ -362,10 +332,7 @@ class _RockIDState extends State<RockID> {
     }
   }
 
-  //Adds rock to database without location - JW
   void _saveClassificationWithOrWithoutLocation() async {
-    //upload image to storage - JW
-    //Get lat and long form Geolocator - JW
     final position = await Geolocator.getCurrentPosition();
     final latitude = position.latitude;
     final longitude = position.longitude;
@@ -374,8 +341,15 @@ class _RockIDState extends State<RockID> {
 
     if (_isLocation) {
       try {
-        rocksFoundCRUD.addRockFoundWithLocation(user.uid, _RockLabel, imageUrl,
-            latitude, longitude, DateTime.now());
+        rocksFoundCRUD.addRockFoundWithLocation(
+          user.uid,
+          _RockLabel,
+          imageUrl,
+          latitude,
+          longitude,
+          _city,
+          DateTime.now(),
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text(
@@ -390,31 +364,41 @@ class _RockIDState extends State<RockID> {
     } else {
       try {
         rocksFoundCRUD.addRockFoundWithOutLocation(
-            user.uid, _RockLabel, imageUrl, DateTime.now());
+          user.uid,
+          _RockLabel,
+          imageUrl,
+          DateTime.now(),
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Successfully saved the rock classification')),
+            content: Text('Successfully saved the rock classification'),
+          ),
         );
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save rock classification')),
+          const SnackBar(
+            content: Text('Failed to save rock classification'),
+          ),
         );
       }
     }
   }
 
   void _SaveRock() async {
-    //Get lat and long form Geolocator - JW
-    //final position = await Geolocator.getCurrentPosition();
-    //final latitude = position.latitude;
-    //final longitude = position.longitude;
+    final position = await Geolocator.getCurrentPosition();
+    final latitude = position.latitude;
+    final longitude = position.longitude;
+    final city = await _getCityFromCoordinates(latitude, longitude);
+    setState(() {
+      _city = city;
+    });
+
     var title = '';
 
     if (_resultStatus == _ResultStatus.notFound) {
-      title = 'Fail to recognise this rock';
+      title = 'Fail to recognize this rock';
     } else if (_resultStatus == _ResultStatus.found) {
-      title =
-          "There is a $_chance proability this rock is a $_rockType $_RockLabel";
+      title = "There is a $_chance proability this rock is a $_rockType $_RockLabel";
     } else {
       title = '';
     }
@@ -422,9 +406,8 @@ class _RockIDState extends State<RockID> {
     if (_resultStatus == _ResultStatus.found) {
       accuracyLabel = '${(_accuracy * 100).toStringAsFixed(2)}%';
     }
-    //upload image to storage - JW
 
-    //Confirmation
+    // Confirmation
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -432,7 +415,8 @@ class _RockIDState extends State<RockID> {
           backgroundColor: Color.fromARGB(255, 255, 237, 223),
           title: Text('Rock Classification'),
           content: Text(
-              "$title with an accuracy of $accuracyLabel. Would you like to save this classification?"),
+            '$title with an accuracy of $accuracyLabel. Would you like to save this classification?',
+          ),
           actions: <Widget>[
             ButtonBar(
               alignment: MainAxisAlignment.center,
@@ -465,14 +449,13 @@ class _RockIDState extends State<RockID> {
   }
 
   void _CantRecognize() async {
-    //Get lat and long form Geolocator - JW
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color.fromARGB(255, 255, 237, 223),
           title: Text('Rock Classification'),
-          content: Text("Failed to recognize the rock"),
+          content: Text('Failed to recognize the rock'),
           actions: <Widget>[
             ButtonBar(
               alignment: MainAxisAlignment.center,
@@ -505,7 +488,7 @@ class _RockIDState extends State<RockID> {
               value: _isLocation,
               activeColor: Colors.brown,
               onChanged: (value) {
-                print("VALUE : $value");
+                print('VALUE: $value');
                 setState(() {
                   _isLocation = value;
                 });
@@ -516,5 +499,18 @@ class _RockIDState extends State<RockID> {
         ),
       ],
     );
+  }
+
+  Future<String> _getCityFromCoordinates(double latitude, double longitude) async {
+    try {
+      final List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        final Placemark placemark = placemarks.first;
+        return placemark.locality ?? '';
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+    return '';
   }
 }
