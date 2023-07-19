@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 import '../data/rocksfound.dart';
 import '../data/users.dart';
+import '../models/rock.dart';
+import '../repositories/rock_repository.dart';
+import '../components/rock_details_popup.dart';
 
 class OtherUsersRocksPage extends StatefulWidget {
   final String uid;
@@ -16,6 +19,7 @@ class OtherUsersRocksPage extends StatefulWidget {
 class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
   RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
   UserCRUD userCRUD = UserCRUD();
+  RockRepository rockRepository = RockRepository();
 
   Future<List<Map<String, dynamic>>>? rocksFoundFuture;
   String _username = '';
@@ -61,6 +65,32 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
       print('Error: $e');
     }
     return '';
+  }
+
+  void showRockInformation(String rockClassificaiton, BuildContext context) {
+    Future<Rock> rockFuture = rockRepository
+        .getRockByClassification(rockClassificaiton.toLowerCase());
+    rockFuture.then((rock) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder<Rock>(
+            future: rockFuture as Future<Rock>,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                return RockDetailsPopup(rock: snapshot.data!);
+              } else {
+                return Text('No data found');
+              }
+            },
+          );
+        },
+      );
+    });
   }
 
   String capitalizeRockClassification(String rockClassificaitonName) {
@@ -123,7 +153,8 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'view') {
-                          // Placeholder to go to rock information page
+                           showRockInformation(
+                                  rockFound['ROCK_CLASSIFICATION'], context);
                         }
                       },
                       itemBuilder: (BuildContext context) {
