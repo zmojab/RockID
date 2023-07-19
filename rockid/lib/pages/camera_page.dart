@@ -14,9 +14,9 @@ import 'package:geocoding/geocoding.dart';
 import '../data/rocksfound.dart';
 
 const _labelsFileName = 'assets/polishedLabels.txt';
-const _modelFileName = 'polished80%.tflite';
+const _modelFileName = 'MobileNetPolished80%.tflite';
 const _labelsFileName1 = 'assets/roughLabels.txt';
-const _modelFileName1 = 'rough82%.tflite';
+const _modelFileName1 = 'MobileNetRough82%.tflite';
 
 final RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
 final user = FirebaseAuth.instance.currentUser!;
@@ -49,7 +49,7 @@ class _RockIDState extends State<RockID> {
   File? _selectedImageFile;
   String _rockType = "";
   String _chance = "";
-  String _city = '';
+  //String _city = '';
 
   // Result
   _ResultStatus _resultStatus = _ResultStatus.notStarted;
@@ -283,6 +283,7 @@ class _RockIDState extends State<RockID> {
   void _analyzeImage(File image) {
     String rockType = "";
     _setAnalyzing(true);
+    String chance = "";
     // flag to ensure rock is not saved again
     //hasBeenSaved = false;
     // flag to ensure rock classified
@@ -301,18 +302,13 @@ class _RockIDState extends State<RockID> {
         : _ResultStatus.notFound;
     final rockLabel = resultCategory.label;
     final accuracy = resultCategory.score;
-    if (accuracy >= 95) {
-      setState(() {
-        _chance = "high";
-      });
-    } else if (accuracy >= 85) {
-      setState(() {
-        _chance = "medium";
-      });
+
+    if (accuracy >= .95) {
+      chance = "high";
+    } else if (accuracy >= .85) {
+      chance = "medium";
     } else {
-      setState(() {
-        _chance = "low";
-      });
+      chance = "low";
     }
 
     Future.delayed(Duration(seconds: 2), () {
@@ -320,6 +316,7 @@ class _RockIDState extends State<RockID> {
     });
 
     setState(() {
+      _chance = chance;
       _resultStatus = result;
       _RockLabel = rockLabel;
       _accuracy = accuracy;
@@ -338,6 +335,7 @@ class _RockIDState extends State<RockID> {
     final longitude = position.longitude;
     final imageUrl =
         await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
+    final city = await _getCityFromCoordinates(latitude, longitude);
 
     if (_isLocation) {
       try {
@@ -347,7 +345,7 @@ class _RockIDState extends State<RockID> {
           imageUrl,
           latitude,
           longitude,
-          _city,
+          city,
           DateTime.now(),
         );
         ScaffoldMessenger.of(context).showSnackBar(
@@ -385,20 +383,21 @@ class _RockIDState extends State<RockID> {
   }
 
   void _SaveRock() async {
-    final position = await Geolocator.getCurrentPosition();
-    final latitude = position.latitude;
-    final longitude = position.longitude;
-    final city = await _getCityFromCoordinates(latitude, longitude);
-    setState(() {
-      _city = city;
-    });
+    //final position = await Geolocator.getCurrentPosition();
+    //final latitude = position.latitude;
+    //final longitude = position.longitude;
+    //final city = await _getCityFromCoordinates(latitude, longitude);
+    //setState(() {
+    //  _city = city;
+    //});
 
     var title = '';
 
     if (_resultStatus == _ResultStatus.notFound) {
       title = 'Fail to recognize this rock';
     } else if (_resultStatus == _ResultStatus.found) {
-      title = "There is a $_chance proability this rock is a $_rockType $_RockLabel";
+      title =
+          "There is a $_chance proability this rock is a $_rockType $_RockLabel";
     } else {
       title = '';
     }
@@ -501,9 +500,11 @@ class _RockIDState extends State<RockID> {
     );
   }
 
-  Future<String> _getCityFromCoordinates(double latitude, double longitude) async {
+  Future<String> _getCityFromCoordinates(
+      double latitude, double longitude) async {
     try {
-      final List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      final List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
       if (placemarks.isNotEmpty) {
         final Placemark placemark = placemarks.first;
         return placemark.locality ?? '';
