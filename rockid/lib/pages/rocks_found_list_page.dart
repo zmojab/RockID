@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../data/rocksfound.dart';
-
-
+import '../models/rock.dart';
+import '../repositories/rock_repository.dart';
+import '../components/rock_details_popup.dart';
 
 // For displaying list of rocks found by user JW
 class RocksFoundListPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class RocksFoundListPage extends StatefulWidget {
 class _RocksFoundListPageState extends State<RocksFoundListPage> {
   //For CRUD operations on rocks_found collection JW
   RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
+  RockRepository rockRepository = RockRepository();
 
   //For rocks found
   Future<List<Map<String, dynamic>>>? rocksFoundFuture;
@@ -35,23 +37,49 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
       rocksFoundFuture = rocksFoundCRUD.getRocksFoundForUID(widget.uid);
     });
   }
-  
+
+  void showRockInformation(String rockClassificaiton, BuildContext context) {
+    Future<Rock> rockFuture = rockRepository
+        .getRockByClassification(rockClassificaiton.toLowerCase());
+    rockFuture.then((rock) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder<Rock>(
+            future: rockFuture as Future<Rock>,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                return RockDetailsPopup(rock: snapshot.data!);
+              } else {
+                return Text('No data found');
+              }
+            },
+          );
+        },
+      );
+    });
+  }
 
   //Rock classification names are stored in firebase in all lower case
   //This function capitalizes the first letter of each word in the rock classification name for presentation in the list tile JW
   String capitalizeRockClassification(String rockClassificaitonName) {
-  if (rockClassificaitonName.isEmpty) return rockClassificaitonName;
+    if (rockClassificaitonName.isEmpty) return rockClassificaitonName;
 
-  final List<String> rockClassificationNames = rockClassificaitonName.split(" ");
-  final capitalizedWords = rockClassificationNames.map((rockClassificationPartName) {
-    if (rockClassificationPartName.isEmpty) return rockClassificationPartName;
-    return rockClassificationPartName[0].toUpperCase() + rockClassificationPartName.substring(1);
-  });
+    final List<String> rockClassificationNames =
+        rockClassificaitonName.split(" ");
+    final capitalizedWords =
+        rockClassificationNames.map((rockClassificationPartName) {
+      if (rockClassificationPartName.isEmpty) return rockClassificationPartName;
+      return rockClassificationPartName[0].toUpperCase() +
+          rockClassificationPartName.substring(1);
+    });
 
-  return capitalizedWords.join(" ");
-}
-
-
+    return capitalizedWords.join(" ");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +115,8 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
                   bool canBeViewed = rockFound['CAN_BE_VIEWED'] ?? false;
                   // Dismissible for each rock found for slide to delete- JW
                   return Dismissible(
-                    //unique key for each rock found JW
-                      key: UniqueKey(), 
+                      //unique key for each rock found JW
+                      key: UniqueKey(),
                       direction: DismissDirection.endToStart,
                       background: Container(
                         color: Color.fromARGB(247, 242, 137, 38),
@@ -122,17 +150,21 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
                           height: 50,
                           fit: BoxFit.cover,
                         ),
-                        title: Text(capitalizeRockClassification(rockFound['ROCK_CLASSIFICATION'])),
+                        title: Text(capitalizeRockClassification(
+                            rockFound['ROCK_CLASSIFICATION'])),
                         subtitle: Text(
                             //Timestamp for when rock found JW
-                            "Found: ${DateFormat('MM/dd/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}" + 
-                            (rockFound['CAN_BE_VIEWED'] ? "\nLatitude: ${rockFound['LATTITUDE']}\nLongitude: ${rockFound['LONGITUDE']}" : "")),
+                            "Found: ${DateFormat('MM/dd/yyyy HH:mm').format(rockFound['DATETIME'].toDate())}" +
+                                (rockFound['CAN_BE_VIEWED']
+                                    ? "\nLatitude: ${rockFound['LATTITUDE']}\nLongitude: ${rockFound['LONGITUDE']}"
+                                    : "")),
                         //popupmenu for each rock found JW
                         trailing: PopupMenuButton<String>(
                           //to show popup needs to be implemented still JW
                           onSelected: (value) {
                             if (value == 'view') {
-                              // Placeholder to go to rock information page
+                              showRockInformation(
+                                  rockFound['ROCK_CLASSIFICATION'], context);
                             } else if (value == 'hide') {
                               //toggles viewable field to false JW
                               rocksFoundCRUD

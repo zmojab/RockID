@@ -12,4 +12,10 @@ class RockRepository {
     }).toList();
     return rockList;
   }
+  
+  Future<Rock> getRockByClassification(String rockId) async {
+    final snapshot = await _firestore.collection('rock_information').doc(rockId).get();
+    final rockData = snapshot.data();
+      return Rock.fromFirestore(rockData!);
+  }
 }
