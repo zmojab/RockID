@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:rockid/pages/Home_page.dart';
 import 'package:rockid/components/disclaimer_popup.dart';
 import 'package:rockid/pages/camera_page.dart';
@@ -33,6 +34,14 @@ String email = user.email!;
 String uid = user.uid;
 
 var collection = FirebaseFirestore.instance.collection("users");
+var phoneNumberFormatter = MaskTextInputFormatter(
+  mask: '(###) ###-####',
+  filter: {'#': RegExp(r'[0-9]')},
+);
+String formatPhoneNumber(String phoneNumber) {
+  final maskedText = phoneNumberFormatter.maskText(phoneNumber);
+  return maskedText;
+}
 
 showAlertDialog(BuildContext context) {
   // set up the buttons
@@ -127,7 +136,8 @@ class _ProfilePageState extends State<ProfilePage> {
           _url = username.docs[0].data()['user_profile_url'];
           _fullname = username.docs[0].data()['fullName'];
           _bio = username.docs[0].data()['bio'];
-          _phoneNumber = username.docs[0].data()['phoneNumber'];
+          _phoneNumber =
+              formatPhoneNumber(username.docs[0].data()['phoneNumber']);
           _location = username.docs[0].data()['location'];
         });
       }

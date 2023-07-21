@@ -53,22 +53,18 @@
 52 Rhodolite
 53 Rhodonite
 54 Ruby
-55 Sapphire Blue
-56 Sapphire Pink
-57 Sapphire Purple
-58 Sapphire Yellow
-59 Serpentine
-60 Sodalite
-61 Spessartite
-62 Sphene
-63 Spinel
-64 Sunstone
-65 Tanzanite
-66 Tigers Eye
-67 Topaz
-68 Tourmaline
-69 Tsavorite
-70 Turquoise
-71 Variscite
-72 Zircon
-73 Zoisite
+55 Sapphire
+56 Serpentine
+57 Sodalite
+58 Spessartite
+59 Sphene
+60 Sunstone
+61 Tanzanite
+62 Tigers Eye
+63 Topaz
+64 Tourmaline
+65 Tsavorite
+66 Turquoise
+67 Variscite
+68 Zircon
+69 Zoisite

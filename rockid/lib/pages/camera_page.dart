@@ -14,10 +14,11 @@ import 'package:geocoding/geocoding.dart';
 import '../data/rocksfound.dart';
 
 const _labelsFileName = 'assets/polishedLabels.txt';
-const _modelFileName = 'polished80%.tflite';
+const _modelFileName = 'MobileNetPolished80%.tflite';
 const _labelsFileName1 = 'assets/roughLabels.txt';
-const _modelFileName1 = 'rough82%.tflite';
-
+const _modelFileName1 = 'mobileNet2Rough80%.tflite';
+const _labelsFileName2 = 'assets/RoughOrPolished.txt';
+const _modelFileName2 = 'RoughOrPolished97%.tflite';
 final RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
 final user = FirebaseAuth.instance.currentUser!;
 
@@ -44,12 +45,11 @@ class _RockIDState extends State<RockID> {
   bool hasBeenSaved = false;
   bool _isAnalyzing = false;
   bool _isLocation = false;
-  bool _isRaw = false;
   final picker = ImagePicker();
   File? _selectedImageFile;
   String _rockType = "";
   String _chance = "";
-  String _city = '';
+  //String _city = '';
 
   // Result
   _ResultStatus _resultStatus = _ResultStatus.notStarted;
@@ -59,6 +59,7 @@ class _RockIDState extends State<RockID> {
   //creates Classifier objects
   late Classifier _classifier;
   late Classifier _classifier1;
+  late Classifier _classifier2;
 
   @override
   void initState() {
@@ -84,6 +85,12 @@ class _RockIDState extends State<RockID> {
       modelFileName: _modelFileName1,
     );
     _classifier1 = classifier1!;
+    //loads rough or polished model
+    final classifier2 = await Classifier.loadWith(
+      labelsFileName: _labelsFileName2,
+      modelFileName: _modelFileName2,
+    );
+    _classifier2 = classifier2!;
   }
 
   @override
@@ -121,24 +128,16 @@ class _RockIDState extends State<RockID> {
             ),
             _buildLocationSwitch(),
             const Spacer(flex: 2),
-            const Text(
-              "Rock Type",
-              style: TextStyle(
-                  color: Colors.brown,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+            _buildImageButton(
+              title: 'Take a Photo',
+              icon: Icons.camera_alt,
+              onPressed: () => _onPickPhoto(ImageSource.camera),
             ),
-            _buildRockRadio(),
             const Spacer(),
-            // only visible when the result is found - JW
-
-            _buildPickPhotoButton(
-              title: 'Take a photo',
-              source: ImageSource.camera,
-            ),
-            _buildPickPhotoButton(
-              title: 'Upload from gallery',
-              source: ImageSource.gallery,
+            _buildImageButton(
+              title: 'Upload From Gallery',
+              icon: Icons.photo_library,
+              onPressed: () => _onPickPhoto(ImageSource.gallery),
             ),
             const Spacer(),
           ],
@@ -172,6 +171,45 @@ class _RockIDState extends State<RockID> {
     );
   }
 
+  Widget _buildImageButton({
+    required String title,
+    required IconData icon,
+    required VoidCallback onPressed,
+    double buttonWidth = 270,
+  }) {
+    return SizedBox(
+      width: buttonWidth,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.brown,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: kButtonFont,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w600,
+                  color: kColorLightbeige,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildPhotolView() {
     return Stack(
       alignment: AlignmentDirectional.center,
@@ -197,68 +235,6 @@ class _RockIDState extends State<RockID> {
     );
   }
 
-  Widget _buildPickPhotoButton({
-    required ImageSource source,
-    required String title,
-  }) {
-    return TextButton(
-      onPressed: () => _onPickPhoto(source),
-      child: Container(
-        width: 300,
-        height: 50,
-        color: kColorbrown,
-        child: Center(
-            child: Text(title,
-                style: const TextStyle(
-                  fontFamily: kButtonFont,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
-                  color: kColorLightbeige,
-                ))),
-      ),
-    );
-  }
-
-  Widget _buildRockRadio() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: RadioListTile(
-            title: const Text(
-              "Rough",
-              style: TextStyle(color: Colors.brown, fontSize: 15),
-            ),
-            value: true,
-            activeColor: Colors.brown,
-            groupValue: _isRaw,
-            onChanged: (value) {
-              setState(() {
-                _isRaw = value!;
-              });
-            },
-          ),
-        ),
-        Expanded(
-          child: RadioListTile(
-            title: const Text(
-              "Polished",
-              style: TextStyle(color: Colors.brown, fontSize: 15),
-            ),
-            activeColor: Colors.brown,
-            value: false,
-            groupValue: _isRaw,
-            onChanged: (value) {
-              setState(() {
-                _isRaw = value!;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
   void _setAnalyzing(bool flag) {
     setState(() {
       _isAnalyzing = flag;
@@ -267,7 +243,7 @@ class _RockIDState extends State<RockID> {
 
   void _onPickPhoto(ImageSource source) async {
     final pickedFile = await picker.pickImage(source: source);
-
+    _setAnalyzing(true);
     if (pickedFile == null) {
       return;
     }
@@ -282,13 +258,12 @@ class _RockIDState extends State<RockID> {
 
   void _analyzeImage(File image) {
     String rockType = "";
-    _setAnalyzing(true);
-    // flag to ensure rock is not saved again
-    //hasBeenSaved = false;
-    // flag to ensure rock classified
+    String chance = "";
     final resultCategory;
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
-    if (_isRaw) {
+    final roughOrPolishedResults = _classifier2.predict(imageInput);
+    print(roughOrPolishedResults.label);
+    if (roughOrPolishedResults.label == "rough") {
       resultCategory = _classifier1.predict(imageInput);
       rockType = "rough";
     } else {
@@ -301,18 +276,13 @@ class _RockIDState extends State<RockID> {
         : _ResultStatus.notFound;
     final rockLabel = resultCategory.label;
     final accuracy = resultCategory.score;
-    if (accuracy >= 95) {
-      setState(() {
-        _chance = "high";
-      });
-    } else if (accuracy >= 85) {
-      setState(() {
-        _chance = "medium";
-      });
+
+    if (accuracy >= .95) {
+      chance = "high";
+    } else if (accuracy >= .85) {
+      chance = "medium";
     } else {
-      setState(() {
-        _chance = "low";
-      });
+      chance = "low";
     }
 
     Future.delayed(Duration(seconds: 2), () {
@@ -320,6 +290,7 @@ class _RockIDState extends State<RockID> {
     });
 
     setState(() {
+      _chance = chance;
       _resultStatus = result;
       _RockLabel = rockLabel;
       _accuracy = accuracy;
@@ -338,6 +309,7 @@ class _RockIDState extends State<RockID> {
     final longitude = position.longitude;
     final imageUrl =
         await rocksFoundCRUD.uploadImageToStorage(_selectedImageFile!);
+    final city = await _getCityFromCoordinates(latitude, longitude);
 
     if (_isLocation) {
       try {
@@ -347,7 +319,7 @@ class _RockIDState extends State<RockID> {
           imageUrl,
           latitude,
           longitude,
-          _city,
+          city,
           DateTime.now(),
         );
         ScaffoldMessenger.of(context).showSnackBar(
@@ -385,20 +357,21 @@ class _RockIDState extends State<RockID> {
   }
 
   void _SaveRock() async {
-    final position = await Geolocator.getCurrentPosition();
-    final latitude = position.latitude;
-    final longitude = position.longitude;
-    final city = await _getCityFromCoordinates(latitude, longitude);
-    setState(() {
-      _city = city;
-    });
+    //final position = await Geolocator.getCurrentPosition();
+    //final latitude = position.latitude;
+    //final longitude = position.longitude;
+    //final city = await _getCityFromCoordinates(latitude, longitude);
+    //setState(() {
+    //  _city = city;
+    //});
 
     var title = '';
 
     if (_resultStatus == _ResultStatus.notFound) {
       title = 'Fail to recognize this rock';
     } else if (_resultStatus == _ResultStatus.found) {
-      title = "There is a $_chance proability this rock is a $_rockType $_RockLabel";
+      title =
+          "There is a $_chance proability this rock is a $_rockType $_RockLabel";
     } else {
       title = '';
     }
@@ -501,9 +474,11 @@ class _RockIDState extends State<RockID> {
     );
   }
 
-  Future<String> _getCityFromCoordinates(double latitude, double longitude) async {
+  Future<String> _getCityFromCoordinates(
+      double latitude, double longitude) async {
     try {
-      final List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      final List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
       if (placemarks.isNotEmpty) {
         final Placemark placemark = placemarks.first;
         return placemark.locality ?? '';

@@ -4,6 +4,7 @@ import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
 import 'package:rockid/services/auth_service.dart';
 import '../components/square_tile.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -113,6 +114,30 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(
                       height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ForgotPasswordPage()),
+                              );
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                  color: Colors.brown,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 25),
