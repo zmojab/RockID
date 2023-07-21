@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:rockid/pages/Home_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
@@ -11,6 +12,7 @@ import 'other_users_collection.dart';
 
 class OtherUserProfilePage extends StatefulWidget {
   final String uid;
+  
   const OtherUserProfilePage({required this.uid});
 
   @override
@@ -21,22 +23,31 @@ class OtherUserProfilePage extends StatefulWidget {
 String _url = "";
 String _username = "";
 String _occ = "";
+String _email = "";
 String _bio = "";
 String _fullname = "";
-String _fullnamePrivate = "";
+bool _fullnamePrivate = false;
 String _phoneNumber = "";
-String _phoneNumberPrivate = "";
-String _emailPrivate = "";
+bool _phoneNumberPrivate = false;
+bool _emailPrivate = false;
 String _location = "";
 
-int _rocks = 0;
-final user = FirebaseAuth.instance.currentUser!;
-String email = user.email!;
 
-var collection = FirebaseFirestore.instance.collection("users");
+
 
 class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
   final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
+  bool _isLoading = true;
+
+  var phoneNumberFormatter = MaskTextInputFormatter(
+  mask: '(###) ###-####',
+  filter: {'#': RegExp(r'[0-9]')},
+);
+
+String formatPhoneNumber(String phoneNumber) {
+  final maskedText = phoneNumberFormatter.maskText(phoneNumber);
+  return maskedText;
+}
 
   @override
   void initState() {
@@ -45,25 +56,34 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
   }
 
   Future<void> _set_user_info() async {
-    var username = await collection.where("UID", isEqualTo: user.uid).get();
+    var collection = FirebaseFirestore.instance.collection("users");
+    var username = await collection.where("UID", isEqualTo: widget.uid).get();
 
     try {
       if (username.docs.isNotEmpty) {
         setState(() {
-          _username = username.docs[0].data()['username'];
-          _occ = username.docs[0].data()['occupation'];
-          _url = username.docs[0].data()['user_profile_url'];
-          _fullname = username.docs[0].data()['fullName'];
-          _fullnamePrivate = username.docs[0].data()['fullNamePrivate'];
+          print("got user info");
+          _username = username.docs[0].data()['username'] ?? "";
+          _occ = username.docs[0].data()['occupation'] ?? "";
+          _url = username.docs[0].data()['user_profile_url'] ?? "";
+          _email = username.docs[0].data()['email'] ?? "";
+          _fullname = username.docs[0].data()['fullName'] ?? "";
+          _fullnamePrivate = username.docs[0].data()['fullNamePrivate'] ?? "";
           _bio = username.docs[0].data()['bio'];
-          _phoneNumber = username.docs[0].data()['phoneNumber'];
+          _phoneNumber =  formatPhoneNumber(username.docs[0].data()['phoneNumber']);
           _phoneNumberPrivate = username.docs[0].data()['phoneNumberPrivate'];
           _location = username.docs[0].data()['location'];
           _emailPrivate = username.docs[0].data()['emailPrivate'];
+          _isLoading = false;
+          print("----------------------");
+          print(_location);
         });
       }
     } catch (e) {
-      print("could not get user info information");
+      print("could not get user information");
+      setState(() {
+        _isLoading = false; // Update the loading state if there's an error.
+      });
     }
   }
 
@@ -81,6 +101,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
         backgroundColor: Colors.brown,
       ),
       body: SafeArea(
+        child: SingleChildScrollView(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -136,6 +157,41 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
                     ),
                   ),
                 ),
+                if (_fullnamePrivate == false)
+                  DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black,
+                    ),
+                    child: Card(
+                      color: Color.fromARGB(255, 255, 237, 223),
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 25.0,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.email,
+                          color: Colors.brown,
+                        ),
+                        title: const Text(
+                          'FULL NAME:',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          _fullname,
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 DefaultTextStyle(
                   style: const TextStyle(
                     fontSize: 20.0,
@@ -196,7 +252,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
                           ),
                         ),
                         subtitle: Text(
-                          email,
+                          _email,
                           style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
@@ -313,7 +369,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OtherUsersRocksPage(uid: uid),
+                        builder: (context) => OtherUsersRocksPage(uid: widget.uid),
                       ),
                     );
                   },
@@ -329,6 +385,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
             ),
           ),
         ),
+      ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.grey,
