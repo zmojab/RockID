@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-//added google maps package - SU
+// import 'other_user_profile_page.dart'; in my branch now
 
-//location of detroit for the pin that will be using this location to populate infomration on rock, this location will change to current location - SU
 const LatLng currentLocation = LatLng(42.3314, -83.0458);
 
-
-//page initiation 
 class MapsPage extends StatefulWidget {
   @override
   _MapsPageState createState() => _MapsPageState();
@@ -15,39 +13,54 @@ class MapsPage extends StatefulWidget {
 
 class _MapsPageState extends State<MapsPage> {
   late GoogleMapController mapController;
-  Set<Marker> markers = Set<Marker>();
+  Set<Marker> markers = {};
 
+  void createMarkers(QuerySnapshot snapshot) {
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      var doc = snapshot.docs[i];
+      var data = doc.data() as Map<String, dynamic>;
+      var markerIdVal = doc.id;
+      var markerId = MarkerId(markerIdVal);
+      var marker = Marker(
+        markerId: markerId,
+        position: LatLng(data['LATTITUDE'], data['LONGITUDE']),
+        infoWindow: InfoWindow(
+          title: data['ROCK_CLASSIFICATION'],
+          snippet: data['CITY'],
+        ),
+        //to go to the other user's profile page from the map icon.
+        //     onTap: () {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       //present in my branch for when to go to the other user's profile page from the map icon.
+        //       builder: (context) => OtherUserProfilePage(uid: data['UID']),
+        //     ),
+        //   );
+        // },
+      );
+      //explicitly setting the state, the markers may have been added too late otherwise
+      setState(() {
+        markers.add(marker);
+      });
+    }
+  }
 
-  
+  getMarkerData() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('rocks_found')
+        .where('VIEWABLE', isEqualTo: true)
+        .where('CAN_BE_VIEWED', isEqualTo: true)
+        .get();
+    createMarkers(snapshot);
+  }
+
   @override
   void initState() {
     super.initState();
-    markers.add(
-      Marker(
-        markerId: MarkerId('locationMarker'), //initiate marker which will be later populated by the lat and long of found rocks - SU
-        position: currentLocation,
-        onTap: () { //marker info which will be given by rock information page, this will also show user who found the rock (if stated true) - SU
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Marker Title'),
-              content: Text('Marker Description'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Close'),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+    getMarkerData();
   }
 
-  //map initial state with control - SU
   @override
   Widget build(BuildContext context) {
     return Scaffold(
