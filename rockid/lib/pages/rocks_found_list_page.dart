@@ -40,7 +40,7 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
 
   void showRockInformation(String rockClassificaiton, BuildContext context) {
     Future<Rock> rockFuture = rockRepository
-        .getRockByClassification(rockClassificaiton.toLowerCase());
+        .getRockByClassification(capitalizeRockClassification(rockClassificaiton));
     rockFuture.then((rock) {
       showDialog(
         context: context,

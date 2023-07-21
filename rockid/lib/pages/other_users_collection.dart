@@ -69,7 +69,7 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
 
   void showRockInformation(String rockClassificaiton, BuildContext context) {
     Future<Rock> rockFuture = rockRepository
-        .getRockByClassification(rockClassificaiton.toLowerCase());
+        .getRockByClassification(capitalizeRockClassification(rockClassificaiton));
     rockFuture.then((rock) {
       showDialog(
         context: context,
@@ -154,7 +154,7 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
                       onSelected: (value) {
                         if (value == 'view') {
                            showRockInformation(
-                                  rockFound['ROCK_CLASSIFICATION'], context);
+                                rockFound['ROCK_CLASSIFICATION'], context);
                         }
                       },
                       itemBuilder: (BuildContext context) {
