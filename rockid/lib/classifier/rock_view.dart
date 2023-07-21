@@ -38,7 +38,7 @@ class RockPhotoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 250,
-      height: 200,
+      height: 250,
       color: Color.fromARGB(198, 121, 85, 72),
       child: (file == null)
           ? _buildEmptyView()
