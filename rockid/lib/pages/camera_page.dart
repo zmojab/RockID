@@ -243,7 +243,7 @@ class _RockIDState extends State<RockID> {
 
   void _onPickPhoto(ImageSource source) async {
     final pickedFile = await picker.pickImage(source: source);
-    _setAnalyzing(true);
+
     if (pickedFile == null) {
       return;
     }
@@ -261,6 +261,7 @@ class _RockIDState extends State<RockID> {
     String chance = "";
     final resultCategory;
     final imageInput = img.decodeImage(image.readAsBytesSync())!;
+    _setAnalyzing(true);
     final roughOrPolishedResults = _classifier2.predict(imageInput);
     print(roughOrPolishedResults.label);
     if (roughOrPolishedResults.label == "rough") {
