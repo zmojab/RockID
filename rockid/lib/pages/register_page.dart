@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
 import '../components/square_tile.dart';
@@ -70,8 +71,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(
-          255, 255, 237, 223), // Set the background color to light brown
+      backgroundColor:
+          backgroundColor, // Set the background color to light brown
       body: SafeArea(
         child: Stack(children: [
           Positioned(
@@ -98,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const Text(
                     'Registeration',
                     style: TextStyle(
-                      color: Colors.brown,
+                      color: ForegroundColor,
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
                     ),
@@ -150,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Expanded(
                           child: Divider(
                             thickness: 0.5,
-                            color: Colors.brown,
+                            color: ForegroundColor,
                           ),
                         ),
                         Padding(
@@ -158,7 +159,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Text(
                             'Or',
                             style: TextStyle(
-                              color: Colors.brown,
+                              color: ForegroundColor,
                               fontSize: 20,
                             ),
                           ),
@@ -166,7 +167,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Expanded(
                           child: Divider(
                             thickness: 0.5,
-                            color: Colors.brown,
+                            color: ForegroundColor,
                           ),
                         ),
                       ],
@@ -203,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: const Text(
                           'Login now',
                           style: TextStyle(
-                            color: Colors.brown,
+                            color: ForegroundColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),

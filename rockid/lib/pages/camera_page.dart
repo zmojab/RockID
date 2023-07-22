@@ -103,10 +103,10 @@ class _RockIDState extends State<RockID> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 237, 223),
+        color: backgroundColor,
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -119,14 +119,19 @@ class _RockIDState extends State<RockID> {
             _buildPhotolView(),
             const SizedBox(height: 10),
             const Spacer(),
-            const Text(
-              "Save Location",
-              style: TextStyle(
-                  color: Colors.brown,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Save Location?",
+                  style: TextStyle(
+                      color: ForegroundColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                _buildLocationSwitch(),
+              ],
             ),
-            _buildLocationSwitch(),
             const Spacer(flex: 2),
             _buildImageButton(
               title: 'Take a Photo',
@@ -152,7 +157,7 @@ class _RockIDState extends State<RockID> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.gps_fixed_sharp, color: Colors.brown),
+            icon: Icon(Icons.gps_fixed_sharp, color: ForegroundColor),
             label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
@@ -182,7 +187,7 @@ class _RockIDState extends State<RockID> {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.brown,
+          backgroundColor: ForegroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -386,7 +391,7 @@ class _RockIDState extends State<RockID> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 255, 237, 223),
+          backgroundColor: backgroundColor,
           title: Text('Rock Classification'),
           content: Text(
             '$title with an accuracy of $accuracyLabel. Would you like to save this classification?',
@@ -398,7 +403,7 @@ class _RockIDState extends State<RockID> {
                 TextButton(
                   child: Text(
                     'Yes',
-                    style: TextStyle(color: Colors.brown),
+                    style: TextStyle(color: ForegroundColor),
                   ),
                   onPressed: () {
                     _saveClassificationWithOrWithoutLocation();
@@ -408,7 +413,7 @@ class _RockIDState extends State<RockID> {
                 TextButton(
                   child: Text(
                     'No',
-                    style: TextStyle(color: Colors.brown),
+                    style: TextStyle(color: ForegroundColor),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -427,7 +432,7 @@ class _RockIDState extends State<RockID> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 255, 237, 223),
+          backgroundColor: backgroundColor,
           title: Text('Rock Classification'),
           content: Text('Failed to recognize the rock'),
           actions: <Widget>[
@@ -437,7 +442,7 @@ class _RockIDState extends State<RockID> {
                 TextButton(
                   child: Text(
                     'Close',
-                    style: TextStyle(color: Colors.brown),
+                    style: TextStyle(color: ForegroundColor),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -460,7 +465,7 @@ class _RockIDState extends State<RockID> {
           children: [
             Switch(
               value: _isLocation,
-              activeColor: Colors.brown,
+              activeColor: switchColor,
               onChanged: (value) {
                 print('VALUE: $value');
                 setState(() {
@@ -468,7 +473,6 @@ class _RockIDState extends State<RockID> {
                 });
               },
             ),
-            Text('On', style: TextStyle(color: Colors.brown)),
           ],
         ),
       ],

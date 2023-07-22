@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
 import 'package:rockid/services/auth_service.dart';
@@ -64,8 +65,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(
-          255, 255, 237, 223), // Set the background color to light brown
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       'Rock ID',
                       style: TextStyle(
-                        color: Colors.brown,
+                        color: ForegroundColor,
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
                       ),
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
-                                  color: Colors.brown,
+                                  color: ForegroundColor,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -153,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.brown,
+                              color: ForegroundColor,
                             ),
                           ),
                           Padding(
@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               'Or',
                               style: TextStyle(
-                                color: Colors.brown,
+                                color: ForegroundColor,
                                 fontSize: 20,
                               ),
                             ),
@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.brown,
+                              color: ForegroundColor,
                             ),
                           ),
                         ],
@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                             'Register now',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.brown,
+                              color: ForegroundColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

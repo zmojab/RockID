@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/pages/Home_page.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
@@ -12,7 +14,7 @@ import 'other_users_collection.dart';
 
 class OtherUserProfilePage extends StatefulWidget {
   final String uid;
-  
+
   const OtherUserProfilePage({required this.uid});
 
   @override
@@ -32,22 +34,18 @@ bool _phoneNumberPrivate = false;
 bool _emailPrivate = false;
 String _location = "";
 
-
-
-
 class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
-  final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
   bool _isLoading = true;
 
   var phoneNumberFormatter = MaskTextInputFormatter(
-  mask: '(###) ###-####',
-  filter: {'#': RegExp(r'[0-9]')},
-);
+    mask: '(###) ###-####',
+    filter: {'#': RegExp(r'[0-9]')},
+  );
 
-String formatPhoneNumber(String phoneNumber) {
-  final maskedText = phoneNumberFormatter.maskText(phoneNumber);
-  return maskedText;
-}
+  String formatPhoneNumber(String phoneNumber) {
+    final maskedText = phoneNumberFormatter.maskText(phoneNumber);
+    return maskedText;
+  }
 
   @override
   void initState() {
@@ -70,7 +68,8 @@ String formatPhoneNumber(String phoneNumber) {
           _fullname = username.docs[0].data()['fullName'] ?? "";
           _fullnamePrivate = username.docs[0].data()['fullNamePrivate'] ?? "";
           _bio = username.docs[0].data()['bio'];
-          _phoneNumber =  formatPhoneNumber(username.docs[0].data()['phoneNumber']);
+          _phoneNumber =
+              formatPhoneNumber(username.docs[0].data()['phoneNumber']);
           _phoneNumberPrivate = username.docs[0].data()['phoneNumberPrivate'];
           _location = username.docs[0].data()['location'];
           _emailPrivate = username.docs[0].data()['emailPrivate'];
@@ -90,92 +89,61 @@ String formatPhoneNumber(String phoneNumber) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: const Text(
           'Profile Page',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(_url),
-                ),
-                Text(
-                  _fullname,
-                  style: TextStyle(fontSize: 22),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                  width: 200,
-                  child: Divider(
-                    color: Colors.brown,
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 80,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(_url),
                   ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.person,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'USERNAME:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        _username,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
+                  if (_fullnamePrivate == false)
+                    Text(
+                      _fullname,
+                      style: GoogleFonts.ptSans(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        textStyle: TextStyle(color: Colors.black),
                       ),
                     ),
+                  const SizedBox(
+                    height: 0.0,
+                    width: 200,
+                    child: Divider(
+                      color: ForegroundColor,
+                    ),
                   ),
-                ),
-                if (_fullnamePrivate == false)
                   DefaultTextStyle(
                     style: const TextStyle(
                       fontSize: 20.0,
                       color: Colors.black,
                     ),
                     child: Card(
-                      color: Color.fromARGB(255, 255, 237, 223),
+                      color: backgroundColor,
                       margin: const EdgeInsets.symmetric(
                         vertical: 10.0,
                         horizontal: 25.0,
                       ),
                       child: ListTile(
                         leading: const Icon(
-                          Icons.email,
-                          color: Colors.brown,
+                          Icons.person,
+                          color: ForegroundColor,
                         ),
                         title: const Text(
-                          'FULL NAME:',
+                          'USERNAME:',
                           style: TextStyle(
                             fontSize: 22.0,
                             color: Colors.black,
@@ -183,7 +151,7 @@ String formatPhoneNumber(String phoneNumber) {
                           ),
                         ),
                         subtitle: Text(
-                          _fullname,
+                          _username,
                           style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
@@ -192,59 +160,24 @@ String formatPhoneNumber(String phoneNumber) {
                       ),
                     ),
                   ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.work,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'OCCUPATION:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        _occ,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                if (_emailPrivate == false)
                   DefaultTextStyle(
                     style: const TextStyle(
                       fontSize: 20.0,
                       color: Colors.black,
                     ),
                     child: Card(
-                      color: Color.fromARGB(255, 255, 237, 223),
+                      color: backgroundColor,
                       margin: const EdgeInsets.symmetric(
                         vertical: 10.0,
                         horizontal: 25.0,
                       ),
                       child: ListTile(
                         leading: const Icon(
-                          Icons.email,
-                          color: Colors.brown,
+                          Icons.person_2_outlined,
+                          color: ForegroundColor,
                         ),
                         title: const Text(
-                          'EMAIL:',
+                          'BIO:',
                           style: TextStyle(
                             fontSize: 22.0,
                             color: Colors.black,
@@ -252,7 +185,7 @@ String formatPhoneNumber(String phoneNumber) {
                           ),
                         ),
                         subtitle: Text(
-                          _email,
+                          _bio,
                           style: const TextStyle(
                             fontSize: 20.0,
                             color: Colors.black,
@@ -261,155 +194,166 @@ String formatPhoneNumber(String phoneNumber) {
                       ),
                     ),
                   ),
-                  if(_phoneNumberPrivate == false)
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
+                  DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black,
                     ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.phone,
-                        color: Colors.brown,
+                    child: Card(
+                      color: backgroundColor,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 25.0,
                       ),
-                      title: const Text(
-                        'PHONE NUMBER:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.work,
+                          color: ForegroundColor,
                         ),
-                      ),
-                      subtitle: Text(
-                        _phoneNumber,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
+                        title: const Text(
+                          'OCCUPATION:',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.location_city,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'LOCATION:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        _location,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
+                        subtitle: Text(
+                          _occ,
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
+                  DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black,
                     ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.person_2_outlined,
-                        color: Colors.brown,
+                    child: Card(
+                      color: backgroundColor,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 25.0,
                       ),
-                      title: const Text(
-                        'BIO:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.location_city,
+                          color: ForegroundColor,
+                        ),
+                        title: const Text(
+                          'LOCATION:',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          _location,
+                          style: const TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      subtitle: Text(
-                        _bio,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
+                    ),
+                  ),
+                  if (_emailPrivate == false)
+                    DefaultTextStyle(
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black,
+                      ),
+                      child: Card(
+                        color: backgroundColor,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 25.0,
+                        ),
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.email,
+                            color: Colors.brown,
+                          ),
+                          title: const Text(
+                            'EMAIL:',
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            _email,
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OtherUsersRocksPage(uid: widget.uid),
+                  if (_phoneNumberPrivate == false)
+                    DefaultTextStyle(
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black,
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(150, 50),
-                    backgroundColor:
-                        Colors.brown, // Set the button background color
+                      child: Card(
+                        color: backgroundColor,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 25.0,
+                        ),
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.phone,
+                            color: ForegroundColor,
+                          ),
+                          title: const Text(
+                            'PHONE NUMBER:',
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            _phoneNumber,
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              OtherUsersRocksPage(uid: widget.uid),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(150, 50),
+                      backgroundColor: ForegroundColor,
+                    ),
+                    child: const Text('Rock Collection',
+                        style: TextStyle(fontSize: 15)),
                   ),
-                  child: const Text('Rock Collection',
-                      style: TextStyle(fontSize: 15)),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.grey,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.grey),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.gps_fixed_sharp, color: Colors.grey),
-            label: 'Rock Identifier',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.brown),
-            label: 'Profile',
-          ),
-        ],
-        onTap: (index) {
-          // Update the state and rebuild the widget
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => _pages[index]),
-          );
-        },
       ),
     );
   }

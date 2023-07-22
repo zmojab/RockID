@@ -42,9 +42,10 @@ const kColorLightRed = Color(0xFFF2CECE);
 const kColorLightGray = Color(0xFFDDDDDD);
 const kColorLightbeige = Color.fromARGB(240, 246, 244, 241);
 
-const kColorbrown = Color.fromARGB(230, 109, 64, 46);
+const ForegroundColor = Colors.brown;
+const backgroundColor = Color.fromARGB(255, 255, 237, 223);
 
-const kColorHunterGreen = Color(0xFF386641);
+const switchColor = Color(0xFF386641);
 const kColorMayGreen = Color(0xFF6a994e);
 const kColorAndroidGreen = Color(0xFFa7c957);
 const kColorEggshell = Color(0xFFf2e8cf);

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/pages/other_user_profile_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223), //Background color - SU
+      backgroundColor: backgroundColor, //Background color - SU
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
         actions: [],
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.brown,
+                color: ForegroundColor,
               ),
             ),
             SizedBox(height: 40),
@@ -113,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(ForegroundColor),
                 padding: MaterialStateProperty.all<EdgeInsets>(
                   EdgeInsets.all(16.0),
                 ),
@@ -136,9 +138,10 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(ForegroundColor),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), 
+                  EdgeInsets.all(16.0),
                 ),
               ),
               child: Text(
@@ -158,16 +161,17 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(ForegroundColor),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), 
+                  EdgeInsets.all(16.0),
                 ),
               ),
               // Map button initate - SU
               child: Text(
                 'Rocks Around the World',
                 style: TextStyle(
-                  fontSize: 20.0, 
+                  fontSize: 20.0,
                   color: Colors.white,
                 ),
               ),
@@ -185,7 +189,7 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.brown),
+            icon: Icon(Icons.home, color: ForegroundColor),
             label: 'Home',
           ),
           BottomNavigationBarItem(
@@ -198,7 +202,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         onTap: (index) {
-          
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => _pages[index]),
