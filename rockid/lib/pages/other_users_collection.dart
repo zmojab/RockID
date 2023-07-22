@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:rockid/classifier/styles.dart';
 import '../data/rocksfound.dart';
 import '../data/users.dart';
 import '../models/rock.dart';
@@ -68,8 +69,8 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
   }
 
   void showRockInformation(String rockClassificaiton, BuildContext context) {
-    Future<Rock> rockFuture = rockRepository
-        .getRockByClassification(capitalizeRockClassification(rockClassificaiton));
+    Future<Rock> rockFuture = rockRepository.getRockByClassification(
+        capitalizeRockClassification(rockClassificaiton));
     rockFuture.then((rock) {
       showDialog(
         context: context,
@@ -98,12 +99,11 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
 
     final List<String> rockClassificationNames =
         rockClassificaitonName.split(" ");
-    final capitalizedWords = rockClassificationNames
-        .map((rockClassificationPartName) =>
-            rockClassificationPartName.isNotEmpty
-                ? rockClassificationPartName[0].toUpperCase() +
-                    rockClassificationPartName.substring(1)
-                : rockClassificationPartName);
+    final capitalizedWords = rockClassificationNames.map(
+        (rockClassificationPartName) => rockClassificationPartName.isNotEmpty
+            ? rockClassificationPartName[0].toUpperCase() +
+                rockClassificationPartName.substring(1)
+            : rockClassificationPartName);
 
     return capitalizedWords.join(" ");
   }
@@ -117,10 +117,10 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
       body: Container(
-        color: Color.fromARGB(255, 255, 237, 223),
+        color: backgroundColor,
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: rocksFoundFuture,
           builder: (context, snapshot) {
@@ -153,8 +153,8 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
                     trailing: PopupMenuButton<String>(
                       onSelected: (value) {
                         if (value == 'view') {
-                           showRockInformation(
-                                rockFound['ROCK_CLASSIFICATION'], context);
+                          showRockInformation(
+                              rockFound['ROCK_CLASSIFICATION'], context);
                         }
                       },
                       itemBuilder: (BuildContext context) {

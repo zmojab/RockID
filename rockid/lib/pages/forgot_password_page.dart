@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
 import '../components/my_textfield.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text(
           'Forgot Password',
@@ -44,7 +45,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         ),
         centerTitle: true,
         actions: [],
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
       body: Center(
         child: Column(
@@ -53,7 +54,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             Text(
               "Please enter your email to recieve a reset password link",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, color: Colors.brown),
+              style: TextStyle(fontSize: 20, color: ForegroundColor),
             ),
             SizedBox(height: 16.0),
             MyTextField(
@@ -68,7 +69,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               },
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(180, 50),
-                backgroundColor: Colors.brown,
+                backgroundColor: ForegroundColor,
               ),
               child: Text(
                 'Reset Password',
