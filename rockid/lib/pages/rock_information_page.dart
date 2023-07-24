@@ -73,7 +73,6 @@ class _RockInformationPageState extends State<RockInformationPage> {
                   final rock = displayedRocks[index];
                   return ListTile(
                     title: Text(rock.name),
-                    subtitle: Text(rock.category),
                     onTap: () {
                       showDialog(
                         context: context,
