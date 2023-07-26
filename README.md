@@ -58,7 +58,6 @@ Rockid is a mobile application built using Flutter for both iOS and Android devi
   - [Rough or Polished Stones](https://kaggle.com/datasets/0a3a236f0bdc89dc55c2392678ac4bb134af45d6563be127c529ed4555e44fd0)
 
 
-
 ## Contributing
 
 To contribute to the RockID application please use the following steps.
