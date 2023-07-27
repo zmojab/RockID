@@ -279,7 +279,7 @@ class _RockIDState extends State<RockID> {
       rockType = "polished";
     }
 
-    final result = resultCategory.score >= 0.75
+    final result = resultCategory.score >= 0.70
         ? _ResultStatus.found
         : _ResultStatus.notFound;
     final rockLabel = resultCategory.label;
@@ -287,7 +287,7 @@ class _RockIDState extends State<RockID> {
 
     if (accuracy >= .95) {
       chance = "high";
-    } else if (accuracy >= .85) {
+    } else if (accuracy >= .80) {
       chance = "medium";
     } else {
       chance = "low";
