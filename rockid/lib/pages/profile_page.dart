@@ -1,15 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rockid/classifier/styles.dart';
+import 'package:rockid/components/hamburger_menu.dart';
 import 'package:rockid/pages/Home_page.dart';
-import 'package:rockid/components/disclaimer_popup.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
-import 'auth_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -43,71 +42,7 @@ String formatPhoneNumber(String phoneNumber) {
   return maskedText;
 }
 
-showAlertDialog(BuildContext context) {
-  // set up the buttons
 
-  Widget cancelButton = TextButton(
-    child: Text(
-      "Yes",
-      style: TextStyle(color: Colors.brown),
-    ),
-    onPressed: () {
-      signUserOut(context);
-    },
-  );
-  Widget continueButton = TextButton(
-    child: Text(
-      "No",
-      style: TextStyle(color: Colors.brown),
-    ),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    backgroundColor: Color.fromARGB(255, 255, 237, 223),
-    title: Text("Logging Out"),
-    content: Text(
-      "Would you like to log out?",
-    ),
-    actions: [
-      cancelButton,
-      continueButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-signUserOut(BuildContext context) async {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  try {
-    final _providerData = _auth.currentUser!.providerData;
-    if (_providerData.isNotEmpty) {
-      // If user signed in through Google
-      if (_providerData[0].providerId.toLowerCase().contains('google')) {
-        GoogleSignIn googleSignIn = GoogleSignIn();
-        await googleSignIn.signOut();
-      }
-    }
-    await _auth.signOut();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => AuthPage()),
-      (route) => false, // Clear all previous routes from the stack
-    );
-  } catch (e) {
-    print(e);
-  }
-}
 
 class _ProfilePageState extends State<ProfilePage> {
   final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
@@ -149,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
@@ -169,42 +104,9 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           ),
         ],
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
-      endDrawer: Drawer(
-        backgroundColor: Color.fromARGB(255, 255, 237, 223),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.brown,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                showAlertDialog(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('Disclaimer'),
-              onTap: () {
-                DisclaimerPopup.show(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      endDrawer: HamburgerMenu(),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -216,15 +118,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundColor: Colors.transparent,
                   backgroundImage: NetworkImage(_url),
                 ),
+                SizedBox(height: 20),
                 Text(
                   _fullname,
-                  style: TextStyle(fontSize: 22),
+                  style: GoogleFonts.ptSans(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    textStyle: TextStyle(color: Colors.black),
+                  ),
                 ),
                 const SizedBox(
-                  height: 20.0,
+                  height: 0.0,
                   width: 200,
                   child: Divider(
-                    color: Colors.brown,
+                    color: ForegroundColor,
                   ),
                 ),
                 DefaultTextStyle(
@@ -233,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.black,
                   ),
                   child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
+                    color: backgroundColor,
                     margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 25.0,
@@ -241,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.person,
-                        color: Colors.brown,
+                        color: ForegroundColor,
                       ),
                       title: const Text(
                         'USERNAME:',
@@ -267,143 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.black,
                   ),
                   child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.work,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'OCCUPATION:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        _occ,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.email,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'EMAIL:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        email,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.phone,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'PHONE NUMBER:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        _phoneNumber,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 25.0,
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.location_city,
-                        color: Colors.brown,
-                      ),
-                      title: const Text(
-                        'LOCATION:',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        _location,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                DefaultTextStyle(
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                  child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
+                    color: backgroundColor,
                     margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 25.0,
@@ -411,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.person_2_outlined,
-                        color: Colors.brown,
+                        color: ForegroundColor,
                       ),
                       title: const Text(
                         'BIO:',
@@ -437,7 +208,143 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.black,
                   ),
                   child: Card(
-                    color: Color.fromARGB(255, 255, 237, 223),
+                    color: backgroundColor,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.work,
+                        color: ForegroundColor,
+                      ),
+                      title: const Text(
+                        'OCCUPATION:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        _occ,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: backgroundColor,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.location_city,
+                        color: ForegroundColor,
+                      ),
+                      title: const Text(
+                        'LOCATION:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        _location,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: backgroundColor,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.email,
+                        color: ForegroundColor,
+                      ),
+                      title: const Text(
+                        'EMAIL:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        email,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: backgroundColor,
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 25.0,
+                    ),
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.phone,
+                        color: ForegroundColor,
+                      ),
+                      title: const Text(
+                        'PHONE NUMBER:',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        _phoneNumber,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                  ),
+                  child: Card(
+                    color: backgroundColor,
                     margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 25.0,
@@ -445,7 +352,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ListTile(
                       leading: const Icon(
                         Icons.search,
-                        color: Colors.brown,
+                        color: ForegroundColor,
                       ),
                       title: const Text(
                         'ROCKS FOUND:',
@@ -476,7 +383,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: ElevatedButton.styleFrom(
                     fixedSize: const Size(150, 50),
                     backgroundColor:
-                        Colors.brown, // Set the button background color
+                        ForegroundColor, // Set the button background color
                   ),
                   child: const Text('EDIT PROFILE',
                       style: TextStyle(fontSize: 15)),
@@ -498,7 +405,7 @@ class _ProfilePageState extends State<ProfilePage> {
             label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.brown),
+            icon: Icon(Icons.person, color: ForegroundColor),
             label: 'Profile',
           ),
         ],

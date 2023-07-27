@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rockid/classifier/styles.dart';
+import '../components/hamburger_menu.dart';
 import '../data/rocksfound.dart';
 import '../models/rock.dart';
 import '../repositories/rock_repository.dart';
@@ -39,8 +41,8 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
   }
 
   void showRockInformation(String rockClassificaiton, BuildContext context) {
-    Future<Rock> rockFuture = rockRepository
-        .getRockByClassification(rockClassificaiton.toLowerCase());
+    Future<Rock> rockFuture = rockRepository.getRockByClassification(
+        capitalizeRockClassification(rockClassificaiton));
     rockFuture.then((rock) {
       showDialog(
         context: context,
@@ -91,10 +93,11 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
       body: Container(
-        color: Color.fromARGB(255, 255, 237, 223),
+        color: backgroundColor,
         child: FutureBuilder<List<Map<String, dynamic>>>(
           future: rocksFoundFuture,
           builder: (context, snapshot) {

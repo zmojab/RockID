@@ -5,8 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/pages/home_page.dart';
+import 'package:rockid/pages/profile_page.dart';
 import 'dart:io';
+import '../components/hamburger_menu.dart';
 import '../data/users.dart';
 
 bool isProfilePrivate = false;
@@ -284,20 +287,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateProfileStatus() async {
-    try {
-      var docID = await UserCRUD().getUserDocID(user.uid);
-      if (docID != null) {
-        await UserCRUD().updateUserProfileStatus(docID, isProfilePrivate);
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Failed to update profile privacy status')),
-      );
-    }
-  }
-
   Future<void> updateFullNameStatus() async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
@@ -359,295 +348,243 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(fontSize: 30),
+      body: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.brown,
+          title: Text('Edit Profile', style: TextStyle(fontSize: 30)),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              // Navigate to the SpecificPage when the AppBar's leading icon (back arrow) is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfilePage()),
+              );
+            },
+          ),
         ),
-        centerTitle: true,
-        actions: [],
-        backgroundColor: Colors.brown,
-      ),
-      backgroundColor: Color.fromARGB(255, 255, 237, 223),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (_image != null)
-              Column(
-                children: [
-                  Image.file(
-                    _image!,
-                    height: 200,
-                  ),
-                  SizedBox(height: 16.0),
-                ],
+        backgroundColor: backgroundColor,
+        endDrawer: HamburgerMenu(),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (_image != null)
+                Column(
+                  children: [
+                    Image.file(
+                      _image!,
+                      height: 200,
+                    ),
+                    SizedBox(height: 16.0),
+                  ],
+                ),
+              ElevatedButton(
+                onPressed: _uploadImage,
+                child: Text('Change Profile Picture'),
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(200, 50),
+                  backgroundColor: ForegroundColor,
+                ),
               ),
-            ElevatedButton(
-              onPressed: _uploadImage,
-              child: Text('Upload Profile Picture'),
-              style: ElevatedButton.styleFrom(
-                fixedSize: const Size(200, 50),
-                backgroundColor: Colors.brown,
-              ),
-            ),
-            SizedBox(height: 16.0),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(labelText: 'Username'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: fullNameController,
-                    decoration: InputDecoration(labelText: 'Full Name'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: phoneNumberController,
-                    inputFormatters: [phoneNumberFormatter],
-                    decoration: InputDecoration(labelText: 'Phone Number'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: occupationController,
-                    decoration: InputDecoration(labelText: 'Occupation'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: locationController,
-                    decoration: InputDecoration(labelText: 'Location'),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-              ],
-            ),
-            SizedBox(height: 16.0),
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: 200.0,
-              ),
-              child: Row(
+              SizedBox(height: 16.0),
+              Row(
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: bioController,
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(labelText: 'Bio'),
+                      controller: fullNameController,
+                      decoration: InputDecoration(labelText: 'Full Name'),
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+                  SizedBox(
+                    height: 50,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Switch.adaptive(
+                                value: isFullNamePrivate,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isFullNamePrivate = value;
+                                  });
+                                },
+                                activeColor: switchColor,
+                              ),
+                              Text('Private'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: usernameController,
+                      decoration: InputDecoration(labelText: 'Username'),
                     ),
                   ),
                   SizedBox(width: 8.0),
                 ],
               ),
-            ),
-            SizedBox(height: 24.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: 50,
-                  child: Container(
-                    alignment: Alignment.center,
+              SizedBox(height: 16.0),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: 200.0,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: bioController,
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(labelText: 'Bio'),
+                      ),
+                    ),
+                    SizedBox(width: 8.0),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: occupationController,
+                      decoration: InputDecoration(labelText: 'Occupation'),
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: locationController,
+                      decoration: InputDecoration(labelText: 'Location'),
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: phoneNumberController,
+                      inputFormatters: [phoneNumberFormatter],
+                      decoration: InputDecoration(labelText: 'Phone Number'),
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+                  SizedBox(
+                    height: 50,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Switch.adaptive(
+                                value: isPhoneNumberPrivate,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isPhoneNumberPrivate = value;
+                                  });
+                                },
+                                activeColor: switchColor,
+                              ),
+                              Text('Private'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
                     child: Text(
-                      'Privacy Options',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      "Email",
+                      style: TextStyle(fontSize: 15),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Profile',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          children: [
-                            Switch.adaptive(
-                              value: isProfilePrivate,
-                              onChanged: (value) {
-                                setState(() {
-                                  isProfilePrivate = value;
-                                });
-                              },
-                              activeColor: Color.fromARGB(247, 242, 137, 38),
-                            ),
-                            Text('Private'),
-                          ],
-                        ),
-                      ],
+                  SizedBox(width: 8.0),
+                  SizedBox(
+                    height: 50,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Switch.adaptive(
+                                value: isEmailPrivate,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isEmailPrivate = value;
+                                  });
+                                },
+                                activeColor: switchColor,
+                              ),
+                              Text('Private'),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Full Name',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          children: [
-                            Switch.adaptive(
-                              value: isFullNamePrivate,
-                              onChanged: (value) {
-                                setState(() {
-                                  isFullNamePrivate = value;
-                                });
-                              },
-                              activeColor: Color.fromARGB(247, 242, 137, 38),
-                            ),
-                            Text('Private'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Email',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          children: [
-                            Switch.adaptive(
-                              value: isEmailPrivate,
-                              onChanged: (value) {
-                                setState(() {
-                                  isEmailPrivate = value;
-                                });
-                              },
-                              activeColor: Color.fromARGB(247, 242, 137, 38),
-                            ),
-                            Text('Private'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Phone Number',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          children: [
-                            Switch.adaptive(
-                              value: isPhoneNumberPrivate,
-                              onChanged: (value) {
-                                setState(() {
-                                  isPhoneNumberPrivate = value;
-                                });
-                              },
-                              activeColor: Color.fromARGB(247, 242, 137, 38),
-                            ),
-                            Text('Private'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    updateUsername();
-                    updateFullName();
-                    updatePhoneNumber();
-                    updateOccupation();
-                    updateLocation();
-                    updateBio();
-                    updateProfileStatus();
-                    updateFullNameStatus();
-                    updateEmailStatus();
-                    updatePhoneNumberStatus();
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      updateUsername();
+                      updateFullName();
+                      updatePhoneNumber();
+                      updateOccupation();
+                      updateLocation();
+                      updateBio();
+                      updateFullNameStatus();
+                      updateEmailStatus();
+                      updatePhoneNumberStatus();
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Fields are updated')),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(150, 50),
-                    backgroundColor: Colors.brown,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Fields are updated')),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      fixedSize: const Size(150, 50),
+                      backgroundColor: ForegroundColor,
+                    ),
+                    child: Text('Update'),
                   ),
-                  child: Text('Update'),
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(150, 50),
-                    backgroundColor: Colors.brown,
-                  ),
-                  child: Text('Home Page'),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
+import '../components/hamburger_menu.dart';
 import '../models/rock.dart';
 import '../repositories/rock_repository.dart';
 import '../components/rock_details_popup.dart';
@@ -43,26 +45,24 @@ class _RockInformationPageState extends State<RockInformationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Rock Information',
-          style: TextStyle(fontSize: 30)
-        ),
+        title: const Text('Rock Information', style: TextStyle(fontSize: 30)),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
+      backgroundColor: backgroundColor,
       body: Container(
-        child: Column(
-          children: [
-            // Search bar for filtering rocks
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _searchController,
-                onChanged: _filterRocks,
-                decoration: const InputDecoration(
-                  labelText: 'Search',
-                  prefixIcon: Icon(Icons.search),
-                ),
+          child: Column(
+        children: [
+          // Search bar for filtering rocks
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _filterRocks,
+              decoration: const InputDecoration(
+                labelText: 'Search',
+                prefixIcon: Icon(Icons.search),
               ),
             ),
             // Scrollable list of rocks
@@ -85,9 +85,9 @@ class _RockInformationPageState extends State<RockInformationPage> {
                 },
               ),
             ),
-          ],
-        )
-      ),
+          ),
+        ],
+      )),
     );
   }
 }
