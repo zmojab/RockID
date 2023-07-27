@@ -15,7 +15,7 @@ class AboutAppPage extends StatelessWidget {
     ),
     SectionData(
       title: "Managing Rocks",
-      description: "You can manage rocks that you have identified and saved to your collection. You can view your rocks, edit their viewability on the map, and delete them from your collection all withing the 'My Collection' page.",
+      description: "You can manage rocks that you have identified and saved to your collection. You can view your rocks, edit their viewability on the map, and delete them from your collection all within the 'My Collection' page.",
     ),
     SectionData(
       title: "Using Maps Functionality",
@@ -23,11 +23,11 @@ class AboutAppPage extends StatelessWidget {
     ),
     SectionData(
       title: "Managing User Profile",
-      description: "You can edit your profile by selecting the edit profile button in the profile page. You can also manage the priacy settings of your full name, email, and phone number from this page. If you would like to make your entire profile private this can be accomplised from the settigns tab in the Hamburger Menu.",
+      description: "You can edit your profile by selecting the edit profile button in the profile page. You can also manage the priacy settings of your full name, email, and phone number from this page. If you would like to make your entire profile private this can be accomplised from the settings tab in the Hamburger Menu.",
     ),
     SectionData(
       title: "Viewing Rock Information",
-      description: "You can view rock information for each rock that the classifier is able to identify throug the rock information pageq.",
+      description: "You can view rock information for each rock that the classifier is able to identify through the rock information page.",
     ),
   ];
 
