@@ -3,16 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:rockid/classifier/styles.dart';
+import 'package:rockid/components/hamburger_menu.dart';
 import 'package:rockid/pages/Home_page.dart';
-import 'package:rockid/components/disclaimer_popup.dart';
 import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:rockid/pages/other_user_profile_page.dart';
-
-import 'auth_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -46,71 +42,7 @@ String formatPhoneNumber(String phoneNumber) {
   return maskedText;
 }
 
-showAlertDialog(BuildContext context) {
-  // set up the buttons
 
-  Widget cancelButton = TextButton(
-    child: Text(
-      "Yes",
-      style: TextStyle(color: ForegroundColor),
-    ),
-    onPressed: () {
-      signUserOut(context);
-    },
-  );
-  Widget continueButton = TextButton(
-    child: Text(
-      "No",
-      style: TextStyle(color: ForegroundColor),
-    ),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    backgroundColor: Color.fromARGB(255, 255, 237, 223),
-    title: Text("Logging Out"),
-    content: Text(
-      "Would you like to log out?",
-    ),
-    actions: [
-      cancelButton,
-      continueButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-signUserOut(BuildContext context) async {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  try {
-    final _providerData = _auth.currentUser!.providerData;
-    if (_providerData.isNotEmpty) {
-      // If user signed in through Google
-      if (_providerData[0].providerId.toLowerCase().contains('google')) {
-        GoogleSignIn googleSignIn = GoogleSignIn();
-        await googleSignIn.signOut();
-      }
-    }
-    await _auth.signOut();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => AuthPage()),
-      (route) => false, // Clear all previous routes from the stack
-    );
-  } catch (e) {
-    print(e);
-  }
-}
 
 class _ProfilePageState extends State<ProfilePage> {
   final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
@@ -174,40 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
         backgroundColor: ForegroundColor,
       ),
-      endDrawer: Drawer(
-        backgroundColor: backgroundColor,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: ForegroundColor,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                showAlertDialog(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.info),
-              title: const Text('Disclaimer'),
-              onTap: () {
-                DisclaimerPopup.show(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      endDrawer: HamburgerMenu(),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rockid/classifier/styles.dart';
+import '../components/hamburger_menu.dart';
 import '../models/rock.dart';
 import '../repositories/rock_repository.dart';
 import '../components/rock_details_popup.dart';
@@ -48,6 +49,7 @@ class _RockInformationPageState extends State<RockInformationPage> {
         centerTitle: true,
         backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
       backgroundColor: backgroundColor,
       body: Container(
           child: Column(
