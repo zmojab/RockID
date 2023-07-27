@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
+import 'package:rockid/pages/other_user_profile_page.dart';
 import '../models/recently_found_rock.dart';
 import '../models/user.dart';
 import '../repositories/recently_found_rock_repository.dart';
@@ -36,10 +38,10 @@ class _RecentlyFoundRocksPageState extends State<RecentlyFoundRocksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: Text('Recently Found Rocks'),
-        backgroundColor: Color.fromARGB(255, 121, 85, 72),
+        backgroundColor: ForegroundColor,
       ),
       body: ListView.builder(
         itemCount: recentlyFoundRocks.length,
@@ -52,7 +54,8 @@ class _RecentlyFoundRocksPageState extends State<RecentlyFoundRocksPage> {
                 padding: const EdgeInsets.all(8.0),
                 child: FutureBuilder<User>(
                   future: UserRepository().getUserById(rock.uid),
-                  builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                  builder:
+                      (BuildContext context, AsyncSnapshot<User> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
@@ -61,12 +64,27 @@ class _RecentlyFoundRocksPageState extends State<RecentlyFoundRocksPage> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            snapshot.data?.username ?? 'Anonymous User',
-                            style: const TextStyle(
-                              fontSize: 20.0, 
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                          GestureDetector(
+                            // Wrap the username Text with GestureDetector
+                            onTap: () {
+                              // Navigate to the user profile page here
+                              // You can use Navigator.push() to navigate to the profile page
+                              // For example:
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      OtherUserProfilePage(uid: rock.uid),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              snapshot.data?.username ?? 'Anonymous User',
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.brown,
+                              ),
                             ),
                           ),
                           Padding(
@@ -74,7 +92,7 @@ class _RecentlyFoundRocksPageState extends State<RecentlyFoundRocksPage> {
                             child: Text(
                               '${capitalize(rock.rockClassification)} | ${rock.city}',
                               style: const TextStyle(
-                                fontSize: 16.0, 
+                                fontSize: 16.0,
                                 color: Colors.black,
                               ),
                             ),
@@ -86,7 +104,7 @@ class _RecentlyFoundRocksPageState extends State<RecentlyFoundRocksPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 8.0, bottom: 50),
                 child: Image.network(rock.rockImageUrl),
               ),
             ],

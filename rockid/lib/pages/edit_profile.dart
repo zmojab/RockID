@@ -522,7 +522,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Email",
+                      email,
                       style: TextStyle(fontSize: 15),
                     ),
                   ),

@@ -52,19 +52,21 @@ class _RockInformationPageState extends State<RockInformationPage> {
       endDrawer: HamburgerMenu(),
       backgroundColor: backgroundColor,
       body: Container(
-          child: Column(
-        children: [
-          // Search bar for filtering rocks
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _filterRocks,
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                prefixIcon: Icon(Icons.search),
+        child: Column(
+          children: [
+            // Search bar for filtering rocks
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterRocks,
+                decoration: const InputDecoration(
+                  labelText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                ),
               ),
-            ),
+            ), // <-- Move the closing parenthesis here
+
             // Scrollable list of rocks
             Expanded(
               child: ListView.builder(
@@ -85,9 +87,9 @@ class _RockInformationPageState extends State<RockInformationPage> {
                 },
               ),
             ),
-          ),
-        ],
-      )),
+          ],
+        ),
+      ),
     );
   }
 }
