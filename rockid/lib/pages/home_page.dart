@@ -5,6 +5,7 @@ import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/pages/other_user_profile_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
+import 'package:rockid/pages/recently_found_rocks_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
 import 'package:rockid/pages/rock_information_page.dart';
@@ -175,6 +176,27 @@ class _HomePageState extends State<HomePage> {
                 'Rocks Around the World',
                 style: TextStyle(
                   fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RecentlyFoundRocksPage()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0), 
+                ),
+              ),
+              child: Text(
+                'Recently Found Rocks',
+                style: TextStyle(
+                  fontSize: 20.0, 
                   color: Colors.white,
                 ),
               ),

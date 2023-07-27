@@ -65,26 +65,25 @@ class _RockInformationPageState extends State<RockInformationPage> {
                 prefixIcon: Icon(Icons.search),
               ),
             ),
-          ),
-          // Scrollable list of rocks
-          Expanded(
-            child: ListView.builder(
-              itemCount: displayedRocks.length,
-              itemBuilder: (BuildContext context, int index) {
-                final rock = displayedRocks[index];
-                return ListTile(
-                  title: Text(rock.name),
-                  subtitle: Text(rock.category),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return RockDetailsPopup(rock: rock);
-                      },
-                    );
-                  },
-                );
-              },
+            // Scrollable list of rocks
+            Expanded(
+              child: ListView.builder(
+                itemCount: displayedRocks.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final rock = displayedRocks[index];
+                  return ListTile(
+                    title: Text(rock.name),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return RockDetailsPopup(rock: rock);
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ],
