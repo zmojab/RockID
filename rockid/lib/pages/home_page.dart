@@ -9,6 +9,8 @@ import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
 import 'package:rockid/pages/rock_information_page.dart';
 
+import '../components/hamburger_menu.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -85,6 +87,7 @@ class _HomePageState extends State<HomePage> {
         actions: [],
         backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
