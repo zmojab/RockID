@@ -8,7 +8,7 @@ Rockid is a mobile application built using Flutter for both iOS and Android devi
 - **Login creditionals:** Firebase Authorization is used to register the user via email, and then they can log in to the app and navigate to the home page.
 - **Rocks found:** Every time a user finds a rock and chooses to display it, it is stored in Firestore. This page displays the time, date, and location for each rock found.
 - **Rock information:** This page allows the user to search for every rock in the application, and when they click on a specific rock, it displays general information about that rock.
-- **Recently found rocks:** All the rocks found in the application will be shown on the homepage in chronological order as users scroll down.
+- **Recently found rocks:** All the rocks found in the application will be shown on the recently found rocks page in chronological order as users scroll down.
 - **Rock Classification:** The user is presented with an option to save their location. They can then choose to upload an image or take a photo using their phone's camera. The application will then attempt to identify that rock.
 - **User profile:** Every user has a profile where they can edit their name, occupation, bio, profile picture, and phone number. They also have the option to choose if they want to keep some of these attributes private, so they will not be shown to other users.
 
