@@ -279,7 +279,7 @@ class _RockIDState extends State<RockID> {
       rockType = "polished";
     }
 
-    final result = resultCategory.score >= 0.8
+    final result = resultCategory.score >= 0.75
         ? _ResultStatus.found
         : _ResultStatus.notFound;
     final rockLabel = resultCategory.label;
@@ -365,14 +365,6 @@ class _RockIDState extends State<RockID> {
   }
 
   void _SaveRock() async {
-    //final position = await Geolocator.getCurrentPosition();
-    //final latitude = position.latitude;
-    //final longitude = position.longitude;
-    //final city = await _getCityFromCoordinates(latitude, longitude);
-    //setState(() {
-    //  _city = city;
-    //});
-
     var title = '';
 
     if (_resultStatus == _ResultStatus.notFound) {
