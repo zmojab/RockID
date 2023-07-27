@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rockid/classifier/styles.dart';
+import '../components/hamburger_menu.dart';
 import '../data/rocksfound.dart';
 import '../models/rock.dart';
 import '../repositories/rock_repository.dart';
@@ -94,6 +95,7 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
         centerTitle: true,
         backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
       body: Container(
         color: backgroundColor,
         child: FutureBuilder<List<Map<String, dynamic>>>(

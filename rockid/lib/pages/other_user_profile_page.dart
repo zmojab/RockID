@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:rockid/pages/profile_page.dart';
 
+import '../components/hamburger_menu.dart';
 import 'other_users_collection.dart';
 
 class OtherUserProfilePage extends StatefulWidget {
@@ -98,6 +99,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
         centerTitle: true,
         backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(

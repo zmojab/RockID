@@ -11,6 +11,7 @@ import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/Home_page.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import '../components/hamburger_menu.dart';
 import '../data/rocksfound.dart';
 
 const _labelsFileName = 'assets/polishedLabels.txt';
@@ -105,6 +106,7 @@ class _RockIDState extends State<RockID> {
         centerTitle: true,
         backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
       body: Container(
         color: backgroundColor,
         width: double.infinity,

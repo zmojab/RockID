@@ -9,6 +9,7 @@ import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/pages/home_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'dart:io';
+import '../components/hamburger_menu.dart';
 import '../data/users.dart';
 
 bool isProfilePrivate = false;
@@ -286,20 +287,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
-  Future<void> updateProfileStatus() async {
-    try {
-      var docID = await UserCRUD().getUserDocID(user.uid);
-      if (docID != null) {
-        await UserCRUD().updateUserProfileStatus(docID, isProfilePrivate);
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Failed to update profile privacy status')),
-      );
-    }
-  }
-
   Future<void> updateFullNameStatus() async {
     try {
       var docID = await UserCRUD().getUserDocID(user.uid);
@@ -377,6 +364,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
         ),
         backgroundColor: backgroundColor,
+        endDrawer: HamburgerMenu(),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -579,7 +567,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       updateOccupation();
                       updateLocation();
                       updateBio();
-                      updateProfileStatus();
                       updateFullNameStatus();
                       updateEmailStatus();
                       updatePhoneNumberStatus();
