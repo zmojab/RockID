@@ -97,230 +97,232 @@ class _MapsPageState extends State<MapsPage> {
   bool _filterlimestone = false;
   bool _filtersandstone = false;
 
-  void createMarkers(QuerySnapshot snapshot) {
+  Future<void> createMarkers(QuerySnapshot snapshot) async {
     markers.clear(); //Clear previous markers to avoid duplication
     for (int i = 0; i < snapshot.docs.length; i++) {
       var doc = snapshot.docs[i];
       var data = doc.data() as Map<String, dynamic>;
-
+      print("test:" + _searchController.text.trim());
       //Filter the data based on the user's search input and filter selections
-      bool shouldAddMarker = (_searchText.isEmpty ||
-              data['CITY'].contains(_searchText)) &&
-          (!_filterAlexandrite ||
-              data['ROCK_CLASSIFICATION'] == 'Alexandrite' ||
-              data['ROCK_CLASSIFICATION'] == 'alexandrite') &&
-          (!_filterAlmandine ||
-              data['ROCK_CLASSIFICATION'] == 'Almandine' ||
-              data['ROCK_CLASSIFICATION'] == 'almandine') &&
-          (!_filterAmazonite ||
-              data['ROCK_CLASSIFICATION'] == 'Amazonite' ||
-              data['ROCK_CLASSIFICATION'] == 'amazonite') &&
-          (!_filterAmber ||
-              data['ROCK_CLASSIFICATION'] == 'Amber' ||
-              data['ROCK_CLASSIFICATION'] == 'amber') &&
-          (!_filterAmethyst ||
-              data['ROCK_CLASSIFICATION'] == 'Amethyst' ||
-              data['ROCK_CLASSIFICATION'] == 'amethyst') &&
-          (!_filterAmetrine ||
-              data['ROCK_CLASSIFICATION'] == 'Ametrine' ||
-              data['ROCK_CLASSIFICATION'] == 'ametrine') &&
-          (!_filterAndalusite ||
-              data['ROCK_CLASSIFICATION'] == 'Andalusite' ||
-              data['ROCK_CLASSIFICATION'] == 'andalusite') &&
-          (!_filterAndradite ||
-              data['ROCK_CLASSIFICATION'] == 'Andradite' ||
-              data['ROCK_CLASSIFICATION'] == 'andradite') &&
-          (!_filterAquamarine ||
-              data['ROCK_CLASSIFICATION'] == 'Aquamarine' ||
-              data['ROCK_CLASSIFICATION'] == 'aquamarine') &&
-          (!_filterAventurineGreen ||
-              data['ROCK_CLASSIFICATION'] == 'Aventurine Green' ||
-              data['ROCK_CLASSIFICATION'] == 'aventurine green') &&
-          (!_filterAventurineYellow ||
-              data['ROCK_CLASSIFICATION'] == 'Aventurine Yellow' ||
-              data['ROCK_CLASSIFICATION'] == 'aventurine yellow') &&
-          (!_filterBenitoite ||
-              data['ROCK_CLASSIFICATION'] == 'Benitoite' ||
-              data['ROCK_CLASSIFICATION'] == 'benitoite') &&
-          (!_filterBerylGolden ||
-              data['ROCK_CLASSIFICATION'] == 'Beryl Golden' ||
-              data['ROCK_CLASSIFICATION'] == 'beryl golden') &&
-          (!_filterBixbite ||
-              data['ROCK_CLASSIFICATION'] == 'Bixbite' ||
-              data['ROCK_CLASSIFICATION'] == 'bixbite') &&
-          (!_filterBloodstone ||
-              data['ROCK_CLASSIFICATION'] == 'Bloodstone' ||
-              data['ROCK_CLASSIFICATION'] == 'bloodstone') &&
-          (!_filterCatsEye ||
-              data['ROCK_CLASSIFICATION'] == 'Cats Eye' ||
-              data['ROCK_CLASSIFICATION'] == 'cats eye') &&
-          (!_filterChalcedonyBlue ||
-              data['ROCK_CLASSIFICATION'] == 'Chalcedony Blue' ||
-              data['ROCK_CLASSIFICATION'] == 'chalcedony blue') &&
-          (!_filterChromeDiopside ||
-              data['ROCK_CLASSIFICATION'] == 'Chrome Diopside' ||
-              data['ROCK_CLASSIFICATION'] == 'chalcedony diopside') &&
-          (!_filterChrysoberyl ||
-              data['ROCK_CLASSIFICATION'] == 'Chrysoberyl' ||
-              data['ROCK_CLASSIFICATION'] == 'chrysoberyl') &&
-          (!_filterChrysocolla ||
-              data['ROCK_CLASSIFICATION'] == 'Chrysocolla' ||
-              data['ROCK_CLASSIFICATION'] == 'chrysocolla') &&
-          (!_filterChrysoprase ||
-              data['ROCK_CLASSIFICATION'] == 'Chrysoprase' ||
-              data['ROCK_CLASSIFICATION'] == 'chrysoprase') &&
-          (!_filterCitrine ||
-              data['ROCK_CLASSIFICATION'] == 'Citrine' ||
-              data['ROCK_CLASSIFICATION'] == 'citrine') &&
-          (!_filterCoral ||
-              data['ROCK_CLASSIFICATION'] == 'Coral' ||
-              data['ROCK_CLASSIFICATION'] == 'coral') &&
-          (!_filterDanburite ||
-              data['ROCK_CLASSIFICATION'] == 'Danburite' ||
-              data['ROCK_CLASSIFICATION'] == 'danburite') &&
-          (!_filterDiamond ||
-              data['ROCK_CLASSIFICATION'] == 'Diamond' ||
-              data['ROCK_CLASSIFICATION'] == 'diamond') &&
-          (!_filterDiaspore ||
-              data['ROCK_CLASSIFICATION'] == 'Diaspore' ||
-              data['ROCK_CLASSIFICATION'] == 'diaspore') &&
-          (!_filterDumortierite ||
-              data['ROCK_CLASSIFICATION'] == 'Dumortierite' ||
-              data['ROCK_CLASSIFICATION'] == 'dumortierite') &&
-          (!_filterEmerald ||
-              data['ROCK_CLASSIFICATION'] == 'Emerald' ||
-              data['ROCK_CLASSIFICATION'] == 'emerald') &&
-          (!_filterFluorite ||
-              data['ROCK_CLASSIFICATION'] == 'Fluorite' ||
-              data['ROCK_CLASSIFICATION'] == 'fluorite') &&
-          (!_filterGarnetRed ||
-              data['ROCK_CLASSIFICATION'] == 'Garnet Red' ||
-              data['ROCK_CLASSIFICATION'] == 'garnet red') &&
-          (!_filterGoshenite ||
-              data['ROCK_CLASSIFICATION'] == 'Goshenite' ||
-              data['ROCK_CLASSIFICATION'] == 'goshenite') &&
-          (!_filterGrossular ||
-              data['ROCK_CLASSIFICATION'] == 'Grossular' ||
-              data['ROCK_CLASSIFICATION'] == 'grossular') &&
-          (!_filterHessonite ||
-              data['ROCK_CLASSIFICATION'] == 'Hessonite' ||
-              data['ROCK_CLASSIFICATION'] == 'hessonite') &&
-          (!_filterHiddenite ||
-              data['ROCK_CLASSIFICATION'] == 'Hiddenite' ||
-              data['ROCK_CLASSIFICATION'] == 'hiddenite') &&
-          (!_filterIolite ||
-              data['ROCK_CLASSIFICATION'] == 'Iolite' ||
-              data['ROCK_CLASSIFICATION'] == 'iolite') &&
-          (!_filterJade ||
-              data['ROCK_CLASSIFICATION'] == 'Jade' ||
-              data['ROCK_CLASSIFICATION'] == 'jade') &&
-          (!_filterKunzite ||
-              data['ROCK_CLASSIFICATION'] == 'Kunzite' ||
-              data['ROCK_CLASSIFICATION'] == 'kunzite') &&
-          (!_filterKyanite ||
-              data['ROCK_CLASSIFICATION'] == 'Kyanite' ||
-              data['ROCK_CLASSIFICATION'] == 'kyanite') &&
-          (!_filterLabradorite ||
-              data['ROCK_CLASSIFICATION'] == 'Labradorite' ||
-              data['ROCK_CLASSIFICATION'] == 'labradorite') &&
-          (!_filterLapisLazuli ||
-              data['ROCK_CLASSIFICATION'] == 'Lapis Lazuli' ||
-              data['ROCK_CLASSIFICATION'] == 'lapis Lazuli') &&
-          (!_filterLarimar ||
-              data['ROCK_CLASSIFICATION'] == 'Larimar' ||
-              data['ROCK_CLASSIFICATION'] == 'larimar') &&
-          (!_filterMalachite ||
-              data['ROCK_CLASSIFICATION'] == 'Malachite' ||
-              data['ROCK_CLASSIFICATION'] == 'malachite') &&
-          (!_filterMoonstone ||
-              data['ROCK_CLASSIFICATION'] == 'Moonstone' ||
-              data['ROCK_CLASSIFICATION'] == 'moonstone') &&
-          (!_filterMorganite ||
-              data['ROCK_CLASSIFICATION'] == 'Morganite' ||
-              data['ROCK_CLASSIFICATION'] == 'morganite') &&
-          (!_filterOnyxBlack ||
-              data['ROCK_CLASSIFICATION'] == 'Onyx Black' ||
-              data['ROCK_CLASSIFICATION'] == 'onyx black') &&
-          (!_filterOpal ||
-              data['ROCK_CLASSIFICATION'] == 'Opal' ||
-              data['ROCK_CLASSIFICATION'] == 'opal') &&
-          (!_filterPearl ||
-              data['ROCK_CLASSIFICATION'] == 'Pearl' ||
-              data['ROCK_CLASSIFICATION'] == 'pearl') &&
-          (!_filterPeridot ||
-              data['ROCK_CLASSIFICATION'] == 'Peridot' ||
-              data['ROCK_CLASSIFICATION'] == 'peridot') &&
-          (!_filterPyrite ||
-              data['ROCK_CLASSIFICATION'] == 'Pyrite' ||
-              data['ROCK_CLASSIFICATION'] == 'pyrite') &&
-          (!_filterPyrope ||
-              data['ROCK_CLASSIFICATION'] == 'Pyrope' ||
-              data['ROCK_CLASSIFICATION'] == 'pyrope') &&
-          (!_filterQuartzSmoky ||
-              data['ROCK_CLASSIFICATION'] == 'Quartz Smoky' ||
-              data['ROCK_CLASSIFICATION'] == 'quartz smoky') &&
-          (!_filterRhodochrosite ||
-              data['ROCK_CLASSIFICATION'] == 'Rhodochrosite' ||
-              data['ROCK_CLASSIFICATION'] == 'rhodochrosite') &&
-          (!_filterRhodolite ||
-              data['ROCK_CLASSIFICATION'] == 'Rhodolite' ||
-              data['ROCK_CLASSIFICATION'] == 'rhodolite') &&
-          (!_filterRhodonite ||
-              data['ROCK_CLASSIFICATION'] == 'Rhodonite' ||
-              data['ROCK_CLASSIFICATION'] == 'rhodonite') &&
-          (!_filterRuby ||
-              data['ROCK_CLASSIFICATION'] == 'Ruby' ||
-              data['ROCK_CLASSIFICATION'] == 'ruby') &&
-          (!_filterSapphire ||
-              data['ROCK_CLASSIFICATION'] == 'Sapphire' ||
-              data['ROCK_CLASSIFICATION'] == 'sapphire') &&
-          (!_filterSerpentine ||
-              data['ROCK_CLASSIFICATION'] == 'Serpentine' ||
-              data['ROCK_CLASSIFICATION'] == 'serpentine') &&
-          (!_filterSodalite || data['ROCK_CLASSIFICATION'] == 'Sodalite') &&
-          (!_filterSpessartite ||
-              data['ROCK_CLASSIFICATION'] == 'Spessartite' ||
-              data['ROCK_CLASSIFICATION'] == 'spessartite') &&
-          (!_filterSphene ||
-              data['ROCK_CLASSIFICATION'] == 'Sphene' ||
-              data['ROCK_CLASSIFICATION'] == 'sphene') &&
-          (!_filterSunstone ||
-              data['ROCK_CLASSIFICATION'] == 'Sunstone' ||
-              data['ROCK_CLASSIFICATION'] == 'sunstone') &&
-          (!_filterTanzanite ||
-              data['ROCK_CLASSIFICATION'] == 'Tanzanite' ||
-              data['ROCK_CLASSIFICATION'] == 'tanzanite') &&
-          (!_filterTigersEye ||
-              data['ROCK_CLASSIFICATION'] == 'Tigers Eye' ||
-              data['ROCK_CLASSIFICATION'] == 'tigers eye') &&
-          (!_filterTopaz ||
-              data['ROCK_CLASSIFICATION'] == 'Topaz' ||
-              data['ROCK_CLASSIFICATION'] == 'topaz') &&
-          (!_filterTourmaline ||
-              data['ROCK_CLASSIFICATION'] == 'Tourmaline' ||
-              data['ROCK_CLASSIFICATION'] == 'tourmaline') &&
-          (!_filterTsavorite ||
-              data['ROCK_CLASSIFICATION'] == 'Tsavorite' ||
-              data['ROCK_CLASSIFICATION'] == 'tsavorite') &&
-          (!_filterTurquoise ||
-              data['ROCK_CLASSIFICATION'] == 'Turquoise' ||
-              data['ROCK_CLASSIFICATION'] == 'turquoise') &&
-          (!_filterVariscite ||
-              data['ROCK_CLASSIFICATION'] == 'Variscite' ||
-              data['ROCK_CLASSIFICATION'] == 'variscite') &&
-          (!_filterZircon ||
-              data['ROCK_CLASSIFICATION'] == 'Zircon' ||
-              data['ROCK_CLASSIFICATION'] == 'zircon') &&
-          (!_filterZoisite ||
-              data['ROCK_CLASSIFICATION'] == 'Zoisite' ||
-              data['ROCK_CLASSIFICATION'] == 'zoisite') &&
-          (!_filteragate || data['ROCK_CLASSIFICATION'] == 'agate') &&
-          (!_filterbasalt || data['ROCK_CLASSIFICATION'] == 'basalt') &&
-          (!_filtercoal || data['ROCK_CLASSIFICATION'] == 'coal') &&
-          (!_filtergarnet || data['ROCK_CLASSIFICATION'] == 'garnet') &&
-          (!_filtergranite || data['ROCK_CLASSIFICATION'] == 'granite') &&
-          (!_filterlimestone || data['ROCK_CLASSIFICATION'] == 'limestone') &&
-          (!_filtersandstone || data['ROCK_CLASSIFICATION'] == 'sandstone');
+      bool shouldAddMarker = (_searchController.text.trim() == "" ||
+          ((data['CITY'].contains(_searchController.text.trim())) &&
+              (!_filterAlexandrite ||
+                  data['ROCK_CLASSIFICATION'] == 'Alexandrite' ||
+                  data['ROCK_CLASSIFICATION'] == 'alexandrite') &&
+              (!_filterAlmandine ||
+                  data['ROCK_CLASSIFICATION'] == 'Almandine' ||
+                  data['ROCK_CLASSIFICATION'] == 'almandine') &&
+              (!_filterAmazonite ||
+                  data['ROCK_CLASSIFICATION'] == 'Amazonite' ||
+                  data['ROCK_CLASSIFICATION'] == 'amazonite') &&
+              (!_filterAmber ||
+                  data['ROCK_CLASSIFICATION'] == 'Amber' ||
+                  data['ROCK_CLASSIFICATION'] == 'amber') &&
+              (!_filterAmethyst ||
+                  data['ROCK_CLASSIFICATION'] == 'Amethyst' ||
+                  data['ROCK_CLASSIFICATION'] == 'amethyst') &&
+              (!_filterAmetrine ||
+                  data['ROCK_CLASSIFICATION'] == 'Ametrine' ||
+                  data['ROCK_CLASSIFICATION'] == 'ametrine') &&
+              (!_filterAndalusite ||
+                  data['ROCK_CLASSIFICATION'] == 'Andalusite' ||
+                  data['ROCK_CLASSIFICATION'] == 'andalusite') &&
+              (!_filterAndradite ||
+                  data['ROCK_CLASSIFICATION'] == 'Andradite' ||
+                  data['ROCK_CLASSIFICATION'] == 'andradite') &&
+              (!_filterAquamarine ||
+                  data['ROCK_CLASSIFICATION'] == 'Aquamarine' ||
+                  data['ROCK_CLASSIFICATION'] == 'aquamarine') &&
+              (!_filterAventurineGreen ||
+                  data['ROCK_CLASSIFICATION'] == 'Aventurine Green' ||
+                  data['ROCK_CLASSIFICATION'] == 'aventurine green') &&
+              (!_filterAventurineYellow ||
+                  data['ROCK_CLASSIFICATION'] == 'Aventurine Yellow' ||
+                  data['ROCK_CLASSIFICATION'] == 'aventurine yellow') &&
+              (!_filterBenitoite ||
+                  data['ROCK_CLASSIFICATION'] == 'Benitoite' ||
+                  data['ROCK_CLASSIFICATION'] == 'benitoite') &&
+              (!_filterBerylGolden ||
+                  data['ROCK_CLASSIFICATION'] == 'Beryl Golden' ||
+                  data['ROCK_CLASSIFICATION'] == 'beryl golden') &&
+              (!_filterBixbite ||
+                  data['ROCK_CLASSIFICATION'] == 'Bixbite' ||
+                  data['ROCK_CLASSIFICATION'] == 'bixbite') &&
+              (!_filterBloodstone ||
+                  data['ROCK_CLASSIFICATION'] == 'Bloodstone' ||
+                  data['ROCK_CLASSIFICATION'] == 'bloodstone') &&
+              (!_filterCatsEye ||
+                  data['ROCK_CLASSIFICATION'] == 'Cats Eye' ||
+                  data['ROCK_CLASSIFICATION'] == 'cats eye') &&
+              (!_filterChalcedonyBlue ||
+                  data['ROCK_CLASSIFICATION'] == 'Chalcedony Blue' ||
+                  data['ROCK_CLASSIFICATION'] == 'chalcedony blue') &&
+              (!_filterChromeDiopside ||
+                  data['ROCK_CLASSIFICATION'] == 'Chrome Diopside' ||
+                  data['ROCK_CLASSIFICATION'] == 'chalcedony diopside') &&
+              (!_filterChrysoberyl ||
+                  data['ROCK_CLASSIFICATION'] == 'Chrysoberyl' ||
+                  data['ROCK_CLASSIFICATION'] == 'chrysoberyl') &&
+              (!_filterChrysocolla ||
+                  data['ROCK_CLASSIFICATION'] == 'Chrysocolla' ||
+                  data['ROCK_CLASSIFICATION'] == 'chrysocolla') &&
+              (!_filterChrysoprase ||
+                  data['ROCK_CLASSIFICATION'] == 'Chrysoprase' ||
+                  data['ROCK_CLASSIFICATION'] == 'chrysoprase') &&
+              (!_filterCitrine ||
+                  data['ROCK_CLASSIFICATION'] == 'Citrine' ||
+                  data['ROCK_CLASSIFICATION'] == 'citrine') &&
+              (!_filterCoral ||
+                  data['ROCK_CLASSIFICATION'] == 'Coral' ||
+                  data['ROCK_CLASSIFICATION'] == 'coral') &&
+              (!_filterDanburite ||
+                  data['ROCK_CLASSIFICATION'] == 'Danburite' ||
+                  data['ROCK_CLASSIFICATION'] == 'danburite') &&
+              (!_filterDiamond ||
+                  data['ROCK_CLASSIFICATION'] == 'Diamond' ||
+                  data['ROCK_CLASSIFICATION'] == 'diamond') &&
+              (!_filterDiaspore ||
+                  data['ROCK_CLASSIFICATION'] == 'Diaspore' ||
+                  data['ROCK_CLASSIFICATION'] == 'diaspore') &&
+              (!_filterDumortierite ||
+                  data['ROCK_CLASSIFICATION'] == 'Dumortierite' ||
+                  data['ROCK_CLASSIFICATION'] == 'dumortierite') &&
+              (!_filterEmerald ||
+                  data['ROCK_CLASSIFICATION'] == 'Emerald' ||
+                  data['ROCK_CLASSIFICATION'] == 'emerald') &&
+              (!_filterFluorite ||
+                  data['ROCK_CLASSIFICATION'] == 'Fluorite' ||
+                  data['ROCK_CLASSIFICATION'] == 'fluorite') &&
+              (!_filterGarnetRed ||
+                  data['ROCK_CLASSIFICATION'] == 'Garnet Red' ||
+                  data['ROCK_CLASSIFICATION'] == 'garnet red') &&
+              (!_filterGoshenite ||
+                  data['ROCK_CLASSIFICATION'] == 'Goshenite' ||
+                  data['ROCK_CLASSIFICATION'] == 'goshenite') &&
+              (!_filterGrossular ||
+                  data['ROCK_CLASSIFICATION'] == 'Grossular' ||
+                  data['ROCK_CLASSIFICATION'] == 'grossular') &&
+              (!_filterHessonite ||
+                  data['ROCK_CLASSIFICATION'] == 'Hessonite' ||
+                  data['ROCK_CLASSIFICATION'] == 'hessonite') &&
+              (!_filterHiddenite ||
+                  data['ROCK_CLASSIFICATION'] == 'Hiddenite' ||
+                  data['ROCK_CLASSIFICATION'] == 'hiddenite') &&
+              (!_filterIolite ||
+                  data['ROCK_CLASSIFICATION'] == 'Iolite' ||
+                  data['ROCK_CLASSIFICATION'] == 'iolite') &&
+              (!_filterJade ||
+                  data['ROCK_CLASSIFICATION'] == 'Jade' ||
+                  data['ROCK_CLASSIFICATION'] == 'jade') &&
+              (!_filterKunzite ||
+                  data['ROCK_CLASSIFICATION'] == 'Kunzite' ||
+                  data['ROCK_CLASSIFICATION'] == 'kunzite') &&
+              (!_filterKyanite ||
+                  data['ROCK_CLASSIFICATION'] == 'Kyanite' ||
+                  data['ROCK_CLASSIFICATION'] == 'kyanite') &&
+              (!_filterLabradorite ||
+                  data['ROCK_CLASSIFICATION'] == 'Labradorite' ||
+                  data['ROCK_CLASSIFICATION'] == 'labradorite') &&
+              (!_filterLapisLazuli ||
+                  data['ROCK_CLASSIFICATION'] == 'Lapis Lazuli' ||
+                  data['ROCK_CLASSIFICATION'] == 'lapis Lazuli') &&
+              (!_filterLarimar ||
+                  data['ROCK_CLASSIFICATION'] == 'Larimar' ||
+                  data['ROCK_CLASSIFICATION'] == 'larimar') &&
+              (!_filterMalachite ||
+                  data['ROCK_CLASSIFICATION'] == 'Malachite' ||
+                  data['ROCK_CLASSIFICATION'] == 'malachite') &&
+              (!_filterMoonstone ||
+                  data['ROCK_CLASSIFICATION'] == 'Moonstone' ||
+                  data['ROCK_CLASSIFICATION'] == 'moonstone') &&
+              (!_filterMorganite ||
+                  data['ROCK_CLASSIFICATION'] == 'Morganite' ||
+                  data['ROCK_CLASSIFICATION'] == 'morganite') &&
+              (!_filterOnyxBlack ||
+                  data['ROCK_CLASSIFICATION'] == 'Onyx Black' ||
+                  data['ROCK_CLASSIFICATION'] == 'onyx black') &&
+              (!_filterOpal ||
+                  data['ROCK_CLASSIFICATION'] == 'Opal' ||
+                  data['ROCK_CLASSIFICATION'] == 'opal') &&
+              (!_filterPearl ||
+                  data['ROCK_CLASSIFICATION'] == 'Pearl' ||
+                  data['ROCK_CLASSIFICATION'] == 'pearl') &&
+              (!_filterPeridot ||
+                  data['ROCK_CLASSIFICATION'] == 'Peridot' ||
+                  data['ROCK_CLASSIFICATION'] == 'peridot') &&
+              (!_filterPyrite ||
+                  data['ROCK_CLASSIFICATION'] == 'Pyrite' ||
+                  data['ROCK_CLASSIFICATION'] == 'pyrite') &&
+              (!_filterPyrope ||
+                  data['ROCK_CLASSIFICATION'] == 'Pyrope' ||
+                  data['ROCK_CLASSIFICATION'] == 'pyrope') &&
+              (!_filterQuartzSmoky ||
+                  data['ROCK_CLASSIFICATION'] == 'Quartz Smoky' ||
+                  data['ROCK_CLASSIFICATION'] == 'quartz smoky') &&
+              (!_filterRhodochrosite ||
+                  data['ROCK_CLASSIFICATION'] == 'Rhodochrosite' ||
+                  data['ROCK_CLASSIFICATION'] == 'rhodochrosite') &&
+              (!_filterRhodolite ||
+                  data['ROCK_CLASSIFICATION'] == 'Rhodolite' ||
+                  data['ROCK_CLASSIFICATION'] == 'rhodolite') &&
+              (!_filterRhodonite ||
+                  data['ROCK_CLASSIFICATION'] == 'Rhodonite' ||
+                  data['ROCK_CLASSIFICATION'] == 'rhodonite') &&
+              (!_filterRuby ||
+                  data['ROCK_CLASSIFICATION'] == 'Ruby' ||
+                  data['ROCK_CLASSIFICATION'] == 'ruby') &&
+              (!_filterSapphire ||
+                  data['ROCK_CLASSIFICATION'] == 'Sapphire' ||
+                  data['ROCK_CLASSIFICATION'] == 'sapphire') &&
+              (!_filterSerpentine ||
+                  data['ROCK_CLASSIFICATION'] == 'Serpentine' ||
+                  data['ROCK_CLASSIFICATION'] == 'serpentine') &&
+              (!_filterSodalite || data['ROCK_CLASSIFICATION'] == 'Sodalite') &&
+              (!_filterSpessartite ||
+                  data['ROCK_CLASSIFICATION'] == 'Spessartite' ||
+                  data['ROCK_CLASSIFICATION'] == 'spessartite') &&
+              (!_filterSphene ||
+                  data['ROCK_CLASSIFICATION'] == 'Sphene' ||
+                  data['ROCK_CLASSIFICATION'] == 'sphene') &&
+              (!_filterSunstone ||
+                  data['ROCK_CLASSIFICATION'] == 'Sunstone' ||
+                  data['ROCK_CLASSIFICATION'] == 'sunstone') &&
+              (!_filterTanzanite ||
+                  data['ROCK_CLASSIFICATION'] == 'Tanzanite' ||
+                  data['ROCK_CLASSIFICATION'] == 'tanzanite') &&
+              (!_filterTigersEye ||
+                  data['ROCK_CLASSIFICATION'] == 'Tigers Eye' ||
+                  data['ROCK_CLASSIFICATION'] == 'tigers eye') &&
+              (!_filterTopaz ||
+                  data['ROCK_CLASSIFICATION'] == 'Topaz' ||
+                  data['ROCK_CLASSIFICATION'] == 'topaz') &&
+              (!_filterTourmaline ||
+                  data['ROCK_CLASSIFICATION'] == 'Tourmaline' ||
+                  data['ROCK_CLASSIFICATION'] == 'tourmaline') &&
+              (!_filterTsavorite ||
+                  data['ROCK_CLASSIFICATION'] == 'Tsavorite' ||
+                  data['ROCK_CLASSIFICATION'] == 'tsavorite') &&
+              (!_filterTurquoise ||
+                  data['ROCK_CLASSIFICATION'] == 'Turquoise' ||
+                  data['ROCK_CLASSIFICATION'] == 'turquoise') &&
+              (!_filterVariscite ||
+                  data['ROCK_CLASSIFICATION'] == 'Variscite' ||
+                  data['ROCK_CLASSIFICATION'] == 'variscite') &&
+              (!_filterZircon ||
+                  data['ROCK_CLASSIFICATION'] == 'Zircon' ||
+                  data['ROCK_CLASSIFICATION'] == 'zircon') &&
+              (!_filterZoisite ||
+                  data['ROCK_CLASSIFICATION'] == 'Zoisite' ||
+                  data['ROCK_CLASSIFICATION'] == 'zoisite') &&
+              (!_filteragate || data['ROCK_CLASSIFICATION'] == 'agate') &&
+              (!_filterbasalt || data['ROCK_CLASSIFICATION'] == 'basalt') &&
+              (!_filtercoal || data['ROCK_CLASSIFICATION'] == 'coal') &&
+              (!_filtergarnet || data['ROCK_CLASSIFICATION'] == 'garnet') &&
+              (!_filtergranite || data['ROCK_CLASSIFICATION'] == 'granite') &&
+              (!_filterlimestone ||
+                  data['ROCK_CLASSIFICATION'] == 'limestone') &&
+              (!_filtersandstone ||
+                  data['ROCK_CLASSIFICATION'] == 'sandstone')));
 
       if (shouldAddMarker) {
         var markerIdVal = doc.id;
@@ -333,7 +335,9 @@ class _MapsPageState extends State<MapsPage> {
             snippet: data['CITY'],
           ),
         );
-        markers.add(marker);
+        setState(() {
+          markers.add(marker);
+        });
       }
     }
   }
@@ -1143,10 +1147,4 @@ class _MapsPageState extends State<MapsPage> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: MapsPage(),
-  ));
 }
