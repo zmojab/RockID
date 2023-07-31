@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
 import 'package:rockid/components/my_button.dart';
 import 'package:rockid/components/my_textfield.dart';
 import 'package:rockid/services/auth_service.dart';
 import '../components/square_tile.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -33,21 +35,25 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      Navigator.pop(context);
-      // Wrong Email
-      if (e.code == 'user-not-found') {
-        showErrorMessage('Incorrect Email or password');
-      }
-      // Wrong Password
-      else if (e.code == 'wrong-password') {
-        showErrorMessage('Incorrect Email or Password');
-      }
-      // Invalid Email
-      else if (e.code == 'invalid-email') {
-        showErrorMessage('Incorrect Email or Password');
+      if (mounted) {
+        print(e.code);
+        Navigator.pop(context);
+        // Wrong Email
+        if (e.code == 'user-not-found') {
+          showErrorMessage('Incorrect Email or password');
+        }
+        // Wrong Password
+        else if (e.code == 'wrong-password') {
+          showErrorMessage('Incorrect Email or Password');
+        }
+        // Invalid Email
+        else if (e.code == 'invalid-email') {
+          showErrorMessage('Incorrect Email or Password');
+        }
       }
     }
   }
@@ -63,8 +69,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(
-          255, 255, 237, 223), // Set the background color to light brown
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -92,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       'Rock ID',
                       style: TextStyle(
-                        color: Colors.brown,
+                        color: ForegroundColor,
                         fontSize: 50,
                         fontWeight: FontWeight.bold,
                       ),
@@ -114,6 +119,30 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 10,
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ForgotPasswordPage()),
+                              );
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                  color: ForegroundColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                     const SizedBox(height: 25),
                     MyButton(
@@ -128,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.brown,
+                              color: ForegroundColor,
                             ),
                           ),
                           Padding(
@@ -137,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               'Or',
                               style: TextStyle(
-                                color: Colors.brown,
+                                color: ForegroundColor,
                                 fontSize: 20,
                               ),
                             ),
@@ -145,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Divider(
                               thickness: 0.5,
-                              color: Colors.brown,
+                              color: ForegroundColor,
                             ),
                           ),
                         ],
@@ -181,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                             'Register now',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.brown,
+                              color: ForegroundColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

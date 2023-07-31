@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rockid/classifier/styles.dart';
+import '../components/hamburger_menu.dart';
 import '../models/rock.dart';
 import '../repositories/rock_repository.dart';
 import '../components/rock_details_popup.dart';
@@ -43,13 +45,12 @@ class _RockInformationPageState extends State<RockInformationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Rock Information',
-          style: TextStyle(fontSize: 30)
-        ),
+        title: const Text('Rock Information', style: TextStyle(fontSize: 30)),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
+      endDrawer: HamburgerMenu(),
+      backgroundColor: backgroundColor,
       body: Container(
         child: Column(
           children: [
@@ -64,7 +65,8 @@ class _RockInformationPageState extends State<RockInformationPage> {
                   prefixIcon: Icon(Icons.search),
                 ),
               ),
-            ),
+            ), // <-- Move the closing parenthesis here
+
             // Scrollable list of rocks
             Expanded(
               child: ListView.builder(
@@ -73,7 +75,6 @@ class _RockInformationPageState extends State<RockInformationPage> {
                   final rock = displayedRocks[index];
                   return ListTile(
                     title: Text(rock.name),
-                    subtitle: Text(rock.category),
                     onTap: () {
                       showDialog(
                         context: context,
@@ -87,7 +88,7 @@ class _RockInformationPageState extends State<RockInformationPage> {
               ),
             ),
           ],
-        )
+        ),
       ),
     );
   }

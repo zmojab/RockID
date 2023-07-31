@@ -161,7 +161,6 @@ class Classifier {
 
   TensorImage _preProcessInput(Image image) {
     // #1
-    //image = Image.rgb(224, 224);
     final inputTensor = TensorImage(_model.inputType);
     inputTensor.loadImage(image);
 
@@ -171,16 +170,16 @@ class Classifier {
 
     // #3
     final shapeLength = _model.inputShape[1];
-    final resizeOp = ResizeOp(224, 224, ResizeMethod.BILINEAR);
+    final resizeOp = ResizeOp(shapeLength, shapeLength, ResizeMethod.BILINEAR);
 
     // #4
-    //final normalizeOp = NormalizeOp(127.5, 127.5);
+    final normalizeOp = NormalizeOp(1.0, 255.0);
 
     // #5
     final imageProcessor = ImageProcessorBuilder()
         .add(cropOp)
         .add(resizeOp)
-        //.add(normalizeOp)
+        .add(normalizeOp)
         .build();
 
     imageProcessor.process(inputTensor);

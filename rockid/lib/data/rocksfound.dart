@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -19,6 +18,7 @@ class RocksFoundCRUD {
       String rockImageUrl,
       double lattitude,
       double longitude,
+      String city,
       DateTime dateTime) async {
     try {
       await rocksFoundCollection.doc().set({
@@ -27,6 +27,7 @@ class RocksFoundCRUD {
         'ROCK_IMAGE_URL': rockImageUrl,
         'LATTITUDE': lattitude,
         'LONGITUDE': longitude,
+        'CITY': city,
         'CAN_BE_VIEWED': true,
         'VIEWABLE': true,
         'DATETIME': dateTime,
@@ -161,4 +162,46 @@ class RocksFoundCRUD {
       print(e);
     }
   }
+
+  // Returns list of all rocks found for a given UID that are viewable JW
+Future<List<Map<String, dynamic>>> getViewableRocksFoundForUID(String uid) async {
+  List<Map<String, dynamic>> rocksFound = [];
+  try {
+    QuerySnapshot snapshot = await rocksFoundCollection
+        .where('UID', isEqualTo: uid)
+        .where('VIEWABLE', isEqualTo: true)
+        .get();
+    rocksFound = snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return {
+        ...data,
+        'ID': doc.id,
+      };
+    }).toList();
+  } catch (e) {
+    print(e);
+  }
+  return rocksFound;
+}
+
+// Returns list of all rocks found that are viewable JW
+Future<List<Map<String, dynamic>>> getAllViewableRocksFound(String uid) async {
+  List<Map<String, dynamic>> rocksFound = [];
+  try {
+    QuerySnapshot snapshot = await rocksFoundCollection
+        .where('VIEWABLE', isEqualTo: true)
+        .get();
+    rocksFound = snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return {
+        ...data,
+        'ID': doc.id,
+      };
+    }).toList();
+  } catch (e) {
+    print(e);
+  }
+  return rocksFound;
+}
+
 }

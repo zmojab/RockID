@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rockid/main.dart';
-import 'package:rockid/pages/auth_page.dart';
-import 'package:rockid/pages/login_or_register_page.dart';
-import 'package:rockid/pages/login_page.dart';
+import 'package:rockid/classifier/styles.dart';
+import 'package:rockid/pages/other_user_profile_page.dart';
 import 'package:rockid/pages/profile_page.dart';
 import 'package:rockid/pages/camera_page.dart';
+import 'package:rockid/pages/recently_found_rocks_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
 import 'package:rockid/pages/rock_information_page.dart';
-import '../components/square_tile.dart';
+
+import '../components/hamburger_menu.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,15 +19,34 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-final user = FirebaseAuth.instance.currentUser!;
+User user = FirebaseAuth.instance.currentUser!;
 
 // Firebase sign out method is asynchronous, so making signUserOut asynchronous
 
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    _refreshUser();
     addUserEntry();
     super.initState();
+  }
+
+  Future<void> _refreshUser() async {
+    User? user1 = FirebaseAuth.instance.currentUser;
+
+    if (user1 != null) {
+      try {
+        await user.reload();
+        setState(() {
+          user = FirebaseAuth.instance.currentUser!;
+        });
+        print('User refreshed successfully!');
+      } catch (e) {
+        print('Error refreshing user: $e');
+      }
+    } else {
+      print('User not currently signed in.');
+    }
   }
 
   Future<void> addUserEntry() async {
@@ -48,7 +66,15 @@ class _HomePageState extends State<HomePage> {
       newUserRef.set({
         'UID': user.uid,
         'username': '',
+        'email': user.email,
         'occupation': '',
+        'phoneNumber': '',
+        'bio': '',
+        'location': '',
+        'isProfilePrivate': false,
+        'isFullNamePrivate': false,
+        'isEmailPrivate': false,
+        'isPhoneNumberPrivate': false,
         'number of rocks found': 0,
         'user_profile_url':
             'https://firebasestorage.googleapis.com/v0/b/rockid-30d56.appspot.com/o/Profile_Images%2FBlank_profile%20(1).png?alt=media&token=36582d23-62ae-460b-b9f4-74e5c9227a3b',
@@ -73,7 +99,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 237, 223), //Background color - SU
+      backgroundColor: backgroundColor, //Background color - SU
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -82,9 +108,10 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
         actions: [],
-        backgroundColor: Colors.brown,
+        backgroundColor: ForegroundColor,
       ),
-      body: Center(
+      endDrawer: HamburgerMenu(),
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,33 +127,10 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.brown,
+                color: ForegroundColor,
               ),
             ),
             SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MapsPage()),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), 
-                ),
-              ),
-              // Map button initate - SU
-              child: Text(
-                'Maps',
-                style: TextStyle(
-                  fontSize: 20.0, 
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -136,13 +140,14 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(ForegroundColor),
                 padding: MaterialStateProperty.all<EdgeInsets>(
                   EdgeInsets.all(16.0),
                 ),
               ),
               child: Text(
-                'Rocks Found',
+                'My Collection',
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.white,
@@ -159,13 +164,61 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(ForegroundColor),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), 
+                  EdgeInsets.all(16.0),
                 ),
               ),
               child: Text(
                 'Rock Information',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapsPage()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(ForegroundColor),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0),
+                ),
+              ),
+              // Map button initate - SU
+              child: Text(
+                'Rocks Around the World',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RecentlyFoundRocksPage()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0),
+                ),
+              ),
+              child: Text(
+                'Recently Found Rocks',
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.white,
@@ -185,11 +238,11 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.brown),
+            icon: Icon(Icons.home, color: ForegroundColor),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera, color: Colors.grey),
+            icon: Icon(Icons.gps_fixed_sharp, color: Colors.grey),
             label: 'Rock Identifier',
           ),
           BottomNavigationBarItem(
@@ -198,7 +251,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         onTap: (index) {
-          
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => _pages[index]),
