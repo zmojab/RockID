@@ -17,7 +17,7 @@ import '../data/rocksfound.dart';
 const _labelsFileName = 'assets/polishedLabels.txt';
 const _modelFileName = 'MobileNetPolished80%.tflite';
 const _labelsFileName1 = 'assets/roughLabels.txt';
-const _modelFileName1 = 'mobileNet2Rough80%.tflite';
+const _modelFileName1 = 'mobileNet2Rough82%.tflite';
 const _labelsFileName2 = 'assets/RoughOrPolished.txt';
 const _modelFileName2 = 'RoughOrPolished97%.tflite';
 final RocksFoundCRUD rocksFoundCRUD = RocksFoundCRUD();
