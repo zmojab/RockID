@@ -25,10 +25,28 @@ class EditProfilePage extends StatefulWidget {
   _EditProfilePageState createState() => _EditProfilePageState();
 }
 
-final user = FirebaseAuth.instance.currentUser!;
-String email = user.email!;
+// Inside your function or class
+User user = FirebaseAuth.instance.currentUser!;
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  void _refreshUser() async {
+    User? user1 = FirebaseAuth.instance.currentUser;
+
+    if (user1 != null) {
+      try {
+        user.reload();
+        setState(() {
+          user = FirebaseAuth.instance.currentUser!;
+        });
+        print('User refreshed successfully!');
+      } catch (e) {
+        print('Error refreshing user: $e');
+      }
+    } else {
+      print('User not currently signed in.');
+    }
+  }
+
   File? _image;
   String? _uploadedImageUrl;
 
@@ -47,6 +65,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
+    _refreshUser();
     usernameController = TextEditingController();
     fullNameController = TextEditingController();
     phoneNumberController = TextEditingController();
@@ -79,6 +98,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             isEmailPrivate = data['emailPrivate'] as bool? ?? true;
             isPhoneNumberPrivate = data['phoneNumberPrivate'] as bool? ?? true;
           });
+          print("loaded attributes");
         }
       }
     } catch (error) {
@@ -242,7 +262,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     String location = locationController.text.trim();
     final RegExp alphanumericWithSpaces = RegExp(r'^[a-zA-Z0-9\s]+$');
 
-    if (location.length > 2 && alphanumericWithSpaces.hasMatch(location)) {
+    if (location.length > 2 &&
+        alphanumericWithSpaces.hasMatch(location) &&
+        locationController.text.trim().length < 30) {
       try {
         var docID = await UserCRUD().getUserDocID(user.uid);
         if (docID != null) {
@@ -522,7 +544,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 children: [
                   Expanded(
                     child: Text(
-                      email,
+                      user.email!.toString(),
                       style: TextStyle(fontSize: 15),
                     ),
                   ),

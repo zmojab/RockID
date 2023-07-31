@@ -19,15 +19,34 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-final user = FirebaseAuth.instance.currentUser!;
+User user = FirebaseAuth.instance.currentUser!;
 
 // Firebase sign out method is asynchronous, so making signUserOut asynchronous
 
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    _refreshUser();
     addUserEntry();
     super.initState();
+  }
+
+  Future<void> _refreshUser() async {
+    User? user1 = FirebaseAuth.instance.currentUser;
+
+    if (user1 != null) {
+      try {
+        await user.reload();
+        setState(() {
+          user = FirebaseAuth.instance.currentUser!;
+        });
+        print('User refreshed successfully!');
+      } catch (e) {
+        print('Error refreshing user: $e');
+      }
+    } else {
+      print('User not currently signed in.');
+    }
   }
 
   Future<void> addUserEntry() async {
@@ -49,6 +68,9 @@ class _HomePageState extends State<HomePage> {
         'username': '',
         'email': user.email,
         'occupation': '',
+        'phoneNumber': '',
+        'bio': '',
+        'location': '',
         'isProfilePrivate': false,
         'isFullNamePrivate': false,
         'isEmailPrivate': false,
@@ -179,24 +201,26 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                 ),
               ),
-            ),SizedBox(height: 20),
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RecentlyFoundRocksPage()),
+                  MaterialPageRoute(
+                      builder: (context) => RecentlyFoundRocksPage()),
                 );
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
                 padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0), 
+                  EdgeInsets.all(16.0),
                 ),
               ),
               child: Text(
                 'Recently Found Rocks',
                 style: TextStyle(
-                  fontSize: 20.0, 
+                  fontSize: 20.0,
                   color: Colors.white,
                 ),
               ),

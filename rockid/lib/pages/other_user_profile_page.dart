@@ -85,7 +85,6 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
       setState(() {
         _isLoading = false; // Update the loading state if there's an error.
       });
-      await DefaultCacheManager().downloadFile(_url);
     }
   }
 
