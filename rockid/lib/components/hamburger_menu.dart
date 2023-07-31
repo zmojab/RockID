@@ -3,10 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rockid/components/disclaimer_popup.dart';
 import 'package:rockid/pages/about_app_page.dart';
-
-
 import '../pages/auth_page.dart';
 import '../pages/settings_page.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class HamburgerMenu extends StatelessWidget {
   const HamburgerMenu({Key? key}) : super(key: key);
@@ -53,6 +52,9 @@ class HamburgerMenu extends StatelessWidget {
 
   Future<void> signUserOut(BuildContext context) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
+    final user = FirebaseAuth.instance.currentUser!;
+    String email = user.email.toString();
+    print("email 2: " + email);
     try {
       final _providerData = _auth.currentUser!.providerData;
       if (_providerData.isNotEmpty) {
@@ -66,7 +68,7 @@ class HamburgerMenu extends StatelessWidget {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => AuthPage()),
-        (route) => false, // Clear all previous routes from the stack
+        (route) => false,
       );
     } catch (e) {
       print(e);
@@ -97,10 +99,9 @@ class HamburgerMenu extends StatelessWidget {
             title: const Text('About App'),
             onTap: () {
               Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AboutAppPage()),
-                    );
+                context,
+                MaterialPageRoute(builder: (context) => AboutAppPage()),
+              );
             },
           ),
           ListTile(
@@ -108,10 +109,9 @@ class HamburgerMenu extends StatelessWidget {
             title: const Text('Settings'),
             onTap: () {
               Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingsPage()),
-                    );
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
             },
           ),
           ListTile(
@@ -133,4 +133,3 @@ class HamburgerMenu extends StatelessWidget {
     );
   }
 }
-

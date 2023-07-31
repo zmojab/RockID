@@ -19,8 +19,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 //default image
-String _url =
-    'https://firebasestorage.googleapis.com/v0/b/rockid-30d56.appspot.com/o/Profile_Images%2FBlank_profile%20(1).png?alt=media&token=36582d23-62ae-460b-b9f4-74e5c9227a3b';
+String _url = "";
 
 String _username = "";
 String _occ = "";
@@ -31,10 +30,30 @@ String _location = "";
 
 int _rocks = 0;
 final user = FirebaseAuth.instance.currentUser!;
-String email = user.email!;
-String uid = user.uid;
+
+String email = '';
+String uid = '';
 
 var collection = FirebaseFirestore.instance.collection("users");
+
+// Inside your function or class
+void refreshUser() async {
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user != null) {
+    try {
+      await user.reload();
+      user = FirebaseAuth
+          .instance.currentUser; // Refresh the user object with updated data
+      print('User refreshed successfully!');
+    } catch (e) {
+      print('Error refreshing user: $e');
+    }
+  } else {
+    print('User not currently signed in.');
+  }
+}
+
 var phoneNumberFormatter = MaskTextInputFormatter(
   mask: '(###) ###-####',
   filter: {'#': RegExp(r'[0-9]')},
@@ -54,12 +73,25 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _set_user_info() async {
-    var username = await collection.where("UID", isEqualTo: user.uid).get();
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    User? user = FirebaseAuth.instance.currentUser;
 
+    if (user != null) {
+      try {
+        await user.reload();
+      } catch (e) {
+        print('Error refreshing user: $e');
+      }
+    } else {
+      print('User not currently signed in.');
+    }
+
+    var username = await collection.where("UID", isEqualTo: user?.uid).get();
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    print(email);
+    print(user?.uid);
     QuerySnapshot snapshot = await firestore
         .collection('rocks_found')
-        .where('UID', isEqualTo: user.uid)
+        .where('UID', isEqualTo: user?.uid)
         .get();
 
     try {
@@ -74,12 +106,12 @@ class _ProfilePageState extends State<ProfilePage> {
           _phoneNumber =
               formatPhoneNumber(username.docs[0].data()['phoneNumber']);
           _location = username.docs[0].data()['location'];
+          email = user!.email.toString();
         });
       }
     } catch (e) {
       print("could not get user info information");
     }
-    await DefaultCacheManager().downloadFile(_url);
   }
 
   @override
@@ -107,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
         backgroundColor: ForegroundColor,
       ),
-      endDrawer: HamburgerMenu(),
+      endDrawer: const HamburgerMenu(),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

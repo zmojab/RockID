@@ -35,21 +35,25 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      Navigator.pop(context);
-      // Wrong Email
-      if (e.code == 'user-not-found') {
-        showErrorMessage('Incorrect Email or password');
-      }
-      // Wrong Password
-      else if (e.code == 'wrong-password') {
-        showErrorMessage('Incorrect Email or Password');
-      }
-      // Invalid Email
-      else if (e.code == 'invalid-email') {
-        showErrorMessage('Incorrect Email or Password');
+      if (mounted) {
+        print(e.code);
+        Navigator.pop(context);
+        // Wrong Email
+        if (e.code == 'user-not-found') {
+          showErrorMessage('Incorrect Email or password');
+        }
+        // Wrong Password
+        else if (e.code == 'wrong-password') {
+          showErrorMessage('Incorrect Email or Password');
+        }
+        // Invalid Email
+        else if (e.code == 'invalid-email') {
+          showErrorMessage('Incorrect Email or Password');
+        }
       }
     }
   }
