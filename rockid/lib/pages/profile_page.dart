@@ -9,6 +9,7 @@ import 'package:rockid/pages/camera_page.dart';
 import 'package:rockid/pages/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,7 +19,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 //default image
-String _url = "";
+String _url =
+    'https://firebasestorage.googleapis.com/v0/b/rockid-30d56.appspot.com/o/Profile_Images%2FBlank_profile%20(1).png?alt=media&token=36582d23-62ae-460b-b9f4-74e5c9227a3b';
 
 String _username = "";
 String _occ = "";
@@ -41,8 +43,6 @@ String formatPhoneNumber(String phoneNumber) {
   final maskedText = phoneNumberFormatter.maskText(phoneNumber);
   return maskedText;
 }
-
-
 
 class _ProfilePageState extends State<ProfilePage> {
   final List<Widget> _pages = [HomePage(), RockID(), ProfilePage()];
@@ -79,6 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       print("could not get user info information");
     }
+    await DefaultCacheManager().downloadFile(_url);
   }
 
   @override
