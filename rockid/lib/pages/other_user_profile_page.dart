@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:rockid/classifier/styles.dart';
@@ -84,6 +85,7 @@ class _OtherUserProfilePageState extends State<OtherUserProfilePage> {
       setState(() {
         _isLoading = false; // Update the loading state if there's an error.
       });
+      await DefaultCacheManager().downloadFile(_url);
     }
   }
 

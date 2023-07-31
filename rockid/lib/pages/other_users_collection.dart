@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
@@ -139,11 +140,14 @@ class _OtherUsersRocksPageState extends State<OtherUsersRocksPage> {
                   double latitude = rockFound['LATTITUDE']!;
                   double longitude = rockFound['LONGITUDE']!;
                   return ListTile(
-                    leading: Image.network(
-                      rockFound['ROCK_IMAGE_URL']!,
+                    leading: CachedNetworkImage(
+                      imageUrl: rockFound['ROCK_IMAGE_URL']!,
                       width: 50,
                       height: 50,
                       fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                     title: Text(
                       capitalizeRockClassification(

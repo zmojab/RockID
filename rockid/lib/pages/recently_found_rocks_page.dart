@@ -5,6 +5,8 @@ import '../models/recently_found_rock.dart';
 import '../models/user.dart';
 import '../repositories/recently_found_rock_repository.dart';
 import '../repositories/user_repository.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RecentlyFoundRocksPage extends StatefulWidget {
   @override
@@ -105,7 +107,11 @@ class _RecentlyFoundRocksPageState extends State<RecentlyFoundRocksPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 50),
-                child: Image.network(rock.rockImageUrl),
+                child: CachedNetworkImage(
+                  imageUrl: rock.rockImageUrl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
               ),
             ],
           );
