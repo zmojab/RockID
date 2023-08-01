@@ -35,6 +35,19 @@ Rockid is a mobile application built using Flutter for both iOS and Android devi
 ```bash
   flutter run
 ```
+## Google sign in
+1. Use the following commands to get the SHA-1 and SHA-256 fingerprints.
+2. Windows:
+     ```bash
+     keytool -list -v \
+     -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+     ```
+ 3. Mac/Linux:
+      ```bash
+       keytool -list -v \
+     -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+      ```
+4. Go to firebase.com and login into the RockID account and under autherization go to sign-in method and go to project settings and add both the SHA-1 and SH-256 fingerprints.
 
 ## Technologies Used
 
@@ -69,20 +82,6 @@ To contribute to the RockID application please use the following steps.
 4. Create a pull request to the "development" branch and explain the purpose of the changes.
 5. When all changes and bug fixes have been completed, create a pull request from "development" to the main branch.
 
-
-## Google sign in
-1. Use the following commands to get the SHA-1 and SHA-256 fingerprints.
-2. Windows:
-     ```bash
-     keytool -list -v \
-     -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
-     ```
- 3. Mac/Linux:
-      ```bash
-       keytool -list -v \
-     -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
-      ```
-4. Go to firebase.com and login into the RockID account and under autherization go to sign-in method and go to project settings and add both the SHA-1 and SH-256 fingerprints.
 
 ## Future improvements
 
