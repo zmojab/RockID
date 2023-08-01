@@ -90,7 +90,7 @@ class _RocksFoundListPageState extends State<RocksFoundListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Rocks Found List',
+          'My Collection',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,

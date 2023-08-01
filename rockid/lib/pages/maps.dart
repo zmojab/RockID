@@ -17,327 +17,360 @@ class _MapsPageState extends State<MapsPage> {
   String _searchText = ''; //search text for hamburger menu
   TextEditingController _searchController = TextEditingController();
 
-//variables - polished
-  bool _filterAlexandrite = false;
-  bool _filterAlmandine = false;
-  bool _filterAmazonite = false;
-  bool _filterAmber = false;
-  bool _filterAmethyst = false;
-  bool _filterAmetrine = false;
-  bool _filterAndalusite = false;
-  bool _filterAndradite = false;
-  bool _filterAquamarine = false;
-  bool _filterAventurineGreen = false;
-  bool _filterAventurineYellow = false;
-  bool _filterBenitoite = false;
-  bool _filterBerylGolden = false;
-  bool _filterBixbite = false;
-  bool _filterBloodstone = false;
-  bool _filterCatsEye = false;
-  bool _filterChalcedonyBlue = false;
-  bool _filterChromeDiopside = false;
-  bool _filterChrysoberyl = false;
-  bool _filterChrysocolla = false;
-  bool _filterChrysoprase = false;
-  bool _filterCitrine = false;
-  bool _filterCoral = false;
-  bool _filterDanburite = false;
-  bool _filterDiamond = false;
-  bool _filterDiaspore = false;
-  bool _filterDumortierite = false;
-  bool _filterEmerald = false;
-  bool _filterFluorite = false;
-  bool _filterGarnetRed = false;
-  bool _filterGoshenite = false;
-  bool _filterGrossular = false;
-  bool _filterHessonite = false;
-  bool _filterHiddenite = false;
-  bool _filterIolite = false;
-  bool _filterJade = false;
-  bool _filterKunzite = false;
-  bool _filterKyanite = false;
-  bool _filterLabradorite = false;
-  bool _filterLapisLazuli = false;
-  bool _filterLarimar = false;
-  bool _filterMalachite = false;
-  bool _filterMoonstone = false;
-  bool _filterMorganite = false;
-  bool _filterOnyxBlack = false;
-  bool _filterOpal = false;
-  bool _filterPearl = false;
-  bool _filterPeridot = false;
-  bool _filterPyrite = false;
-  bool _filterPyrope = false;
-  bool _filterQuartzSmoky = false;
-  bool _filterRhodochrosite = false;
-  bool _filterRhodolite = false;
-  bool _filterRhodonite = false;
-  bool _filterRuby = false;
-  bool _filterSapphire = false;
-  bool _filterSerpentine = false;
-  bool _filterSodalite = false;
-  bool _filterSpessartite = false;
-  bool _filterSphene = false;
-  bool _filterSunstone = false;
-  bool _filterTanzanite = false;
-  bool _filterTigersEye = false;
-  bool _filterTopaz = false;
-  bool _filterTourmaline = false;
-  bool _filterTsavorite = false;
-  bool _filterTurquoise = false;
-  bool _filterVariscite = false;
-  bool _filterZircon = false;
-  bool _filterZoisite = false;
+  
 
-  bool _filteragate = false;
-  bool _filterbasalt = false;
-  bool _filtercoal = false;
-  bool _filtergarnet = false;
-  bool _filtergranite = false;
-  bool _filterlimestone = false;
-  bool _filtersandstone = false;
+//variables - polished
+  bool _filterall = true;
+  bool _filterAlexandrite = true;
+  bool _filterAlmandine = true;
+  bool _filterAmazonite = true;
+  bool _filterAmber = true;
+  bool _filterAmethyst = true;
+  bool _filterAmetrine = true;
+  bool _filterAndalusite = true;
+  bool _filterAndradite = true;
+  bool _filterAquamarine = true;
+  bool _filterAventurineGreen = true;
+  bool _filterAventurineYellow = true;
+  bool _filterBenitoite = true;
+  bool _filterBerylGolden = true;
+  bool _filterBixbite = true;
+  bool _filterBloodstone = true;
+  bool _filterCatsEye = true;
+  bool _filterChalcedonyBlue = true;
+  bool _filterChromeDiopside = true;
+  bool _filterChrysoberyl = true;
+  bool _filterChrysocolla = true;
+  bool _filterChrysoprase = true;
+  bool _filterCitrine = true;
+  bool _filterCoral = true;
+  bool _filterDanburite = true;
+  bool _filterDiamond = true;
+  bool _filterDiaspore = true;
+  bool _filterDumortierite = true;
+  bool _filterEmerald = true;
+  bool _filterFluorite = true;
+  bool _filterGarnetRed = true;
+  bool _filterGoshenite = true;
+  bool _filterGrossular = true;
+  bool _filterHessonite = true;
+  bool _filterHiddenite = true;
+  bool _filterIolite = true;
+  bool _filterJade = true;
+  bool _filterKunzite = true;
+  bool _filterKyanite = true;
+  bool _filterLabradorite = true;
+  bool _filterLapisLazuli = true;
+  bool _filterLarimar = true;
+  bool _filterMalachite = true;
+  bool _filterMoonstone = true;
+  bool _filterMorganite = true;
+  bool _filterOnyxBlack = true;
+  bool _filterOpal = true;
+  bool _filterPearl = true;
+  bool _filterPeridot = true;
+  bool _filterPyrite = true;
+  bool _filterPyrope = true;
+  bool _filterQuartzSmoky = true;
+  bool _filterRhodochrosite = true;
+  bool _filterRhodolite = true;
+  bool _filterRhodonite = true;
+  bool _filterRuby = true;
+  bool _filterSapphire = true;
+  bool _filterSerpentine = true;
+  bool _filterSodalite = true;
+  bool _filterSpessartite = true;
+  bool _filterSphene = true;
+  bool _filterSunstone = true;
+  bool _filterTanzanite = true;
+  bool _filterTigersEye = true;
+  bool _filterTopaz = true;
+  bool _filterTourmaline = true;
+  bool _filterTsavorite = true;
+  bool _filterTurquoise = true;
+  bool _filterVariscite = true;
+  bool _filterZircon = true;
+  bool _filterZoisite = true;
+  bool _filteragate = true;
+  bool _filterbasalt = true;
+  bool _filtercoal = true;
+  bool _filtergarnet = true;
+  bool _filtergranite = true;
+  bool _filterlimestone = true;
+  bool _filtersandstone = true;
+
+  
+  void setAllFiltersFalse(){
+  _filterAlexandrite = false;
+  _filterAlmandine = false;
+  _filterAmazonite = false;
+  _filterAmber = false;
+  _filterAmethyst = false;
+  _filterAmetrine = false;
+  _filterAndalusite = false;
+  _filterAndradite = false;
+  _filterAquamarine = false;
+  _filterAventurineGreen = false;
+  _filterAventurineYellow = false;
+  _filterBenitoite = false;
+  _filterBerylGolden = false;
+  _filterBixbite = false;
+  _filterBloodstone = false;
+  _filterCatsEye = false;
+  _filterChalcedonyBlue = false;
+  _filterChromeDiopside = false;
+  _filterChrysoberyl = false;
+  _filterChrysocolla = false;
+  _filterChrysoprase = false;
+  _filterCitrine = false;
+  _filterCoral = false;
+  _filterDanburite = false;
+  _filterDiamond = false;
+  _filterDiaspore = false;
+  _filterDumortierite = false;
+  _filterEmerald = false;
+  _filterFluorite = false;
+  _filterGarnetRed = false;
+  _filterGoshenite = false;
+  _filterGrossular = false;
+  _filterHessonite = false;
+  _filterHiddenite = false;
+  _filterIolite = false;
+  _filterJade = false;
+  _filterKunzite = false;
+  _filterKyanite = false;
+  _filterLabradorite = false;
+  _filterLapisLazuli = false;
+  _filterLarimar = false;
+  _filterMalachite = false;
+  _filterMoonstone = false;
+  _filterMorganite = false;
+  _filterOnyxBlack = false;
+  _filterOpal = false;
+  _filterPearl = false;
+  _filterPeridot = false;
+  _filterPyrite = false;
+  _filterPyrope = false;
+  _filterQuartzSmoky = false;
+  _filterRhodochrosite = false;
+  _filterRhodolite = false;
+  _filterRhodonite = false;
+  _filterRuby = false;
+  _filterSapphire = false;
+  _filterSerpentine = false;
+  _filterSodalite = false;
+  _filterSpessartite = false;
+  _filterSphene = false;
+  _filterSunstone = false;
+  _filterTanzanite = false;
+  _filterTigersEye = false;
+  _filterTopaz = false;
+  _filterTourmaline = false;
+  _filterTsavorite = false;
+  _filterTurquoise = false;
+  _filterVariscite = false;
+  _filterZircon = false;
+  _filterZoisite = false;
+  _filteragate = false;
+  _filterbasalt = false;
+  _filtercoal = false;
+  _filtergarnet = false;
+  _filtergranite = false;
+  _filterlimestone = false;
+  _filtersandstone = false;
+  }
+
+  void setAllFiltersTrue(){
+    _filterAlexandrite = true;
+  _filterAlmandine = true;
+  _filterAmazonite = true;
+  _filterAmber = true;
+  _filterAmethyst = true;
+  _filterAmetrine = true;
+  _filterAndalusite = true;
+  _filterAndradite = true;
+  _filterAquamarine = true;
+  _filterAventurineGreen = true;
+  _filterAventurineYellow = true;
+  _filterBenitoite = true;
+  _filterBerylGolden = true;
+  _filterBixbite = true;
+  _filterBloodstone = true;
+  _filterCatsEye = true;
+  _filterChalcedonyBlue = true;
+  _filterChromeDiopside = true;
+  _filterChrysoberyl = true;
+  _filterChrysocolla = true;
+  _filterChrysoprase = true;
+  _filterCitrine = true;
+  _filterCoral = true;
+  _filterDanburite = true;
+  _filterDiamond = true;
+  _filterDiaspore = true;
+  _filterDumortierite = true;
+  _filterEmerald = true;
+  _filterFluorite = true;
+  _filterGarnetRed = true;
+  _filterGoshenite = true;
+  _filterGrossular = true;
+  _filterHessonite = true;
+  _filterHiddenite = true;
+  _filterIolite = true;
+  _filterJade = true;
+  _filterKunzite = true;
+  _filterKyanite = true;
+  _filterLabradorite = true;
+  _filterLapisLazuli = true;
+  _filterLarimar = true;
+  _filterMalachite = true;
+  _filterMoonstone = true;
+  _filterMorganite = true;
+  _filterOnyxBlack = true;
+  _filterOpal = true;
+  _filterPearl = true;
+  _filterPeridot = true;
+  _filterPyrite = true;
+  _filterPyrope = true;
+  _filterQuartzSmoky = true;
+  _filterRhodochrosite = true;
+  _filterRhodolite = true;
+  _filterRhodonite = true;
+  _filterRuby = true;
+  _filterSapphire = true;
+  _filterSerpentine = true;
+  _filterSodalite = true;
+  _filterSpessartite = true;
+  _filterSphene = true;
+  _filterSunstone = true;
+  _filterTanzanite = true;
+  _filterTigersEye = true;
+  _filterTopaz = true;
+  _filterTourmaline = true;
+  _filterTsavorite = true;
+  _filterTurquoise = true;
+  _filterVariscite = true;
+  _filterZircon = true;
+  _filterZoisite = true;
+  _filteragate = true;
+  _filterbasalt = true;
+  _filtercoal = true;
+  _filtergarnet = true;
+  _filtergranite = true;
+  _filterlimestone = true;
+  _filtersandstone = true;
+  }
+
 
   Future<void> createMarkers(QuerySnapshot snapshot) async {
-    markers.clear(); //Clear previous markers to avoid duplication
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      var doc = snapshot.docs[i];
-      var data = doc.data() as Map<String, dynamic>;
-      print("test:" + _searchController.text.trim());
-      //Filter the data based on the user's search input and filter selections
-      bool shouldAddMarker = (_searchText.isEmpty ||
-              data['CITY'].contains(_searchText)) &&
-          (!_filterAlexandrite ||
-              data['ROCK_CLASSIFICATION'] == 'Alexandrite' ||
-              data['ROCK_CLASSIFICATION'] == 'alexandrite') &&
-          (!_filterAlmandine ||
-              data['ROCK_CLASSIFICATION'] == 'Almandine' ||
-              data['ROCK_CLASSIFICATION'] == 'almandine') &&
-          (!_filterAmazonite ||
-              data['ROCK_CLASSIFICATION'] == 'Amazonite' ||
-              data['ROCK_CLASSIFICATION'] == 'amazonite') &&
-          (!_filterAmber ||
-              data['ROCK_CLASSIFICATION'] == 'Amber' ||
-              data['ROCK_CLASSIFICATION'] == 'amber') &&
-          (!_filterAmethyst ||
-              data['ROCK_CLASSIFICATION'] == 'Amethyst' ||
-              data['ROCK_CLASSIFICATION'] == 'amethyst') &&
-          (!_filterAmetrine ||
-              data['ROCK_CLASSIFICATION'] == 'Ametrine' ||
-              data['ROCK_CLASSIFICATION'] == 'ametrine') &&
-          (!_filterAndalusite ||
-              data['ROCK_CLASSIFICATION'] == 'Andalusite' ||
-              data['ROCK_CLASSIFICATION'] == 'andalusite') &&
-          (!_filterAndradite ||
-              data['ROCK_CLASSIFICATION'] == 'Andradite' ||
-              data['ROCK_CLASSIFICATION'] == 'andradite') &&
-          (!_filterAquamarine ||
-              data['ROCK_CLASSIFICATION'] == 'Aquamarine' ||
-              data['ROCK_CLASSIFICATION'] == 'aquamarine') &&
-          (!_filterAventurineGreen ||
-              data['ROCK_CLASSIFICATION'] == 'Aventurine Green' ||
-              data['ROCK_CLASSIFICATION'] == 'aventurine green') &&
-          (!_filterAventurineYellow ||
-              data['ROCK_CLASSIFICATION'] == 'Aventurine Yellow' ||
-              data['ROCK_CLASSIFICATION'] == 'aventurine yellow') &&
-          (!_filterBenitoite ||
-              data['ROCK_CLASSIFICATION'] == 'Benitoite' ||
-              data['ROCK_CLASSIFICATION'] == 'benitoite') &&
-          (!_filterBerylGolden ||
-              data['ROCK_CLASSIFICATION'] == 'Beryl Golden' ||
-              data['ROCK_CLASSIFICATION'] == 'beryl golden') &&
-          (!_filterBixbite ||
-              data['ROCK_CLASSIFICATION'] == 'Bixbite' ||
-              data['ROCK_CLASSIFICATION'] == 'bixbite') &&
-          (!_filterBloodstone ||
-              data['ROCK_CLASSIFICATION'] == 'Bloodstone' ||
-              data['ROCK_CLASSIFICATION'] == 'bloodstone') &&
-          (!_filterCatsEye ||
-              data['ROCK_CLASSIFICATION'] == 'Cats Eye' ||
-              data['ROCK_CLASSIFICATION'] == 'cats eye') &&
-          (!_filterChalcedonyBlue ||
-              data['ROCK_CLASSIFICATION'] == 'Chalcedony Blue' ||
-              data['ROCK_CLASSIFICATION'] == 'chalcedony blue') &&
-          (!_filterChromeDiopside ||
-              data['ROCK_CLASSIFICATION'] == 'Chrome Diopside' ||
-              data['ROCK_CLASSIFICATION'] == 'chalcedony diopside') &&
-          (!_filterChrysoberyl ||
-              data['ROCK_CLASSIFICATION'] == 'Chrysoberyl' ||
-              data['ROCK_CLASSIFICATION'] == 'chrysoberyl') &&
-          (!_filterChrysocolla ||
-              data['ROCK_CLASSIFICATION'] == 'Chrysocolla' ||
-              data['ROCK_CLASSIFICATION'] == 'chrysocolla') &&
-          (!_filterChrysoprase ||
-              data['ROCK_CLASSIFICATION'] == 'Chrysoprase' ||
-              data['ROCK_CLASSIFICATION'] == 'chrysoprase') &&
-          (!_filterCitrine ||
-              data['ROCK_CLASSIFICATION'] == 'Citrine' ||
-              data['ROCK_CLASSIFICATION'] == 'citrine') &&
-          (!_filterCoral ||
-              data['ROCK_CLASSIFICATION'] == 'Coral' ||
-              data['ROCK_CLASSIFICATION'] == 'coral') &&
-          (!_filterDanburite ||
-              data['ROCK_CLASSIFICATION'] == 'Danburite' ||
-              data['ROCK_CLASSIFICATION'] == 'danburite') &&
-          (!_filterDiamond ||
-              data['ROCK_CLASSIFICATION'] == 'Diamond' ||
-              data['ROCK_CLASSIFICATION'] == 'diamond') &&
-          (!_filterDiaspore ||
-              data['ROCK_CLASSIFICATION'] == 'Diaspore' ||
-              data['ROCK_CLASSIFICATION'] == 'diaspore') &&
-          (!_filterDumortierite ||
-              data['ROCK_CLASSIFICATION'] == 'Dumortierite' ||
-              data['ROCK_CLASSIFICATION'] == 'dumortierite') &&
-          (!_filterEmerald ||
-              data['ROCK_CLASSIFICATION'] == 'Emerald' ||
-              data['ROCK_CLASSIFICATION'] == 'emerald') &&
-          (!_filterFluorite ||
-              data['ROCK_CLASSIFICATION'] == 'Fluorite' ||
-              data['ROCK_CLASSIFICATION'] == 'fluorite') &&
-          (!_filterGarnetRed ||
-              data['ROCK_CLASSIFICATION'] == 'Garnet Red' ||
-              data['ROCK_CLASSIFICATION'] == 'garnet red') &&
-          (!_filterGoshenite ||
-              data['ROCK_CLASSIFICATION'] == 'Goshenite' ||
-              data['ROCK_CLASSIFICATION'] == 'goshenite') &&
-          (!_filterGrossular ||
-              data['ROCK_CLASSIFICATION'] == 'Grossular' ||
-              data['ROCK_CLASSIFICATION'] == 'grossular') &&
-          (!_filterHessonite ||
-              data['ROCK_CLASSIFICATION'] == 'Hessonite' ||
-              data['ROCK_CLASSIFICATION'] == 'hessonite') &&
-          (!_filterHiddenite ||
-              data['ROCK_CLASSIFICATION'] == 'Hiddenite' ||
-              data['ROCK_CLASSIFICATION'] == 'hiddenite') &&
-          (!_filterIolite ||
-              data['ROCK_CLASSIFICATION'] == 'Iolite' ||
-              data['ROCK_CLASSIFICATION'] == 'iolite') &&
-          (!_filterJade ||
-              data['ROCK_CLASSIFICATION'] == 'Jade' ||
-              data['ROCK_CLASSIFICATION'] == 'jade') &&
-          (!_filterKunzite ||
-              data['ROCK_CLASSIFICATION'] == 'Kunzite' ||
-              data['ROCK_CLASSIFICATION'] == 'kunzite') &&
-          (!_filterKyanite ||
-              data['ROCK_CLASSIFICATION'] == 'Kyanite' ||
-              data['ROCK_CLASSIFICATION'] == 'kyanite') &&
-          (!_filterLabradorite ||
-              data['ROCK_CLASSIFICATION'] == 'Labradorite' ||
-              data['ROCK_CLASSIFICATION'] == 'labradorite') &&
-          (!_filterLapisLazuli ||
-              data['ROCK_CLASSIFICATION'] == 'Lapis Lazuli' ||
-              data['ROCK_CLASSIFICATION'] == 'lapis Lazuli') &&
-          (!_filterLarimar ||
-              data['ROCK_CLASSIFICATION'] == 'Larimar' ||
-              data['ROCK_CLASSIFICATION'] == 'larimar') &&
-          (!_filterMalachite ||
-              data['ROCK_CLASSIFICATION'] == 'Malachite' ||
-              data['ROCK_CLASSIFICATION'] == 'malachite') &&
-          (!_filterMoonstone ||
-              data['ROCK_CLASSIFICATION'] == 'Moonstone' ||
-              data['ROCK_CLASSIFICATION'] == 'moonstone') &&
-          (!_filterMorganite ||
-              data['ROCK_CLASSIFICATION'] == 'Morganite' ||
-              data['ROCK_CLASSIFICATION'] == 'morganite') &&
-          (!_filterOnyxBlack ||
-              data['ROCK_CLASSIFICATION'] == 'Onyx Black' ||
-              data['ROCK_CLASSIFICATION'] == 'onyx black') &&
-          (!_filterOpal ||
-              data['ROCK_CLASSIFICATION'] == 'Opal' ||
-              data['ROCK_CLASSIFICATION'] == 'opal') &&
-          (!_filterPearl ||
-              data['ROCK_CLASSIFICATION'] == 'Pearl' ||
-              data['ROCK_CLASSIFICATION'] == 'pearl') &&
-          (!_filterPeridot ||
-              data['ROCK_CLASSIFICATION'] == 'Peridot' ||
-              data['ROCK_CLASSIFICATION'] == 'peridot') &&
-          (!_filterPyrite ||
-              data['ROCK_CLASSIFICATION'] == 'Pyrite' ||
-              data['ROCK_CLASSIFICATION'] == 'pyrite') &&
-          (!_filterPyrope ||
-              data['ROCK_CLASSIFICATION'] == 'Pyrope' ||
-              data['ROCK_CLASSIFICATION'] == 'pyrope') &&
-          (!_filterQuartzSmoky ||
-              data['ROCK_CLASSIFICATION'] == 'Quartz Smoky' ||
-              data['ROCK_CLASSIFICATION'] == 'quartz smoky') &&
-          (!_filterRhodochrosite ||
-              data['ROCK_CLASSIFICATION'] == 'Rhodochrosite' ||
-              data['ROCK_CLASSIFICATION'] == 'rhodochrosite') &&
-          (!_filterRhodolite ||
-              data['ROCK_CLASSIFICATION'] == 'Rhodolite' ||
-              data['ROCK_CLASSIFICATION'] == 'rhodolite') &&
-          (!_filterRhodonite ||
-              data['ROCK_CLASSIFICATION'] == 'Rhodonite' ||
-              data['ROCK_CLASSIFICATION'] == 'rhodonite') &&
-          (!_filterRuby ||
-              data['ROCK_CLASSIFICATION'] == 'Ruby' ||
-              data['ROCK_CLASSIFICATION'] == 'ruby') &&
-          (!_filterSapphire ||
-              data['ROCK_CLASSIFICATION'] == 'Sapphire' ||
-              data['ROCK_CLASSIFICATION'] == 'sapphire') &&
-          (!_filterSerpentine ||
-              data['ROCK_CLASSIFICATION'] == 'Serpentine' ||
-              data['ROCK_CLASSIFICATION'] == 'serpentine') &&
-          (!_filterSodalite || data['ROCK_CLASSIFICATION'] == 'Sodalite') &&
-          (!_filterSpessartite ||
-              data['ROCK_CLASSIFICATION'] == 'Spessartite' ||
-              data['ROCK_CLASSIFICATION'] == 'spessartite') &&
-          (!_filterSphene ||
-              data['ROCK_CLASSIFICATION'] == 'Sphene' ||
-              data['ROCK_CLASSIFICATION'] == 'sphene') &&
-          (!_filterSunstone ||
-              data['ROCK_CLASSIFICATION'] == 'Sunstone' ||
-              data['ROCK_CLASSIFICATION'] == 'sunstone') &&
-          (!_filterTanzanite ||
-              data['ROCK_CLASSIFICATION'] == 'Tanzanite' ||
-              data['ROCK_CLASSIFICATION'] == 'tanzanite') &&
-          (!_filterTigersEye ||
-              data['ROCK_CLASSIFICATION'] == 'Tigers Eye' ||
-              data['ROCK_CLASSIFICATION'] == 'tigers eye') &&
-          (!_filterTopaz ||
-              data['ROCK_CLASSIFICATION'] == 'Topaz' ||
-              data['ROCK_CLASSIFICATION'] == 'topaz') &&
-          (!_filterTourmaline ||
-              data['ROCK_CLASSIFICATION'] == 'Tourmaline' ||
-              data['ROCK_CLASSIFICATION'] == 'tourmaline') &&
-          (!_filterTsavorite ||
-              data['ROCK_CLASSIFICATION'] == 'Tsavorite' ||
-              data['ROCK_CLASSIFICATION'] == 'tsavorite') &&
-          (!_filterTurquoise ||
-              data['ROCK_CLASSIFICATION'] == 'Turquoise' ||
-              data['ROCK_CLASSIFICATION'] == 'turquoise') &&
-          (!_filterVariscite ||
-              data['ROCK_CLASSIFICATION'] == 'Variscite' ||
-              data['ROCK_CLASSIFICATION'] == 'variscite') &&
-          (!_filterZircon ||
-              data['ROCK_CLASSIFICATION'] == 'Zircon' ||
-              data['ROCK_CLASSIFICATION'] == 'zircon') &&
-          (!_filterZoisite ||
-              data['ROCK_CLASSIFICATION'] == 'Zoisite' ||
-              data['ROCK_CLASSIFICATION'] == 'zoisite') &&
-          (!_filteragate || data['ROCK_CLASSIFICATION'] == 'agate') &&
-          (!_filterbasalt || data['ROCK_CLASSIFICATION'] == 'basalt') &&
-          (!_filtercoal || data['ROCK_CLASSIFICATION'] == 'coal') &&
-          (!_filtergarnet || data['ROCK_CLASSIFICATION'] == 'garnet') &&
-          (!_filtergranite || data['ROCK_CLASSIFICATION'] == 'granite') &&
-          (!_filterlimestone || data['ROCK_CLASSIFICATION'] == 'limestone') &&
-          (!_filtersandstone || data['ROCK_CLASSIFICATION'] == 'sandstone');
+    setState(() {
+       markers.clear();//Clear previous markers to avoid duplication
+      });
 
-      if (shouldAddMarker) {
-        var markerIdVal = doc.id;
-        var markerId = MarkerId(markerIdVal);
-        var marker = Marker(
-          markerId: markerId,
-          position: LatLng(data['LATTITUDE'], data['LONGITUDE']),
-          infoWindow: InfoWindow(
-            title: data['ROCK_CLASSIFICATION'],
-            snippet: data['CITY'],
-          ),
-        );
-        setState(() {
-          markers.add(marker);
-        });
-      }
+    Map<String, bool> filterMap = {
+    'alexandrite': _filterAlexandrite,
+    'almandine': _filterAlmandine,
+    'amazonite': _filterAmazonite,
+    'amber': _filterAmber,
+    'amethyst': _filterAmethyst,
+    'ametrine': _filterAmetrine,
+    'andalusite': _filterAndalusite,
+    'andradite': _filterAndradite,
+    'aquamarine': _filterAquamarine,
+    'aventurine green': _filterAventurineGreen,
+    'aventurine yellow': _filterAventurineYellow,
+    'benitoite': _filterBenitoite,
+    'beryl golden': _filterBerylGolden,
+    'bixbite': _filterBixbite,
+    'bloodstone': _filterBloodstone,
+    'cats eye': _filterCatsEye,
+    'chalcedony blue': _filterChalcedonyBlue,
+    'chrome diopside': _filterChromeDiopside,
+    'chrysoberyl': _filterChrysoberyl,
+    'chrysocolla': _filterChrysocolla,
+    'chrysoprase': _filterChrysoprase,
+    'citrine': _filterCitrine,
+    'coral': _filterCoral,
+    'danburite': _filterDanburite,
+    'diamond': _filterDiamond,
+    'diaspore': _filterDiaspore,
+    'dumortierite': _filterDumortierite,
+    'emerald': _filterEmerald,
+    'fluorite': _filterFluorite,
+    'garnet red': _filterGarnetRed,
+    'goshenite': _filterGoshenite,
+    'grossular': _filterGrossular,
+    'hessonite': _filterHessonite,
+    'hiddenite': _filterHiddenite,
+    'iolite': _filterIolite,
+    'jade': _filterJade,
+    'kunzite': _filterKunzite,
+    'kyanite': _filterKyanite,
+    'labradorite': _filterLabradorite,
+    'lapis lazuli': _filterLapisLazuli,
+    'larimar': _filterLarimar,
+    'malachite': _filterMalachite,
+    'moonstone': _filterMoonstone,
+    'morganite': _filterMorganite,
+    'onyx black': _filterOnyxBlack,
+    'opal': _filterOpal,
+    'pearl': _filterPearl,
+    'peridot': _filterPeridot,
+    'pyrite': _filterPyrite,
+    'pyrope': _filterPyrope,
+    'quartz smoky': _filterQuartzSmoky,
+    'rhodochrosite': _filterRhodochrosite,
+    'rhodolite': _filterRhodolite,
+    'rhodonite': _filterRhodonite,
+    'ruby': _filterRuby,
+    'sapphire': _filterSapphire,
+    'serpentine': _filterSerpentine,
+    'sodalite': _filterSodalite,
+    'spessartite': _filterSpessartite,
+    'sphene': _filterSphene,
+    'sunstone': _filterSunstone,
+    'tanzanite': _filterTanzanite,
+    'tigers eye': _filterTigersEye,
+    'topaz': _filterTopaz,
+    'tourmaline': _filterTourmaline,
+    'tsavorite': _filterTsavorite,
+    'turquoise': _filterTurquoise,
+    'variscite': _filterVariscite,
+    'zircon': _filterZircon,
+    'zoisite': _filterZoisite,
+    'agate': _filteragate,
+    'basalt': _filterbasalt,
+    'coal': _filtercoal,
+    'garnet': _filtergarnet,
+    'granite': _filtergranite,
+    'limestone': _filterlimestone,
+    'sandstone': _filtersandstone,
+  };
+
+  for (int i = 0; i < snapshot.docs.length; i++) {
+    var doc = snapshot.docs[i];
+    var data = doc.data() as Map<String, dynamic>;
+    String rockClassification = data['ROCK_CLASSIFICATION'].toLowerCase();
+
+    bool shouldAddMarker =
+        (_searchText.isEmpty || data['CITY'].toLowerCase().contains(_searchText.toLowerCase().trim())) &&
+        filterMap[rockClassification] != false;
+
+    if (shouldAddMarker) {
+      var markerIdVal = doc.id;
+      var markerId = MarkerId(markerIdVal);
+      var marker = Marker(
+        markerId: markerId,
+        position: LatLng(data['LATTITUDE'], data['LONGITUDE']),
+        infoWindow: InfoWindow(
+          title: data['ROCK_CLASSIFICATION'],
+          snippet: data['CITY'],
+        ),
+      );
+      setState(() {
+        markers.add(marker);
+      });
     }
+  }
   }
 
   getMarkerData() async {
@@ -355,8 +388,6 @@ class _MapsPageState extends State<MapsPage> {
     getMarkerData();
   }
 
-  // Variable to hold the selected value from the drop-down menu
-  String _selectedValue = 'All';
 
 //header
   @override
@@ -429,10 +460,20 @@ class _MapsPageState extends State<MapsPage> {
                 ),
               ),
             ),
-            // Add the checkbox list for filter selections
-            //
-            //
-            //
+            CheckboxListTile(
+              title: Text('All Rock Types'),
+              value: _filterall,
+              onChanged: (value) {
+                setState(() {
+                  _filterall = value!;
+                  if(_filterall == true){
+                    setAllFiltersTrue();
+                  }else{
+                    setAllFiltersFalse();
+                  }
+                });
+              },
+            ),
             CheckboxListTile(
               title: Text('Agate'),
               value: _filteragate,
@@ -1126,11 +1167,6 @@ class _MapsPageState extends State<MapsPage> {
                 });
               },
             ),
-
-//
-//
-//
-//
           ],
         ),
       ),

@@ -9,7 +9,6 @@ import 'package:rockid/pages/recently_found_rocks_page.dart';
 import 'package:rockid/pages/rocks_found_list_page.dart';
 import 'package:rockid/pages/maps.dart';
 import 'package:rockid/pages/rock_information_page.dart';
-
 import '../components/hamburger_menu.dart';
 
 class HomePage extends StatefulWidget {
@@ -103,7 +102,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Home Page',
+          'Home',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
@@ -116,12 +115,13 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 0),
+            SizedBox(height: 10),
             Image.asset(
-              'lib/images/two_rocks.png', // top image with padding - SU
-              width: 600,
-              height: 150,
+              'lib/images/blinking.gif',
+              width: 400,
+              height: 100,
             ),
+            SizedBox(height: 5),
             Text(
               'Welcome Back',
               style: TextStyle(
@@ -130,13 +130,16 @@ class _HomePageState extends State<HomePage> {
                 color: ForegroundColor,
               ),
             ),
-            SizedBox(height: 40),
-            ElevatedButton(
+            SizedBox(height: 20),
+
+            // ElevatedButtons with Icons
+            ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RocksFoundListPage(uid: user.uid)),
+                    builder: (context) => RocksFoundListPage(uid: user.uid),
+                  ),
                 );
               },
               style: ButtonStyle(
@@ -146,7 +149,8 @@ class _HomePageState extends State<HomePage> {
                   EdgeInsets.all(16.0),
                 ),
               ),
-              child: Text(
+              icon: Icon(Icons.collections, size: 30), // Icon added here
+              label: Text(
                 'My Collection',
                 style: TextStyle(
                   fontSize: 20.0,
@@ -155,12 +159,13 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RockInformationPage()),
+                    builder: (context) => RockInformationPage(),
+                  ),
                 );
               },
               style: ButtonStyle(
@@ -170,7 +175,8 @@ class _HomePageState extends State<HomePage> {
                   EdgeInsets.all(16.0),
                 ),
               ),
-              child: Text(
+              icon: Icon(Icons.info, size: 30), // Icon added here
+              label: Text(
                 'Rock Information',
                 style: TextStyle(
                   fontSize: 20.0,
@@ -179,11 +185,38 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapsPage()),
+                  MaterialPageRoute(
+                    builder: (context) => RecentlyFoundRocksPage(),
+                  ),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                  EdgeInsets.all(16.0),
+                ),
+              ),
+              icon: Icon(Icons.search, size: 30), // Icon added here
+              label: Text(
+                'Recently Found Rocks',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MapsPage(),
+                  ),
                 );
               },
               style: ButtonStyle(
@@ -193,8 +226,8 @@ class _HomePageState extends State<HomePage> {
                   EdgeInsets.all(16.0),
                 ),
               ),
-              // Map button initate - SU
-              child: Text(
+              icon: Icon(Icons.public, size: 30), // Icon added here
+              label: Text(
                 'Rocks Around the World',
                 style: TextStyle(
                   fontSize: 20.0,
@@ -202,30 +235,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => RecentlyFoundRocksPage()),
-                );
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  EdgeInsets.all(16.0),
-                ),
-              ),
-              child: Text(
-                'Recently Found Rocks',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 60),
+            SizedBox(height: 5),
             Image.asset(
               'lib/images/rockpic.png',
               width: 600,
@@ -234,6 +244,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
