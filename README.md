@@ -72,7 +72,7 @@ To contribute to the RockID application please use the following steps.
 
 ## Google sign in
 1. Use the following commands to get the SHA-1 and SHA-256 fingerprints.
-2. 2. Windows:
+2.  Windows:
      ```bash
      keytool -list -v \
      -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
