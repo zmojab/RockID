@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          'Profile Page',
+          'Profile',
           style: TextStyle(fontSize: 30),
         ),
         centerTitle: true,
@@ -146,10 +146,13 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 80,
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(_url),
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: CircleAvatar(
+                    radius: 80,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(_url),
+                  ),
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -405,6 +408,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                ),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -420,6 +426,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: const Text('EDIT PROFILE',
                       style: TextStyle(fontSize: 15)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
                 ),
               ],
             ),
