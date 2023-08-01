@@ -70,9 +70,23 @@ To contribute to the RockID application please use the following steps.
 5. When all changes and bug fixes have been completed, create a pull request from "development" to the main branch.
 
 
-## License
+## Google sign in
+1. Use the following commands to get the SHA-1 and SHA-256 fingerprints:
+  Windows:
+     ```bash
+     keytool -list -v \
+     -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+     ```
+  Mac/Linux:
+      ```bash
+       keytool -list -v \
+     -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
+     ```
+2. Go to firebase.com and login into the RockID account and under autherization go to sign-in method and go to project settings and add both the SHA-1 and SH-256 fingerprints.
 
-The RockID App is open-source and uses the [MIT License](https://choosealicense.com/licenses/mit/)
+
+
+
 
 
 ## Authors
