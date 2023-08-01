@@ -71,18 +71,18 @@ To contribute to the RockID application please use the following steps.
 
 
 ## Google sign in
-1. Use the following commands to get the SHA-1 and SHA-256 fingerprints:
-  Windows:
+1. Use the following commands to get the SHA-1 and SHA-256 fingerprints.
+2. 2. Windows:
      ```bash
      keytool -list -v \
      -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
      ```
-  Mac/Linux:
+ 3.  Mac/Linux:
       ```bash
        keytool -list -v \
      -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore
-     ```
-2. Go to firebase.com and login into the RockID account and under autherization go to sign-in method and go to project settings and add both the SHA-1 and SH-256 fingerprints.
+      ```
+4. Go to firebase.com and login into the RockID account and under autherization go to sign-in method and go to project settings and add both the SHA-1 and SH-256 fingerprints.
 
 
 
