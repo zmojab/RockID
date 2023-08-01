@@ -84,7 +84,13 @@ To contribute to the RockID application please use the following steps.
       ```
 4. Go to firebase.com and login into the RockID account and under autherization go to sign-in method and go to project settings and add both the SHA-1 and SH-256 fingerprints.
 
+## Future improvements
 
+- **Improving the training models:** Currently, both the rough and polished classification models have an accuracy of 80-82. This can possibly be improved by optimizing the dataset and trying different hyperparameters.
+- **Adding more rocks:** Adding more rocks to the app will make the app more robust.
+- iOS compatibility: Unfortunately, we ran out of time and could not get this app to run on iOS. We set up the emulator, but it would not build successfully.
+- **Maps page:** Add more filters and attributes to the pins, such as username, rock information, etc.
+- **Friend list:** When a user views another user's profile, they can have the option to send messages or send a friend request. If they accept it, all that user's friends will be viewable within the application.
 
 
 
