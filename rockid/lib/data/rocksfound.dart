@@ -69,7 +69,7 @@ class RocksFoundCRUD {
   }
 
   //returns list of all rocks found for a given UID JW
-  Future<List<Map<String, dynamic>>> getRocksFoundForUID(String uid) async {
+ Future<List<Map<String, dynamic>>> getRocksFoundForUID(String uid) async {
   List<Map<String, dynamic>> rocksFound = [];
   try {
     QuerySnapshot snapshot =
@@ -81,11 +81,15 @@ class RocksFoundCRUD {
         'ID': doc.id,
       };
     }).toList();
+    rocksFound.sort((a, b) {
+      return b['DATETIME'].compareTo(a['DATETIME']);
+    });
   } catch (e) {
     print(e);
   }
   return rocksFound;
 }
+
    
   //Updates a given rock found, not currently used or needed should be removed JW
   Future<void> updateRockFound(String documentId, String uid,
@@ -178,6 +182,11 @@ Future<List<Map<String, dynamic>>> getViewableRocksFoundForUID(String uid) async
         'ID': doc.id,
       };
     }).toList();
+
+    rocksFound.sort((a, b) {
+      return b['DATETIME'].compareTo(a['DATETIME']);
+    });
+    
   } catch (e) {
     print(e);
   }
