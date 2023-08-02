@@ -90,6 +90,13 @@ To contribute to the RockID application please use the following steps.
 - iOS compatibility: Unfortunately, we ran out of time and could not get this app to run on iOS. We set up the emulator, but it would not build successfully.
 - **Maps page:** Add more filters and attributes to the pins, such as username, rock information, etc.
 - **Friend list:** When a user views another user's profile, they can have the option to send messages or send a friend request. If they accept it, all that user's friends will be viewable within the application.
+- **tflite_flutter_helper:** The tflutter_lite_helper package is used to help with image processing. The package is deprecated as of 8/2/23. Because the package is deprecated and the package uses a gradle build version that is older, there may be difficulties updating some packages in the future. A bug fixes may be available for this soon though.
+
+## Notes On Building for iOS
+- Currently the project is only capable of building for Android devices. Problems occur when building for iOS devices. To start building for iOS, a team member must have an iOS simulator on an macOS machine.
+- Simulators can be created using XCode on macOS. If a team member is able to create a simulator, after starting the simulators and downloading the Android iOS Emulator package in VSCode, the project can start to be build for iOS devices.
+-  Currently the project fails while building using the tflite_flutter package.
+ 
 
 
 
